@@ -2,6 +2,7 @@
 const workspace = document.getElementById("workspace");
 const generator = document.getElementById("generator");
 const enumerator = document.getElementById("enumerator");
+const reset = document.getElementById("reset");
 const BLOCK_X = 0;
 const BLOCK_Y = 1;
 const BLOCK_W = 2;
@@ -10,8 +11,9 @@ const BLOCK_PARENT = 4;
 const BLOCK_CHILDREN = 5;
 const BLOCK_ID = 6;
 const BLOCK_TYPE = 7;
-const BLOCK_CHILDREN_NUM = 8;
-const BLOCK_ELEM = 9;
+const BLOCK_CONTENT = 8;
+const BLOCK_CHILDREN_NUM = 9;
+const BLOCK_ELEM = 10;
 
 // Global variants
 let blocks = [];
@@ -23,12 +25,13 @@ let listener_up = null;
 // Temp variants for BLOCK_ID
 let block_num = 0;
 
-function createBlock(x, y, w, h, t, n) {
+function createBlock(x, y, w, h, t, c, n) {
     const elem = document.createElement("div");
     elem.style.left = x + "px";
     elem.style.top = y + "px";
     elem.style.width = w + "px";
     elem.style.height = h + "px";
+    elem.innerText = c[0];
     elem.classList.add("block");
     let block = [];
     block.push(x);
@@ -39,6 +42,7 @@ function createBlock(x, y, w, h, t, n) {
     block.push([]);
     block.push(block_num);
     block.push(t);
+    block.push(c);
     block.push(n);
     block.push(elem);
     elem.onmousedown = event => funBlockOnMouseDown(block, event);
@@ -89,6 +93,7 @@ function funBlockOnMouseDown(block, event) {
     if (block[BLOCK_PARENT] != null) {
         block[BLOCK_PARENT][BLOCK_CHILDREN] = block[BLOCK_PARENT][BLOCK_CHILDREN].filter(n => n !== block);
     }
+    //delete child's parent
     for(const b of blocks){
         if(block[BLOCK_CHILDREN].includes(b)){
             b[BLOCK_PARENT] = null;
@@ -97,8 +102,6 @@ function funBlockOnMouseDown(block, event) {
     block[BLOCK_PARENT] = null;
     block[BLOCK_CHILDREN] = [];
     
-    console.log("MouseDown");
-    console.log(blocks[1]);
 
     listener_move = event => funBlockOnMouseMove(block, event);
     listener_up = event => funBlockOnMouseUp(block, event);
@@ -131,16 +134,12 @@ function funBlockOnMouseUp(block, event) {
                 updatePosition(block, getSplitCenterX(blocks[i], j) - block[BLOCK_W] / 2.0, blocks[i][BLOCK_Y] + blocks[i][BLOCK_H]);
                 blocks[i][BLOCK_CHILDREN].push(block);
                 block[BLOCK_PARENT] = blocks[i];
-                console.log("MouseUp");
-                console.log(blocks[1]);
             }
         } else {
-            if((getCenterX(block) - getCenterX(blocks[i])) ** 2 <= Math.min(block[BLOCK_W] / 2.0, blocks[i][BLOCK_W] / 2.0) ** 2){
+            if((getCenterX(block) - getCenterX(blocks[i])) ** 2 <= Math.min(block[BLOCK_W] / 2.0, blocks[i][BLOCK_W] / 2.0) ** 2 && block[BLOCK_CHILDREN_NUM] != 0){
                 updatePosition(block, getCenterX(blocks[i]) - block[BLOCK_W] / 2.0, blocks[i][BLOCK_Y] - block[BLOCK_H]);
                 block[BLOCK_CHILDREN].push(blocks[i]);
                 blocks[i][BLOCK_PARENT] = block;
-                console.log("MouseUp");
-                console.log(blocks[1]);
             }
         }
     }
@@ -156,12 +155,10 @@ function createBlockHoverDebug(event, block){
     debugField.id = "debug";
     debugField.style.left = (block[BLOCK_X] + block[BLOCK_W] + 10) + "px";
     debugField.style.top = (block[BLOCK_Y] - 10) + "px";
-    debugField.style.width = "50px";
-    debugField.style.height = "20px";
     debugField.style.position = "absolute";
     debugField.style.backgroundColor = "#7f7f7f";
     debugField.style.opacity = 0.75;
-    debugField.innerText = "id : "+ block[BLOCK_ID];
+    debugField.innerText = "id: "+ block[BLOCK_ID] + ", type: " + block[BLOCK_TYPE] +"\nContent_NAME: "+block[BLOCK_CONTENT][0];
     workspace.appendChild(debugField);
 }
 
@@ -223,11 +220,11 @@ function getSquareDistance(x1, x2, y1, y2) {
 
 // Button
 function clickGenerator() {
-    blocks.push(createBlock(200, 100, 100, 50, "normal", 1));
+    blocks.push(createBlock(200, 100, 100, 50, "null", [["null"]], 1));
 }
 
-function clickGenerator2(n) {
-    blocks.push(createBlock(200, 100, 100 * n, 50, "longer", n));
+function clickGenerator2(n, t, c) {
+    blocks.push(createBlock(200, 100, (n == 0 ? 100 : 100 * n), 50, t, c, n));
 }
 
 function clickEnumerator() {
@@ -247,7 +244,7 @@ function clickEnumerator() {
         function enumerate(array) {
             s += "("
             for (const block of array){
-                s += block[BLOCK_ID] + " ";
+                s += block[BLOCK_CONTENT][0] + " ";
                 if(block[BLOCK_CHILDREN].length > 0){
                     enumerate(block[BLOCK_CHILDREN]);
                 }
@@ -259,10 +256,27 @@ function clickEnumerator() {
     }
 }
 
+function clickReset(){
+    blocks = [];
+    block_num = 0;
+    function del(p){
+        if(p.firstChild != null){
+            p.removeChild(p.firstChild);
+            del(p);
+        }
+    }
+    del(workspace);
+}
+
 // Entry point
 window.onload = () => {
     generator.onclick = clickGenerator;
     enumerator.onclick = clickEnumerator;
+    reset.onclick = clickReset;
+
+    //temp buttons
+    document.getElementById("generator_add").onclick = (_ => clickGenerator2(2, "add", [["+"]]));
+    document.getElementById("generator_integer").onclick = (_ => clickGenerator2(0, "integer", [[document.forms["integer_form"].elements["integer_num"].value]]));
 
     workspace.onmousedown = event => screenOnMouseClick(event);
 }
