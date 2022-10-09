@@ -42,6 +42,12 @@ function createBlock(x, y, w, h, t, n) {
     block.push(n);
     block.push(elem);
     elem.onmousedown = event => funBlockOnMouseDown(block, event);
+    elem.addEventListener('mouseover', (event) => {
+        createBlockHoverDebug(event, block);
+    }, false);
+    elem.addEventListener('mouseleave', (event)=> {
+        deleteBlockHoverDebug(event, block);
+    }, false);
     workspace.appendChild(elem);
 
     block_num += 1;
@@ -83,8 +89,17 @@ function funBlockOnMouseDown(block, event) {
     if (block[BLOCK_PARENT] != null) {
         block[BLOCK_PARENT][BLOCK_CHILDREN] = block[BLOCK_PARENT][BLOCK_CHILDREN].filter(n => n !== block);
     }
+    for(const b of blocks){
+        if(block[BLOCK_CHILDREN].includes(b)){
+            b[BLOCK_PARENT] = null;
+        }
+    }
     block[BLOCK_PARENT] = null;
     block[BLOCK_CHILDREN] = [];
+    
+    console.log("MouseDown");
+    console.log(blocks[1]);
+
     listener_move = event => funBlockOnMouseMove(block, event);
     listener_up = event => funBlockOnMouseUp(block, event);
     document.addEventListener("mousemove", listener_move, false);
@@ -116,14 +131,16 @@ function funBlockOnMouseUp(block, event) {
                 updatePosition(block, getSplitCenterX(blocks[i], j) - block[BLOCK_W] / 2.0, blocks[i][BLOCK_Y] + blocks[i][BLOCK_H]);
                 blocks[i][BLOCK_CHILDREN].push(block);
                 block[BLOCK_PARENT] = blocks[i];
-                //alert("connected");
+                console.log("MouseUp");
+                console.log(blocks[1]);
             }
         } else {
             if((getCenterX(block) - getCenterX(blocks[i])) ** 2 <= Math.min(block[BLOCK_W] / 2.0, blocks[i][BLOCK_W] / 2.0) ** 2){
                 updatePosition(block, getCenterX(blocks[i]) - block[BLOCK_W] / 2.0, blocks[i][BLOCK_Y] - block[BLOCK_H]);
                 block[BLOCK_CHILDREN].push(blocks[i]);
                 blocks[i][BLOCK_PARENT] = block;
-                //alert("connected");
+                console.log("MouseUp");
+                console.log(blocks[1]);
             }
         }
     }
@@ -132,6 +149,31 @@ function funBlockOnMouseUp(block, event) {
     document.removeEventListener("mouseleave", listener_up, false);
     listener_move = null;
     listener_up = null;
+}
+
+function createBlockHoverDebug(event, block){
+    debugField = document.createElement("div");
+    debugField.id = "debug";
+    debugField.style.left = (block[BLOCK_X] + block[BLOCK_W] + 10) + "px";
+    debugField.style.top = (block[BLOCK_Y] - 10) + "px";
+    debugField.style.width = "50px";
+    debugField.style.height = "20px";
+    debugField.style.position = "absolute";
+    debugField.style.backgroundColor = "#7f7f7f";
+    debugField.style.opacity = 0.75;
+    debugField.innerText = "id : "+ block[BLOCK_ID];
+    workspace.appendChild(debugField);
+}
+
+function deleteBlockHoverDebug(event, block){
+    function del(){
+        target = document.getElementById("debug");
+        if(target != null){
+            workspace.removeChild(target);
+            del();
+        }
+    }
+    del();
 }
 
 // Event/workspace
