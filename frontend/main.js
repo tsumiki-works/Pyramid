@@ -20,8 +20,11 @@ let y_dragstart = 0;
 let listener_move = null;
 let listener_up = null;
 
+let menublock = [];
+
 // Temp variants for BLOCK_ID
 let block_num = 0;
+let menublock_num = 0;
 
 function createBlock(x, y, w, h, t, n) {
     const elem = document.createElement("div");
@@ -49,6 +52,39 @@ function createBlock(x, y, w, h, t, n) {
     return block;
 }
 
+function createmenuBlock(x, y, w, h, t, n) {
+    const elem = document.createElement("div");
+    elem.style.left = x + "px";
+    elem.style.top = y + "px";
+    elem.style.width = w + "px";
+    elem.style.height = h + "px";
+    elem.classList.add(t);
+    let block = [];
+    block.push(x);
+    block.push(y);
+    block.push(w);
+    block.push(h);
+    block.push(null);
+    block.push([]);
+    block.push(menublock_num);
+    block.push(t);
+    block.push(n);
+    block.push(elem);
+    elem.onmousedown = event => funBlockOnMouseDown(menublock, event);
+    menu.appendChild(elem);
+
+    menublock_num += 1;
+
+    return block;
+}
+
+createmenuBlock(20, 10, 100 *2 , 50, "plus", 2);
+createmenuBlock(20, 110, 100 * 2, 50, "minus", 2);
+createmenuBlock(20, 210, 100 * 2, 50, "times", 2);
+createmenuBlock(20, 310, 100 * 2, 50, "waru", 2);
+createmenuBlock(20, 410, 100, 50, "number", 2);
+
+
 function getCenterX(block) {
     return block[BLOCK_X] + block[BLOCK_W] / 2.0;
 }
@@ -75,6 +111,10 @@ function updatePosition(block, x, y) {
 }
 
 // Event/Block
+
+function funBlockOnMouseDown2(menublock, event) {
+
+}
 
 function funBlockOnMouseDown(block, event) {
     const rect = block[BLOCK_ELEM].getBoundingClientRect();

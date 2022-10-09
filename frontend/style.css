@@ -26,67 +26,51 @@ div#workspace {
     position: absolute;
     cursor: move;
     background-color: royalblue;
-    // テスト時に見やすくするため仮の枠線追加
     border-color: darkslategray;
     border-style: solid;
     border-width: 1.5px;
 }
 
-.menublock1 {
+.plus {
     text-align:center;
-    width: 100px;
-    height: 26px;
-    padding:12px 0;
     background-color: royalblue;
-    // テスト時に見やすくするため仮の枠線追加
+
     border-color: darkslategray;
     border-style: solid;
     border-width: 1.5px;
 }
 
-.menublock2 {
+.minus {
     text-align:center;
-    width: 100px;
-    height: 26px;
-    padding:12px 0;
     background-color: steelblue;
-    // テスト時に見やすくするため仮の枠線追加
+
     border-color: darkslategray;
     border-style: solid;
     border-width: 1.5px;
 }
 
-.menublock3 {
+.times {
     text-align:center;
-    width: 100px;
-    height: 26px;
-    padding:12px 0;
     background-color: darkblue;
-    // テスト時に見やすくするため仮の枠線追加
+/* テスト時に見やすくするため仮の枠線追加 */
     border-color: darkslategray;
     border-style: solid;
     border-width: 1.5px;
 }
 
-.menublock4 {
+.waru {
     text-align:center;
-    width: 100px;
-    height: 26px;
-    padding:12px 0;
     background-color: darkslateblue;
-    // テスト時に見やすくするため仮の枠線追加
+    /* テスト時に見やすくするため仮の枠線追加 */
     border-color: darkslategray;
     border-style: solid;
     border-width: 1.5px;
 }
 
-.menublock5 {
+.number {
     text-align:center;
-    width: 100px;
-    height: 46px;
-    padding: 2px 0px;
     background-color: mediumaquamarine;
-    // テスト時に見やすくするため仮の枠線追加
+
     border-color: darkslategray;
     border-style: solid;
     border-width: 1.5px;
