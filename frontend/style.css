@@ -25,5 +25,7 @@ div#workspace {
 .block {
     position: absolute;
     cursor: move;
+    color: white;
+    text-align: center;
     background-color: blue;
 }
