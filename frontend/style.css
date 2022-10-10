@@ -12,13 +12,13 @@ div#all {
 }
 
 div#menu {
-    width: 17%;
+    width: 224px;
     height: 80%;
     background-color: gray;
 }
 
 div#workspace {
-    width: 83%;
+    width: 80%;
     height: 100%;
 }
 
