@@ -20,7 +20,7 @@ let y_dragstart = 0;
 let listener_move = null;
 let listener_up = null;
 
-let menublock = [];
+let menublocks = [];
 
 // Temp variants for BLOCK_ID
 let block_num = 0;
@@ -59,30 +59,29 @@ function createmenuBlock(x, y, w, h, t, n) {
     elem.style.width = w + "px";
     elem.style.height = h + "px";
     elem.classList.add(t);
-    let block = [];
-    block.push(x);
-    block.push(y);
-    block.push(w);
-    block.push(h);
-    block.push(null);
-    block.push([]);
-    block.push(menublock_num);
-    block.push(t);
-    block.push(n);
-    block.push(elem);
+    let menublock = [];
+    menublock.push(x);
+    menublock.push(y);
+    menublock.push(w);
+    menublock.push(h);
+    menublock.push(null);
+    menublock.push([]);
+    menublock.push(menublock_num);
+    menublock.push(t);
+    menublock.push(n);
+    menublock.push(elem);
     elem.onmousedown = event => funBlockOnMouseDown2(menublock, event);
     menu.appendChild(elem);
 
     menublock_num += 1;
 
-    return block;
+    return menublock;
 }
-
-createmenuBlock(20, 80, 100 *2 , 50, "plus", 2);
-createmenuBlock(20, 140, 100 * 2, 50, "minus", 2);
-createmenuBlock(20, 200, 100 * 2, 50, "times", 2);
-createmenuBlock(20, 260, 100 * 2, 50, "divide", 2);
-createmenuBlock(20, 320, 100, 50, "number", 2);
+menublocks.push(createmenuBlock(20, 80, 100 *2 , 50, "plus", 2));
+menublocks.push(createmenuBlock(20, 140, 100 * 2, 50, "minus", 2));
+menublocks.push(createmenuBlock(20, 200, 100 * 2, 50, "times", 2));
+menublocks.push(createmenuBlock(20, 260, 100 * 2, 50, "divide", 2));
+menublocks.push(createmenuBlock(20, 320, 100, 50, "number", 2));
 
 function getCenterX(block) {
     return block[BLOCK_X] + block[BLOCK_W] / 2.0;
@@ -109,10 +108,17 @@ function updatePosition(block, x, y) {
     block[BLOCK_ELEM].style.top = y + "px";
 }
 
+function updatePosition2(menublock, x, y) {
+    menublock[BLOCK_X] = x;
+    menublock[BLOCK_Y] = y;
+    menublock[BLOCK_ELEM].style.left = x + "px";
+    menublock[BLOCK_ELEM].style.top = y + "px";
+}
+
 // Event/Block
 
 function funBlockOnMouseDown2(menublock, event) {
-    const rect = block[BLOCK_ELEM].getBoundingClientRect();
+    const rect = menublock[BLOCK_ELEM].getBoundingClientRect();
     x_dragstart = event.pageX - rect.left;
     y_dragstart = event.pageY - rect.top;
     if (menublock[BLOCK_PARENT] != null) {
@@ -154,7 +160,7 @@ function funBlockOnMouseMove2(menublock, event) {
     const rect = menu.getBoundingClientRect();
     const x = Math.max(rect.left, Math.min(rect.right, event.pageX - x_dragstart));
     const y = Math.max(rect.top, Math.min(rect.bottom, event.pageY - y_dragstart));
-    updatePosition(block, x, y);
+    updatePosition2(block, x, y);
     event.preventDefault();
 }
 
