@@ -12,13 +12,13 @@ div#all {
 }
 
 div#menu {
-    width: 10%;
-    height: 60%;
+    width: 20%;
+    height: 80%;
     background-color: gray;
 }
 
 div#workspace {
-    width: 90%;
+    width: 80%;
     height: 100%;
 }
 
@@ -32,6 +32,8 @@ div#workspace {
 }
 
 .plus {
+    position: absolute;
+    cursor: move;
     text-align:center;
     background-color: royalblue;
 
@@ -41,6 +43,8 @@ div#workspace {
 }
 
 .minus {
+    position: absolute;
+    cursor: move;
     text-align:center;
     background-color: steelblue;
 
@@ -50,6 +54,8 @@ div#workspace {
 }
 
 .times {
+    position: absolute;
+    cursor: move;
     text-align:center;
     background-color: darkblue;
 /* テスト時に見やすくするため仮の枠線追加 */
@@ -59,6 +65,8 @@ div#workspace {
 }
 
 .waru {
+    position: absolute;
+    cursor: move;
     text-align:center;
     background-color: darkslateblue;
     /* テスト時に見やすくするため仮の枠線追加 */
@@ -68,6 +76,8 @@ div#workspace {
 }
 
 .number {
+    position: absolute;
+    cursor: move;
     text-align:center;
     background-color: mediumaquamarine;
 

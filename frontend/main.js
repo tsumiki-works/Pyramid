@@ -70,7 +70,7 @@ function createmenuBlock(x, y, w, h, t, n) {
     block.push(t);
     block.push(n);
     block.push(elem);
-    elem.onmousedown = event => funBlockOnMouseDown(menublock, event);
+    elem.onmousedown = event => funBlockOnMouseDown2(menublock, event);
     menu.appendChild(elem);
 
     menublock_num += 1;
@@ -78,11 +78,11 @@ function createmenuBlock(x, y, w, h, t, n) {
     return block;
 }
 
-createmenuBlock(20, 10, 100 *2 , 50, "plus", 2);
-createmenuBlock(20, 110, 100 * 2, 50, "minus", 2);
-createmenuBlock(20, 210, 100 * 2, 50, "times", 2);
-createmenuBlock(20, 310, 100 * 2, 50, "waru", 2);
-createmenuBlock(20, 410, 100, 50, "number", 2);
+createmenuBlock(20, 80, 100 *2 , 50, "plus", 2);
+createmenuBlock(20, 140, 100 * 2, 50, "minus", 2);
+createmenuBlock(20, 200, 100 * 2, 50, "times", 2);
+createmenuBlock(20, 260, 100 * 2, 50, "waru", 2);
+createmenuBlock(20, 320, 100, 50, "number", 2);
 
 
 function getCenterX(block) {
@@ -113,7 +113,19 @@ function updatePosition(block, x, y) {
 // Event/Block
 
 function funBlockOnMouseDown2(menublock, event) {
-
+    const rect = block[BLOCK_ELEM].getBoundingClientRect();
+    x_dragstart = event.pageX - rect.left;
+    y_dragstart = event.pageY - rect.top;
+    if (menublock[BLOCK_PARENT] != null) {
+        menunblock[BLOCK_PARENT][BLOCK_CHILDREN] = menublock[BLOCK_PARENT][BLOCK_CHILDREN].filter(n => n !== block);
+    }
+    menublock[BLOCK_PARENT] = null;
+    menublock[BLOCK_CHILDREN] = [];
+    listener_move = event => funBlockOnMouseMove2(menublock, event);
+    listener_up = event => funBlockOnMouseUp(menublock, event);
+    document.addEventListener("mousemove", listener_move, false);
+    document.addEventListener("mouseup", listener_up, false);
+    document.addEventListener("mouseleave", listener_up, false);
 }
 
 function funBlockOnMouseDown(block, event) {
@@ -134,6 +146,13 @@ function funBlockOnMouseDown(block, event) {
 
 function funBlockOnMouseMove(block, event) {
     const rect = workspace.getBoundingClientRect();
+    const x = Math.max(rect.left, Math.min(rect.right, event.pageX - x_dragstart));
+    const y = Math.max(rect.top, Math.min(rect.bottom, event.pageY - y_dragstart));
+    updatePosition(block, x, y);
+    event.preventDefault();
+}
+function funBlockOnMouseMove2(menublock, event) {
+    const rect = menu.getBoundingClientRect();
     const x = Math.max(rect.left, Math.min(rect.right, event.pageX - x_dragstart));
     const y = Math.max(rect.top, Math.min(rect.bottom, event.pageY - y_dragstart));
     updatePosition(block, x, y);
