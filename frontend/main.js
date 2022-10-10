@@ -77,11 +77,12 @@ function createmenuBlock(x, y, w, h, t, n) {
 
     return menublock;
 }
-menublocks.push(createmenuBlock(20, 80, 100 *2 , 50, "plus", 2));
-menublocks.push(createmenuBlock(20, 140, 100 * 2, 50, "minus", 2));
-menublocks.push(createmenuBlock(20, 200, 100 * 2, 50, "times", 2));
-menublocks.push(createmenuBlock(20, 260, 100 * 2, 50, "divide", 2));
-menublocks.push(createmenuBlock(20, 320, 100, 50, "number", 2));
+
+menublocks.push(createmenuBlock(10, 80, 100 *2 , 50, "plus", 2));
+menublocks.push(createmenuBlock(10, 140, 100 * 2, 50, "minus", 2));
+menublocks.push(createmenuBlock(10, 200, 100 * 2, 50, "times", 2));
+menublocks.push(createmenuBlock(10, 260, 100 * 2, 50, "divide", 2));
+menublocks.push(createmenuBlock(10, 320, 100, 50, "number", 2));
 
 function getCenterX(block) {
     return block[BLOCK_X] + block[BLOCK_W] / 2.0;
@@ -160,7 +161,7 @@ function funBlockOnMouseMove2(menublock, event) {
     const rect = menu.getBoundingClientRect();
     const x = Math.max(rect.left, Math.min(rect.right, event.pageX - x_dragstart));
     const y = Math.max(rect.top, Math.min(rect.bottom, event.pageY - y_dragstart));
-    updatePosition2(block, x, y);
+    updatePosition2(menublock, x, y);
     event.preventDefault();
 }
 
