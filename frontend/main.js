@@ -81,9 +81,8 @@ function createmenuBlock(x, y, w, h, t, n) {
 createmenuBlock(20, 80, 100 *2 , 50, "plus", 2);
 createmenuBlock(20, 140, 100 * 2, 50, "minus", 2);
 createmenuBlock(20, 200, 100 * 2, 50, "times", 2);
-createmenuBlock(20, 260, 100 * 2, 50, "waru", 2);
+createmenuBlock(20, 260, 100 * 2, 50, "divide", 2);
 createmenuBlock(20, 320, 100, 50, "number", 2);
-
 
 function getCenterX(block) {
     return block[BLOCK_X] + block[BLOCK_W] / 2.0;
@@ -117,7 +116,7 @@ function funBlockOnMouseDown2(menublock, event) {
     x_dragstart = event.pageX - rect.left;
     y_dragstart = event.pageY - rect.top;
     if (menublock[BLOCK_PARENT] != null) {
-        menunblock[BLOCK_PARENT][BLOCK_CHILDREN] = menublock[BLOCK_PARENT][BLOCK_CHILDREN].filter(n => n !== block);
+        menublock[BLOCK_PARENT][BLOCK_CHILDREN] = menublock[BLOCK_PARENT][BLOCK_CHILDREN].filter(n => n !== block);
     }
     menublock[BLOCK_PARENT] = null;
     menublock[BLOCK_CHILDREN] = [];
