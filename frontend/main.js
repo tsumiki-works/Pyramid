@@ -243,7 +243,7 @@ function funBlockOnMouseUp2(menublock, event) {
                 const y = 260;
                 updatePosition2(menublock, x, y);
             } else if(menublock[BLOCK_TYPE] == "number") {
-                blocks.push(createBlock(menublock[BLOCK_X], menublock[BLOCK_Y], 100, 50, "number", [0], 0));
+                blocks.push(createBlock(menublock[BLOCK_X], menublock[BLOCK_Y], 100, 50, "number", [document.forms["integer_form"].elements["integer_num"].value], 0));
                 const x = 10;
                 const y = 320;
                 updatePosition2(menublock, x, y);
@@ -379,8 +379,6 @@ window.onload = () => {
     generator.onclick = clickGenerator;
     enumerator.onclick = clickEnumerator;
     reset.onclick = clickReset;
-
-    document.getElementById("generator_integer").onclick = (_ => clickGenerator2(0, "integer", [[document.forms["integer_form"].elements["integer_num"].value]]));
 
     workspace.onmousedown = event => screenOnMouseClick(event);
 }
