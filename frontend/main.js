@@ -22,8 +22,11 @@ let y_dragstart = 0;
 let listener_move = null;
 let listener_up = null;
 
+let menublocks = [];
+
 // Temp variants for BLOCK_ID
 let block_num = 0;
+let menublock_num = 0;
 
 function createBlock(x, y, w, h, t, c, n) {
     const elem = document.createElement("div");
@@ -31,8 +34,9 @@ function createBlock(x, y, w, h, t, c, n) {
     elem.style.top = y + "px";
     elem.style.width = w + "px";
     elem.style.height = h + "px";
+    elem.classList.add(t);
     elem.innerText = c[0];
-    elem.classList.add("block");
+
     let block = [];
     block.push(x);
     block.push(y);
@@ -59,6 +63,39 @@ function createBlock(x, y, w, h, t, c, n) {
     return block;
 }
 
+function createmenuBlock(x, y, w, h, t, n) {
+    const elem = document.createElement("div");
+    elem.style.left = x + "px";
+    elem.style.top = y + "px";
+    elem.style.width = w + "px";
+    elem.style.height = h + "px";
+    elem.classList.add(t);
+    let menublock = [];
+    menublock.push(x);
+    menublock.push(y);
+    menublock.push(w);
+    menublock.push(h);
+    menublock.push(null);
+    menublock.push([]);
+    menublock.push(menublock_num);
+    menublock.push(t);
+    menublock.push([]);
+    menublock.push(n);
+    menublock.push(elem);
+    elem.onmousedown = event => funBlockOnMouseDown2(menublock, event);
+    menu.appendChild(elem);
+
+    menublock_num += 1;
+
+    return menublock;
+}
+
+menublocks.push(createmenuBlock(10, 80, 100 *2 , 50, "plus", 2));
+menublocks.push(createmenuBlock(10, 140, 100 * 2, 50, "minus", 2));
+menublocks.push(createmenuBlock(10, 200, 100 * 2, 50, "times", 2));
+menublocks.push(createmenuBlock(10, 260, 100 * 2, 50, "divide", 2));
+menublocks.push(createmenuBlock(10, 320, 100, 50, "number", 2));
+
 function getCenterX(block) {
     return block[BLOCK_X] + block[BLOCK_W] / 2.0;
 }
@@ -84,8 +121,14 @@ function updatePosition(block, x, y) {
     block[BLOCK_ELEM].style.top = y + "px";
 }
 
-// Event/Block
+function updatePosition2(menublock, x, y) {
+    menublock[BLOCK_X] = x;
+    menublock[BLOCK_Y] = y;
+    menublock[BLOCK_ELEM].style.left = x + "px";
+    menublock[BLOCK_ELEM].style.top = y + "px";
+}
 
+// Event/Block
 function funBlockOnMouseDown(block, event) {
     const rect = block[BLOCK_ELEM].getBoundingClientRect();
     x_dragstart = event.pageX - rect.left;
@@ -110,11 +153,34 @@ function funBlockOnMouseDown(block, event) {
     document.addEventListener("mouseleave", listener_up, false);
 }
 
+function funBlockOnMouseDown2(menublock, event) {
+    const rect = menublock[BLOCK_ELEM].getBoundingClientRect();
+    x_dragstart = event.pageX - rect.left;
+    y_dragstart = event.pageY - rect.top;
+    if (menublock[BLOCK_PARENT] != null) {
+        menublock[BLOCK_PARENT][BLOCK_CHILDREN] = menublock[BLOCK_PARENT][BLOCK_CHILDREN].filter(n => n !== block);
+    }
+/*    menublock[BLOCK_PARENT] = null;
+    menublock[BLOCK_CHILDREN] = []; */
+    listener_move = event => funBlockOnMouseMove2(menublock, event);
+    listener_up = event => funBlockOnMouseUp2(menublock, event);
+    document.addEventListener("mousemove", listener_move, false);
+    document.addEventListener("mouseup", listener_up, false);
+    document.addEventListener("mouseleave", listener_up, false);
+}
+
 function funBlockOnMouseMove(block, event) {
     const rect = workspace.getBoundingClientRect();
     const x = Math.max(rect.left, Math.min(rect.right, event.pageX - x_dragstart));
     const y = Math.max(rect.top, Math.min(rect.bottom, event.pageY - y_dragstart));
     updatePosition(block, x, y);
+    event.preventDefault();
+}
+function funBlockOnMouseMove2(menublock, event) {
+    const rect = all.getBoundingClientRect();
+    const x = Math.max(rect.left, Math.min(rect.right, event.pageX - x_dragstart));
+    const y = Math.max(rect.top, Math.min(rect.bottom, event.pageY - y_dragstart));
+    updatePosition2(menublock, x, y);
     event.preventDefault();
 }
 
@@ -143,6 +209,45 @@ function funBlockOnMouseUp(block, event) {
             }
         }
     }
+    document.removeEventListener("mousemove", listener_move, false);
+    document.removeEventListener("mouseup", listener_up, false);
+    document.removeEventListener("mouseleave", listener_up, false);
+    listener_move = null;
+    listener_up = null;
+}
+
+function funBlockOnMouseUp2(menublock, event) {
+        if (menublock[BLOCK_X] > 224 || menublock[BLOCK_Y] > 800 ) {
+            if (menublock[BLOCK_TYPE] == "plus") {
+                blocks.push(createBlock(menublock[BLOCK_X], menublock[BLOCK_Y], 100 * 2, 50, "plus", ["plus"], 2));
+                const x = 10;
+                const y = 80;
+                updatePosition2(menublock, x, y);
+                event.preventDefault();
+            } else if(menublock[BLOCK_TYPE] == "minus") {
+                blocks.push(createBlock(menublock[BLOCK_X], menublock[BLOCK_Y], 100 * 2, 50, "minus", ["minus"], 2));
+                const x = 10;
+                const y = 140;
+                updatePosition2(menublock, x, y);
+                event.preventDefault();
+            } else if(menublock[BLOCK_TYPE] == "times") {
+                blocks.push(createBlock(menublock[BLOCK_X], menublock[BLOCK_Y], 100 * 2, 50, "times", ["times"], 2));
+                const x = 10;
+                const y = 200;
+                updatePosition2(menublock, x, y);
+                event.preventDefault();
+            } else if(menublock[BLOCK_TYPE] == "divide") {
+                blocks.push(createBlock(menublock[BLOCK_X], menublock[BLOCK_Y], 100 * 2, 50, "divide", ["divide"], 2));
+                const x = 10;
+                const y = 260;
+                updatePosition2(menublock, x, y);
+            } else if(menublock[BLOCK_TYPE] == "number") {
+                blocks.push(createBlock(menublock[BLOCK_X], menublock[BLOCK_Y], 100, 50, "number", [0], 0));
+                const x = 10;
+                const y = 320;
+                updatePosition2(menublock, x, y);
+            }
+        }
     document.removeEventListener("mousemove", listener_move, false);
     document.removeEventListener("mouseup", listener_up, false);
     document.removeEventListener("mouseleave", listener_up, false);

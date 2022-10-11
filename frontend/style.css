@@ -7,18 +7,18 @@ body {
 
 div#all {
     width: 100%;
-    height: 100%;
+    height: 92%;
     display: flex;
 }
 
 div#menu {
-    width: 10%;
-    height: 100%;
+    width: 224px;
+    height: 80%;
     background-color: gray;
 }
 
 div#workspace {
-    width: 90%;
+    width: 80%;
     height: 100%;
 }
 
@@ -35,9 +35,63 @@ div#runspace {
 .block {
     position: absolute;
     cursor: move;
+    background-color: royalblue;
+    border-color: darkslategray;
     color: white;
     text-align: center;
-    background-color: blue;
+/* テスト時に見やすくするため仮の枠線追加 */
+    border-style: solid;
+    border-width: 1.5px;
+}
+
+.plus {
+    position: absolute;
+    cursor: move;
+    text-align:center;
+    background-color: royalblue;
+    border-color: darkslategray;
+    border-style: solid;
+    border-width: 1.5px;
+}
+
+.minus {
+    position: absolute;
+    cursor: move;
+    text-align:center;
+    background-color: steelblue;
+    border-color: darkslategray;
+    border-style: solid;
+    border-width: 1.5px;
+}
+
+.times {
+    position: absolute;
+    cursor: move;
+    text-align:center;
+    background-color: darkblue;
+    border-color: darkslategray;
+    border-style: solid;
+    border-width: 1.5px;
+}
+
+.divide {
+    position: absolute;
+    cursor: move;
+    text-align:center;
+    background-color: darkslateblue;
+    border-color: darkslategray;
+    border-style: solid;
+    border-width: 1.5px;
+}
+
+.number {
+    position: absolute;
+    cursor: move;
+    text-align:center;
+    background-color: mediumaquamarine;
+    border-color: darkslategray;
+    border-style: solid;
+    border-width: 1.5px;
 }
 
 #runner {
