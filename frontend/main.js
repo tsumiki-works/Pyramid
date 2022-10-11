@@ -68,6 +68,7 @@ function createmenuBlock(x, y, w, h, t, n) {
     menublock.push([]);
     menublock.push(menublock_num);
     menublock.push(t);
+    menublock.push([]);
     menublock.push(n);
     menublock.push(elem);
     elem.onmousedown = event => funBlockOnMouseDown2(menublock, event);
@@ -201,30 +202,30 @@ function funBlockOnMouseUp(block, event) {
 function funBlockOnMouseUp2(menublock, event) {
         if (menublock[BLOCK_X] > 224 || menublock[BLOCK_Y] > 800 ) {
             if (menublock[BLOCK_TYPE] == "plus") {
-                blocks.push(createBlock(menublock[BLOCK_X], menublock[BLOCK_Y], 100 * 2, 50, "plus", 2));
+                blocks.push(createBlock(menublock[BLOCK_X], menublock[BLOCK_Y], 100 * 2, 50, "plus", ["plus"], 2));
                 const x = 10;
                 const y = 80;
                 updatePosition2(menublock, x, y);
                 event.preventDefault();
             } else if(menublock[BLOCK_TYPE] == "minus") {
-                blocks.push(createBlock(menublock[BLOCK_X], menublock[BLOCK_Y], 100 * 2, 50, "minus", 2));
+                blocks.push(createBlock(menublock[BLOCK_X], menublock[BLOCK_Y], 100 * 2, 50, "minus", ["minus"], 2));
                 const x = 10;
                 const y = 140;
                 updatePosition2(menublock, x, y);
                 event.preventDefault();
             } else if(menublock[BLOCK_TYPE] == "times") {
-                blocks.push(createBlock(menublock[BLOCK_X], menublock[BLOCK_Y], 100 * 2, 50, "times", 2));
+                blocks.push(createBlock(menublock[BLOCK_X], menublock[BLOCK_Y], 100 * 2, 50, "times", ["times"], 2));
                 const x = 10;
                 const y = 200;
                 updatePosition2(menublock, x, y);
                 event.preventDefault();
             } else if(menublock[BLOCK_TYPE] == "divide") {
-                blocks.push(createBlock(menublock[BLOCK_X], menublock[BLOCK_Y], 100 * 2, 50, "divide", 2));
+                blocks.push(createBlock(menublock[BLOCK_X], menublock[BLOCK_Y], 100 * 2, 50, "divide", ["divide"], 2));
                 const x = 10;
                 const y = 260;
                 updatePosition2(menublock, x, y);
             } else if(menublock[BLOCK_TYPE] == "number") {
-                blocks.push(createBlock(menublock[BLOCK_X], menublock[BLOCK_Y], 100, 50, "number", 2));
+                blocks.push(createBlock(menublock[BLOCK_X], menublock[BLOCK_Y], 100, 50, "number", [0], 0));
                 const x = 10;
                 const y = 320;
                 updatePosition2(menublock, x, y);
