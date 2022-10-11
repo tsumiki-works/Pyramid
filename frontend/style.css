@@ -27,6 +27,7 @@ div#workspace {
     cursor: move;
     background-color: royalblue;
     border-color: darkslategray;
+/* テスト時に見やすくするため仮の枠線追加 */
     border-style: solid;
     border-width: 1.5px;
 }
@@ -36,7 +37,6 @@ div#workspace {
     cursor: move;
     text-align:center;
     background-color: royalblue;
-
     border-color: darkslategray;
     border-style: solid;
     border-width: 1.5px;
@@ -47,7 +47,6 @@ div#workspace {
     cursor: move;
     text-align:center;
     background-color: steelblue;
-
     border-color: darkslategray;
     border-style: solid;
     border-width: 1.5px;
@@ -58,7 +57,6 @@ div#workspace {
     cursor: move;
     text-align:center;
     background-color: darkblue;
-/* テスト時に見やすくするため仮の枠線追加 */
     border-color: darkslategray;
     border-style: solid;
     border-width: 1.5px;
@@ -69,7 +67,6 @@ div#workspace {
     cursor: move;
     text-align:center;
     background-color: darkslateblue;
-    /* テスト時に見やすくするため仮の枠線追加 */
     border-color: darkslategray;
     border-style: solid;
     border-width: 1.5px;
@@ -80,7 +77,6 @@ div#workspace {
     cursor: move;
     text-align:center;
     background-color: mediumaquamarine;
-
     border-color: darkslategray;
     border-style: solid;
     border-width: 1.5px;

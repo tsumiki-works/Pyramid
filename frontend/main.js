@@ -117,23 +117,6 @@ function updatePosition2(menublock, x, y) {
 }
 
 // Event/Block
-
-function funBlockOnMouseDown2(menublock, event) {
-    const rect = menublock[BLOCK_ELEM].getBoundingClientRect();
-    x_dragstart = event.pageX - rect.left;
-    y_dragstart = event.pageY - rect.top;
-    if (menublock[BLOCK_PARENT] != null) {
-        menublock[BLOCK_PARENT][BLOCK_CHILDREN] = menublock[BLOCK_PARENT][BLOCK_CHILDREN].filter(n => n !== block);
-    }
-    menublock[BLOCK_PARENT] = null;
-    menublock[BLOCK_CHILDREN] = [];
-    listener_move = event => funBlockOnMouseMove2(menublock, event);
-    listener_up = event => funBlockOnMouseUp(menublock, event);
-    document.addEventListener("mousemove", listener_move, false);
-    document.addEventListener("mouseup", listener_up, false);
-    document.addEventListener("mouseleave", listener_up, false);
-}
-
 function funBlockOnMouseDown(block, event) {
     const rect = block[BLOCK_ELEM].getBoundingClientRect();
     x_dragstart = event.pageX - rect.left;
@@ -150,6 +133,22 @@ function funBlockOnMouseDown(block, event) {
     document.addEventListener("mouseleave", listener_up, false);
 }
 
+function funBlockOnMouseDown2(menublock, event) {
+    const rect = menublock[BLOCK_ELEM].getBoundingClientRect();
+    x_dragstart = event.pageX - rect.left;
+    y_dragstart = event.pageY - rect.top;
+    if (menublock[BLOCK_PARENT] != null) {
+        menublock[BLOCK_PARENT][BLOCK_CHILDREN] = menublock[BLOCK_PARENT][BLOCK_CHILDREN].filter(n => n !== block);
+    }
+/*    menublock[BLOCK_PARENT] = null;
+    menublock[BLOCK_CHILDREN] = []; */
+    listener_move = event => funBlockOnMouseMove2(menublock, event);
+    listener_up = event => funBlockOnMouseUp2(menublock, event);
+    document.addEventListener("mousemove", listener_move, false);
+    document.addEventListener("mouseup", listener_up, false);
+    document.addEventListener("mouseleave", listener_up, false);
+}
+
 function funBlockOnMouseMove(block, event) {
     const rect = workspace.getBoundingClientRect();
     const x = Math.max(rect.left, Math.min(rect.right, event.pageX - x_dragstart));
@@ -158,7 +157,7 @@ function funBlockOnMouseMove(block, event) {
     event.preventDefault();
 }
 function funBlockOnMouseMove2(menublock, event) {
-    const rect = menu.getBoundingClientRect();
+    const rect = all.getBoundingClientRect();
     const x = Math.max(rect.left, Math.min(rect.right, event.pageX - x_dragstart));
     const y = Math.max(rect.top, Math.min(rect.bottom, event.pageY - y_dragstart));
     updatePosition2(menublock, x, y);
@@ -199,6 +198,26 @@ function funBlockOnMouseUp(block, event) {
     listener_up = null;
 }
 
+function funBlockOnMouseUp2(menublock, event) {
+        if (menublock[BLOCK_X] > 224) {
+            if (menublock[BLOCK_TYPE] == "plus") {
+                menublocks.push(createmenuBlock(10, 80, 100 *2 , 50, "plus", 2));
+            } else if(menublock[BLOCK_TYPE] == "minus") {
+                menublocks.push(createmenuBlock(10, 140, 100 * 2, 50, "minus", 2));
+            } else if(menublock[BLOCK_TYPE] == "times") {
+                menublocks.push(createmenuBlock(10, 200, 100 * 2, 50, "times", 2));
+            } else if(menublock[BLOCK_TYPE] == "divide") {
+                menublocks.push(createmenuBlock(10, 260, 100 * 2, 50, "divide", 2));
+            } else if(menublock[BLOCK_TYPE] == "number") {
+                menublocks.push(createmenuBlock(10, 320, 100, 50, "number", 2));
+            }
+        }
+    document.removeEventListener("mousemove", listener_move, false);
+    document.removeEventListener("mouseup", listener_up, false);
+    document.removeEventListener("mouseleave", listener_up, false);
+    listener_move = null;
+    listener_up = null;
+}
 // Event/workspace
 
 function screenOnMouseClick(event) {
