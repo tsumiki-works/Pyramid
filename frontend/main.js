@@ -70,6 +70,7 @@ function createmenuBlock(x, y, w, h, t, n) {
     elem.style.width = w + "px";
     elem.style.height = h + "px";
     elem.classList.add(t);
+    elem.innerHTML = t;
     let menublock = [];
     menublock.push(x);
     menublock.push(y);
@@ -379,8 +380,6 @@ window.onload = () => {
     enumerator.onclick = clickEnumerator;
     reset.onclick = clickReset;
 
-    //temp buttons
-    document.getElementById("generator_add").onclick = (_ => clickGenerator2(2, "add", [["+"]]));
     document.getElementById("generator_integer").onclick = (_ => clickGenerator2(0, "integer", [[document.forms["integer_form"].elements["integer_num"].value]]));
 
     workspace.onmousedown = event => screenOnMouseClick(event);
