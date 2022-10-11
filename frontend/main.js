@@ -32,7 +32,7 @@ function createBlock(x, y, w, h, t, n) {
     elem.style.top = y + "px";
     elem.style.width = w + "px";
     elem.style.height = h + "px";
-    elem.classList.add("block");
+    elem.classList.add(t);
     let block = [];
     block.push(x);
     block.push(y);
@@ -199,17 +199,35 @@ function funBlockOnMouseUp(block, event) {
 }
 
 function funBlockOnMouseUp2(menublock, event) {
-        if (menublock[BLOCK_X] > 224) {
+        if (menublock[BLOCK_X] > 224 || menublock[BLOCK_Y] > 800 ) {
             if (menublock[BLOCK_TYPE] == "plus") {
-                menublocks.push(createmenuBlock(10, 80, 100 *2 , 50, "plus", 2));
+                blocks.push(createBlock(menublock[BLOCK_X], menublock[BLOCK_Y], 100 * 2, 50, "plus", 2));
+                const x = 10;
+                const y = 80;
+                updatePosition2(menublock, x, y);
+                event.preventDefault();
             } else if(menublock[BLOCK_TYPE] == "minus") {
-                menublocks.push(createmenuBlock(10, 140, 100 * 2, 50, "minus", 2));
+                blocks.push(createBlock(menublock[BLOCK_X], menublock[BLOCK_Y], 100 * 2, 50, "minus", 2));
+                const x = 10;
+                const y = 140;
+                updatePosition2(menublock, x, y);
+                event.preventDefault();
             } else if(menublock[BLOCK_TYPE] == "times") {
-                menublocks.push(createmenuBlock(10, 200, 100 * 2, 50, "times", 2));
+                blocks.push(createBlock(menublock[BLOCK_X], menublock[BLOCK_Y], 100 * 2, 50, "times", 2));
+                const x = 10;
+                const y = 200;
+                updatePosition2(menublock, x, y);
+                event.preventDefault();
             } else if(menublock[BLOCK_TYPE] == "divide") {
-                menublocks.push(createmenuBlock(10, 260, 100 * 2, 50, "divide", 2));
+                blocks.push(createBlock(menublock[BLOCK_X], menublock[BLOCK_Y], 100 * 2, 50, "divide", 2));
+                const x = 10;
+                const y = 260;
+                updatePosition2(menublock, x, y);
             } else if(menublock[BLOCK_TYPE] == "number") {
-                menublocks.push(createmenuBlock(10, 320, 100, 50, "number", 2));
+                blocks.push(createBlock(menublock[BLOCK_X], menublock[BLOCK_Y], 100, 50, "number", 2));
+                const x = 10;
+                const y = 320;
+                updatePosition2(menublock, x, y);
             }
         }
     document.removeEventListener("mousemove", listener_move, false);
@@ -265,7 +283,7 @@ function getSquareDistance(x1, x2, y1, y2) {
 
 // Button
 function clickGenerator() {
-    blocks.push(createBlock(200, 100, 100, 50, "normal", 1));
+    blocks.push(createBlock(200, 100, 100, 50, "block", 1));
 }
 
 function clickGenerator2(n) {
