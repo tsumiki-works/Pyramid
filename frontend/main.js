@@ -70,6 +70,7 @@ function createmenuBlock(x, y, w, h, t, n) {
     elem.style.width = w + "px";
     elem.style.height = h + "px";
     elem.classList.add(t);
+    elem.innerHTML = t;
     let menublock = [];
     menublock.push(x);
     menublock.push(y);
@@ -242,7 +243,7 @@ function funBlockOnMouseUp2(menublock, event) {
                 const y = 260;
                 updatePosition2(menublock, x, y);
             } else if(menublock[BLOCK_TYPE] == "number") {
-                blocks.push(createBlock(menublock[BLOCK_X], menublock[BLOCK_Y], 100, 50, "number", [0], 0));
+                blocks.push(createBlock(menublock[BLOCK_X], menublock[BLOCK_Y], 100, 50, "number", [document.forms["integer_form"].elements["integer_num"].value], 0));
                 const x = 10;
                 const y = 320;
                 updatePosition2(menublock, x, y);
@@ -325,7 +326,7 @@ function getSquareDistance(x1, x2, y1, y2) {
 
 // Button
 function clickGenerator() {
-    blocks.push(createBlock(200, 100, 100, 50, "null", [["null"]], 1));
+    blocks.push(createBlock(200, 100, 100, 50, "null", ["null"], 1));
 }
 
 function clickGenerator2(n, t, c) {
@@ -378,10 +379,6 @@ window.onload = () => {
     generator.onclick = clickGenerator;
     enumerator.onclick = clickEnumerator;
     reset.onclick = clickReset;
-
-    //temp buttons
-    document.getElementById("generator_add").onclick = (_ => clickGenerator2(2, "add", [["+"]]));
-    document.getElementById("generator_integer").onclick = (_ => clickGenerator2(0, "integer", [[document.forms["integer_form"].elements["integer_num"].value]]));
 
     workspace.onmousedown = event => screenOnMouseClick(event);
 }
