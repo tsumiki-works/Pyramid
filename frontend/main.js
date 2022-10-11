@@ -326,7 +326,7 @@ function getSquareDistance(x1, x2, y1, y2) {
 
 // Button
 function clickGenerator() {
-    blocks.push(createBlock(200, 100, 100, 50, "null", [["null"]], 1));
+    blocks.push(createBlock(200, 100, 100, 50, "null", ["null"], 1));
 }
 
 function clickGenerator2(n, t, c) {
