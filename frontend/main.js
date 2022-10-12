@@ -32,7 +32,7 @@ function createBlock(x, y, w, h, t, c, n) {
     const elem = document.createElement("div");
     elem.style.left = x + "px";
     elem.style.top = y + "px";
-    elem.style.width = w + "px";
+    elem.style.width = (n == 0 ? w : w * n - 50) + "px";
     elem.style.height = h + "px";
     elem.classList.add(t);
     elem.innerText = c[0];
@@ -40,12 +40,12 @@ function createBlock(x, y, w, h, t, c, n) {
     let block = [];
     block.push(x);
     block.push(y);
-    block.push(w);
+    block.push(n == 0 ? w : w * n - 50);
     block.push(h);
     block.push(null);
-    block.push([]);
+    block.push(new Array(n));
     block.push(n);
-    block.push([]);
+    block.push(getSplitLocalCenterX(n));
     block.push(block_num);
     block.push(t);
     block.push(c);
@@ -68,14 +68,14 @@ function createmenuBlock(x, y, w, h, t, c, n) {
     const elem = document.createElement("div");
     elem.style.left = x + "px";
     elem.style.top = y + "px";
-    elem.style.width = w + "px";
+    elem.style.width = (n == 0 ? w : w * n - 50) + "px";
     elem.style.height = h + "px";
     elem.classList.add(t);
     elem.innerHTML = c[0];
     let menublock = [];
     menublock.push(x);
     menublock.push(y);
-    menublock.push(w);
+    menublock.push(n == 0 ? w : w * n - 50);
     menublock.push(h);
     menublock.push(null);
     menublock.push([]);
@@ -93,11 +93,11 @@ function createmenuBlock(x, y, w, h, t, c, n) {
     return menublock;
 }
 
-menublocks.push(createmenuBlock(10, 80, 100 *2 , 50, "plus", ["+"], 2));
-menublocks.push(createmenuBlock(10, 140, 100 * 2, 50, "minus", ["-"], 2));
-menublocks.push(createmenuBlock(10, 200, 100 * 2, 50, "times", ["*"], 2));
-menublocks.push(createmenuBlock(10, 260, 100 * 2, 50, "divide", ["/"], 2));
-menublocks.push(createmenuBlock(10, 320, 100, 50, "number", ["number"], 2));
+menublocks.push(createmenuBlock(10, 80, 100, 50, "plus", ["+"], 2));
+menublocks.push(createmenuBlock(10, 140, 100, 50, "minus", ["-"], 2));
+menublocks.push(createmenuBlock(10, 200, 100, 50, "times", ["*"], 2));
+menublocks.push(createmenuBlock(10, 260, 100, 50, "divide", ["/"], 2));
+menublocks.push(createmenuBlock(10, 320, 100, 50, "number", ["number"], 0));
 
 function getCenterX(block) {
     return block[BLOCK_X] + block[BLOCK_W] / 2.0;
@@ -108,13 +108,14 @@ function getCenterY(block) {
 }
 
 //n: input split, idx: index
-function getSplitCenterX(block, idx) {
-    let ret = -1;
-    let n = block[BLOCK_CHILDREN_NUM];
-    if(n > 0 && idx < n){
-        ret = block[BLOCK_X] + (((block[BLOCK_W] / (2 * n))) * ((2 * idx) + 1));
+function getSplitLocalCenterX(n) {
+    let ret = [];
+    for(let idx = 0; idx < n; ++idx){
+        if(n > 0){
+            ret.push(25 + 100 * idx);
+        }
     }
-    return ret 
+    return ret
 }
 
 function updatePosition(block, x, y) {
@@ -131,13 +132,22 @@ function updatePosition2(menublock, x, y) {
     menublock[BLOCK_ELEM].style.top = y + "px";
 }
 
+function expandBlockWidth(w, n){
+
+}
+
+function shrinkBlockWidth(w, n){
+    
+}
+
 // Event/Block
 function funBlockOnMouseDown(block, event) {
     const rect = block[BLOCK_ELEM].getBoundingClientRect();
     x_dragstart = event.pageX - rect.left;
     y_dragstart = event.pageY - rect.top;
+    //delete me from parent's children
     if (block[BLOCK_PARENT] != null) {
-        block[BLOCK_PARENT][BLOCK_CHILDREN] = block[BLOCK_PARENT][BLOCK_CHILDREN].filter(n => n !== block);
+        block[BLOCK_PARENT][BLOCK_CHILDREN][block[BLOCK_PARENT][BLOCK_CHILDREN].findIndex(n => n === block)] = null;
     }
     //delete child's parent
     for(const b of blocks){
@@ -146,7 +156,7 @@ function funBlockOnMouseDown(block, event) {
         }
     }
     block[BLOCK_PARENT] = null;
-    block[BLOCK_CHILDREN] = [];
+    block[BLOCK_CHILDREN] = new Array(block[BLOCK_CHILDREN_NUM]);
     
 
     listener_move = event => funBlockOnMouseMove(block, event);
@@ -198,17 +208,23 @@ function funBlockOnMouseUp(block, event) {
         if (getCenterY(block) > getCenterY(blocks[i])) {
             // Search nearest parent's connection
             for(let j = 0; j < blocks[i][BLOCK_CHILDREN_NUM]; ++j){
-                if ((getCenterX(block) - getSplitCenterX(blocks[i], j)) ** 2 >= Math.min(block[BLOCK_W] / 2.0, blocks[i][BLOCK_W] / 2.0) ** 2)
+                if ((getCenterX(block) - blocks[i][BLOCK_CHILDREN_CONNECTIONS][j] - blocks[i][BLOCK_X]) ** 2 >= Math.min(block[BLOCK_W] / 2.0, blocks[i][BLOCK_W] / 2.0) ** 2 || blocks[i][BLOCK_CHILDREN][j] != null) 
                     continue;
-                updatePosition(block, getSplitCenterX(blocks[i], j) - block[BLOCK_W] / 2.0, blocks[i][BLOCK_Y] + blocks[i][BLOCK_H]);
-                blocks[i][BLOCK_CHILDREN].push(block);
+                //fit block size
+                if(block[BLOCK_CHILDREN_NUM] > 1){
+                    //Non-Implement
+                    updatePosition(block, blocks[i][BLOCK_CHILDREN_CONNECTIONS][j] + blocks[i][BLOCK_X] - block[BLOCK_W] / 2.0, blocks[i][BLOCK_Y] + blocks[i][BLOCK_H]);
+                }else{
+                    updatePosition(block, blocks[i][BLOCK_CHILDREN_CONNECTIONS][j] + blocks[i][BLOCK_X] - block[BLOCK_W] / 2.0, blocks[i][BLOCK_Y] + blocks[i][BLOCK_H]);
+                }
+                blocks[i][BLOCK_CHILDREN][j] = block;
                 block[BLOCK_PARENT] = blocks[i];
             }
         // (parent, child) = (block, block[i])
         } else {
             if((getCenterX(block) - getCenterX(blocks[i])) ** 2 <= Math.min(block[BLOCK_W] / 2.0, blocks[i][BLOCK_W] / 2.0) ** 2 && block[BLOCK_CHILDREN_NUM] != 0){
                 updatePosition(block, getCenterX(blocks[i]) - block[BLOCK_W] / 2.0, blocks[i][BLOCK_Y] - block[BLOCK_H]);
-                block[BLOCK_CHILDREN].push(blocks[i]);
+                block[BLOCK_CHILDREN][0] = blocks[i];
                 blocks[i][BLOCK_PARENT] = block;
             }
         }
@@ -223,25 +239,25 @@ function funBlockOnMouseUp(block, event) {
 function funBlockOnMouseUp2(menublock, event) {
         if (menublock[BLOCK_X] > 224 || menublock[BLOCK_Y] > 800 ) {
             if (menublock[BLOCK_TYPE] == "plus") {
-                blocks.push(createBlock(menublock[BLOCK_X], menublock[BLOCK_Y], 100 * 2, 50, "plus", ["+"], 2));
+                blocks.push(createBlock(menublock[BLOCK_X], menublock[BLOCK_Y], 100, 50, "plus", ["+"], 2));
                 const x = 10;
                 const y = 80;
                 updatePosition2(menublock, x, y);
                 event.preventDefault();
             } else if(menublock[BLOCK_TYPE] == "minus") {
-                blocks.push(createBlock(menublock[BLOCK_X], menublock[BLOCK_Y], 100 * 2, 50, "minus", ["-"], 2));
+                blocks.push(createBlock(menublock[BLOCK_X], menublock[BLOCK_Y], 100, 50, "minus", ["-"], 2));
                 const x = 10;
                 const y = 140;
                 updatePosition2(menublock, x, y);
                 event.preventDefault();
             } else if(menublock[BLOCK_TYPE] == "times") {
-                blocks.push(createBlock(menublock[BLOCK_X], menublock[BLOCK_Y], 100 * 2, 50, "times", ["*"], 2));
+                blocks.push(createBlock(menublock[BLOCK_X], menublock[BLOCK_Y], 100, 50, "times", ["*"], 2));
                 const x = 10;
                 const y = 200;
                 updatePosition2(menublock, x, y);
                 event.preventDefault();
             } else if(menublock[BLOCK_TYPE] == "divide") {
-                blocks.push(createBlock(menublock[BLOCK_X], menublock[BLOCK_Y], 100 * 2, 50, "divide", ["/"], 2));
+                blocks.push(createBlock(menublock[BLOCK_X], menublock[BLOCK_Y], 100, 50, "divide", ["/"], 2));
                 const x = 10;
                 const y = 260;
                 updatePosition2(menublock, x, y);
@@ -262,12 +278,15 @@ function funBlockOnMouseUp2(menublock, event) {
 function createBlockHoverDebug(event, block){
     debugField = document.createElement("div");
     debugField.id = "debug";
-    debugField.style.left = (block[BLOCK_X] + block[BLOCK_W] + 10) + "px";
-    debugField.style.top = (block[BLOCK_Y] - 10) + "px";
+    debugField.style.left = (block[BLOCK_X] + block[BLOCK_W] + 20) + "px";
+    debugField.style.top = (block[BLOCK_Y] - 20) + "px";
     debugField.style.position = "absolute";
     debugField.style.backgroundColor = "#7f7f7f";
     debugField.style.opacity = 0.75;
-    debugField.innerText = "id: "+ block[BLOCK_ID] + ", type: " + block[BLOCK_TYPE] +"\nContent_NAME: "+block[BLOCK_CONTENT][0];
+    let t = "id: "+ block[BLOCK_ID] + ", type: " + block[BLOCK_TYPE] + "\n Content_NAME: " + block[BLOCK_CONTENT][0];
+    t += "\nleft: "+ block[BLOCK_X] +", top: " + block[BLOCK_Y] + "\n";
+    t += "width: " + block[BLOCK_W] + ", height: " + block[BLOCK_H];
+    debugField.innerText = t;
     workspace.appendChild(debugField);
 }
 
@@ -353,9 +372,11 @@ function clickEnumerator() {
         function enumerate(array) {
             s += "("
             for (const block of array){
-                s += block[BLOCK_CONTENT][0] + " ";
-                if(block[BLOCK_CHILDREN].length > 0){
-                    enumerate(block[BLOCK_CHILDREN]);
+                if(block != null){
+                    s += block[BLOCK_CONTENT][0] + " ";
+                    if(block[BLOCK_CHILDREN].length > 0){
+                        enumerate(block[BLOCK_CHILDREN]);
+                    }
                 }
             }
             s += ")";
