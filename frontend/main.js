@@ -138,8 +138,9 @@ function funBlockOnMouseDown(block, event) {
     const rect = block[BLOCK_ELEM].getBoundingClientRect();
     x_dragstart = event.pageX - rect.left;
     y_dragstart = event.pageY - rect.top;
+    //delete me from parent's children
     if (block[BLOCK_PARENT] != null) {
-        block[BLOCK_PARENT][BLOCK_CHILDREN] = block[BLOCK_PARENT][BLOCK_CHILDREN].filter(n => n !== block);
+        block[BLOCK_PARENT][BLOCK_CHILDREN][block[BLOCK_PARENT][BLOCK_CHILDREN].findIndex(n => n === block)] = null;
     }
     //delete child's parent
     for(const b of blocks){
