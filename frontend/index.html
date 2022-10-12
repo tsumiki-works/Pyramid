@@ -30,22 +30,6 @@
         </div>
     </div>
     <script src="main.js"></script>
-    <script>
-        var request = new XMLHttpRequest();
-        request.open('POST', "http://localhost:7878");
-        request.onreadystatechange = function () {
-            if (request.readyState != 4) {
-                // リクエスト中
-            } else if (request.status != 200) {
-                // 失敗
-            } else {
-                // 送信成功
-                // var result = request.responseText;
-            }
-        };
-        request.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
-        request.send("hi");
-    </script>
 </body>
 
 </html>
