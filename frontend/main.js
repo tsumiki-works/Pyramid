@@ -1,6 +1,5 @@
 // Global constants
 const workspace = document.getElementById("workspace");
-const generator = document.getElementById("generator");
 const enumerator = document.getElementById("enumerator");
 const reset = document.getElementById("reset");
 const BLOCK_X = 0;
@@ -9,11 +8,12 @@ const BLOCK_W = 2;
 const BLOCK_H = 3;
 const BLOCK_PARENT = 4;
 const BLOCK_CHILDREN = 5;
-const BLOCK_ID = 6;
-const BLOCK_TYPE = 7;
-const BLOCK_CONTENT = 8;
-const BLOCK_CHILDREN_NUM = 9;
-const BLOCK_ELEM = 10;
+const BLOCK_CHILDREN_NUM = 6;
+const BLOCK_CHILDREN_CONNECTIONS = 7;
+const BLOCK_ID = 8;
+const BLOCK_TYPE = 9;
+const BLOCK_CONTENT = 10;
+const BLOCK_ELEM = 11;
 
 // Global variants
 let blocks = [];
@@ -44,10 +44,11 @@ function createBlock(x, y, w, h, t, c, n) {
     block.push(h);
     block.push(null);
     block.push([]);
+    block.push(n);
+    block.push([]);
     block.push(block_num);
     block.push(t);
     block.push(c);
-    block.push(n);
     block.push(elem);
     elem.onmousedown = event => funBlockOnMouseDown(block, event);
     elem.addEventListener('mouseover', (event) => {
@@ -63,14 +64,14 @@ function createBlock(x, y, w, h, t, c, n) {
     return block;
 }
 
-function createmenuBlock(x, y, w, h, t, n) {
+function createmenuBlock(x, y, w, h, t, c, n) {
     const elem = document.createElement("div");
     elem.style.left = x + "px";
     elem.style.top = y + "px";
     elem.style.width = w + "px";
     elem.style.height = h + "px";
     elem.classList.add(t);
-    elem.innerHTML = t;
+    elem.innerHTML = c[0];
     let menublock = [];
     menublock.push(x);
     menublock.push(y);
@@ -78,10 +79,11 @@ function createmenuBlock(x, y, w, h, t, n) {
     menublock.push(h);
     menublock.push(null);
     menublock.push([]);
+    menublock.push(n);
+    menublock.push([]);
     menublock.push(menublock_num);
     menublock.push(t);
-    menublock.push([]);
-    menublock.push(n);
+    menublock.push(c[0]);
     menublock.push(elem);
     elem.onmousedown = event => funBlockOnMouseDown2(menublock, event);
     menu.appendChild(elem);
@@ -91,11 +93,11 @@ function createmenuBlock(x, y, w, h, t, n) {
     return menublock;
 }
 
-menublocks.push(createmenuBlock(10, 80, 100 *2 , 50, "plus", 2));
-menublocks.push(createmenuBlock(10, 140, 100 * 2, 50, "minus", 2));
-menublocks.push(createmenuBlock(10, 200, 100 * 2, 50, "times", 2));
-menublocks.push(createmenuBlock(10, 260, 100 * 2, 50, "divide", 2));
-menublocks.push(createmenuBlock(10, 320, 100, 50, "number", 2));
+menublocks.push(createmenuBlock(10, 80, 100 *2 , 50, "plus", ["+"], 2));
+menublocks.push(createmenuBlock(10, 140, 100 * 2, 50, "minus", ["-"], 2));
+menublocks.push(createmenuBlock(10, 200, 100 * 2, 50, "times", ["*"], 2));
+menublocks.push(createmenuBlock(10, 260, 100 * 2, 50, "divide", ["/"], 2));
+menublocks.push(createmenuBlock(10, 320, 100, 50, "number", ["number"], 2));
 
 function getCenterX(block) {
     return block[BLOCK_X] + block[BLOCK_W] / 2.0;
@@ -202,6 +204,7 @@ function funBlockOnMouseUp(block, event) {
                 blocks[i][BLOCK_CHILDREN].push(block);
                 block[BLOCK_PARENT] = blocks[i];
             }
+        // (parent, child) = (block, block[i])
         } else {
             if((getCenterX(block) - getCenterX(blocks[i])) ** 2 <= Math.min(block[BLOCK_W] / 2.0, blocks[i][BLOCK_W] / 2.0) ** 2 && block[BLOCK_CHILDREN_NUM] != 0){
                 updatePosition(block, getCenterX(blocks[i]) - block[BLOCK_W] / 2.0, blocks[i][BLOCK_Y] - block[BLOCK_H]);
@@ -220,25 +223,25 @@ function funBlockOnMouseUp(block, event) {
 function funBlockOnMouseUp2(menublock, event) {
         if (menublock[BLOCK_X] > 224 || menublock[BLOCK_Y] > 800 ) {
             if (menublock[BLOCK_TYPE] == "plus") {
-                blocks.push(createBlock(menublock[BLOCK_X], menublock[BLOCK_Y], 100 * 2, 50, "plus", ["plus"], 2));
+                blocks.push(createBlock(menublock[BLOCK_X], menublock[BLOCK_Y], 100 * 2, 50, "plus", ["+"], 2));
                 const x = 10;
                 const y = 80;
                 updatePosition2(menublock, x, y);
                 event.preventDefault();
             } else if(menublock[BLOCK_TYPE] == "minus") {
-                blocks.push(createBlock(menublock[BLOCK_X], menublock[BLOCK_Y], 100 * 2, 50, "minus", ["minus"], 2));
+                blocks.push(createBlock(menublock[BLOCK_X], menublock[BLOCK_Y], 100 * 2, 50, "minus", ["-"], 2));
                 const x = 10;
                 const y = 140;
                 updatePosition2(menublock, x, y);
                 event.preventDefault();
             } else if(menublock[BLOCK_TYPE] == "times") {
-                blocks.push(createBlock(menublock[BLOCK_X], menublock[BLOCK_Y], 100 * 2, 50, "times", ["times"], 2));
+                blocks.push(createBlock(menublock[BLOCK_X], menublock[BLOCK_Y], 100 * 2, 50, "times", ["*"], 2));
                 const x = 10;
                 const y = 200;
                 updatePosition2(menublock, x, y);
                 event.preventDefault();
             } else if(menublock[BLOCK_TYPE] == "divide") {
-                blocks.push(createBlock(menublock[BLOCK_X], menublock[BLOCK_Y], 100 * 2, 50, "divide", ["divide"], 2));
+                blocks.push(createBlock(menublock[BLOCK_X], menublock[BLOCK_Y], 100 * 2, 50, "divide", ["/"], 2));
                 const x = 10;
                 const y = 260;
                 updatePosition2(menublock, x, y);
@@ -376,7 +379,6 @@ function clickReset(){
 
 // Entry point
 window.onload = () => {
-    generator.onclick = clickGenerator;
     enumerator.onclick = clickEnumerator;
     reset.onclick = clickReset;
 
