@@ -1,1 +1,6 @@
 /target
+
+#executable file
+*.exe
+*.out
+*.o
