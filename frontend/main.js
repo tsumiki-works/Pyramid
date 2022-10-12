@@ -45,7 +45,7 @@ function createBlock(x, y, w, h, t, c, n) {
     block.push(null);
     block.push(new Array(n));
     block.push(n);
-    block.push(getSplitCenterX(x, w, n));
+    block.push(getSplitLocalCenterX(n));
     block.push(block_num);
     block.push(t);
     block.push(c);
@@ -108,12 +108,11 @@ function getCenterY(block) {
 }
 
 //n: input split, idx: index
-function getSplitCenterX(x, w, n) {
+function getSplitLocalCenterX(n) {
     let ret = [];
-    let local_x = x - 25;
     for(let idx = 0; idx < n; ++idx){
         if(n > 0){
-            ret.push(local_x + (50 + 100 * idx));
+            ret.push(25 + 100 * idx);
         }
     }
     return ret
@@ -133,6 +132,14 @@ function updatePosition2(menublock, x, y) {
     menublock[BLOCK_ELEM].style.top = y + "px";
 }
 
+function expandBlockWidth(w, n){
+
+}
+
+function shrinkBlockWidth(w, n){
+    
+}
+
 // Event/Block
 function funBlockOnMouseDown(block, event) {
     const rect = block[BLOCK_ELEM].getBoundingClientRect();
@@ -149,7 +156,7 @@ function funBlockOnMouseDown(block, event) {
         }
     }
     block[BLOCK_PARENT] = null;
-    block[BLOCK_CHILDREN] = [];
+    block[BLOCK_CHILDREN] = new Array(block[BLOCK_CHILDREN_NUM]);
     
 
     listener_move = event => funBlockOnMouseMove(block, event);
@@ -201,14 +208,14 @@ function funBlockOnMouseUp(block, event) {
         if (getCenterY(block) > getCenterY(blocks[i])) {
             // Search nearest parent's connection
             for(let j = 0; j < blocks[i][BLOCK_CHILDREN_NUM]; ++j){
-                if ((getCenterX(block) - blocks[i][BLOCK_CHILDREN_CONNECTIONS][j]) ** 2 >= Math.min(block[BLOCK_W] / 2.0, blocks[i][BLOCK_W] / 2.0) ** 2 || blocks[i][BLOCK_CHILDREN][j] != null) 
+                if ((getCenterX(block) - blocks[i][BLOCK_CHILDREN_CONNECTIONS][j] - blocks[i][BLOCK_X]) ** 2 >= Math.min(block[BLOCK_W] / 2.0, blocks[i][BLOCK_W] / 2.0) ** 2 || blocks[i][BLOCK_CHILDREN][j] != null) 
                     continue;
                 //fit block size
                 if(block[BLOCK_CHILDREN_NUM] > 1){
                     //Non-Implement
-                    updatePosition(block, blocks[i][BLOCK_CHILDREN_CONNECTIONS][j] - block[BLOCK_W] / 2.0, blocks[i][BLOCK_Y] + blocks[i][BLOCK_H]);
+                    updatePosition(block, blocks[i][BLOCK_CHILDREN_CONNECTIONS][j] + blocks[i][BLOCK_X] - block[BLOCK_W] / 2.0, blocks[i][BLOCK_Y] + blocks[i][BLOCK_H]);
                 }else{
-                    updatePosition(block, blocks[i][BLOCK_CHILDREN_CONNECTIONS][j] - block[BLOCK_W] / 2.0, blocks[i][BLOCK_Y] + blocks[i][BLOCK_H]);
+                    updatePosition(block, blocks[i][BLOCK_CHILDREN_CONNECTIONS][j] + blocks[i][BLOCK_X] - block[BLOCK_W] / 2.0, blocks[i][BLOCK_Y] + blocks[i][BLOCK_H]);
                 }
                 blocks[i][BLOCK_CHILDREN][j] = block;
                 block[BLOCK_PARENT] = blocks[i];
@@ -271,12 +278,15 @@ function funBlockOnMouseUp2(menublock, event) {
 function createBlockHoverDebug(event, block){
     debugField = document.createElement("div");
     debugField.id = "debug";
-    debugField.style.left = (block[BLOCK_X] + block[BLOCK_W] + 10) + "px";
-    debugField.style.top = (block[BLOCK_Y] - 10) + "px";
+    debugField.style.left = (block[BLOCK_X] + block[BLOCK_W] + 20) + "px";
+    debugField.style.top = (block[BLOCK_Y] - 20) + "px";
     debugField.style.position = "absolute";
     debugField.style.backgroundColor = "#7f7f7f";
     debugField.style.opacity = 0.75;
-    debugField.innerText = "id: "+ block[BLOCK_ID] + ", type: " + block[BLOCK_TYPE] +"\nContent_NAME: "+block[BLOCK_CONTENT][0];
+    let t = "id: "+ block[BLOCK_ID] + ", type: " + block[BLOCK_TYPE] + "\n Content_NAME: " + block[BLOCK_CONTENT][0];
+    t += "\nleft: "+ block[BLOCK_X] +", top: " + block[BLOCK_Y] + "\n";
+    t += "width: " + block[BLOCK_W] + ", height: " + block[BLOCK_H];
+    debugField.innerText = t;
     workspace.appendChild(debugField);
 }
 
@@ -362,9 +372,11 @@ function clickEnumerator() {
         function enumerate(array) {
             s += "("
             for (const block of array){
-                s += block[BLOCK_CONTENT][0] + " ";
-                if(block[BLOCK_CHILDREN].length > 0){
-                    enumerate(block[BLOCK_CHILDREN]);
+                if(block != null){
+                    s += block[BLOCK_CONTENT][0] + " ";
+                    if(block[BLOCK_CHILDREN].length > 0){
+                        enumerate(block[BLOCK_CHILDREN]);
+                    }
                 }
             }
             s += ")";
