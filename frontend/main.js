@@ -24,6 +24,7 @@ let listener_move = null;
 let listener_up = null;
 
 let menublocks = [];
+let highlightBlock = [];
 
 // Temp variants for BLOCK_ID
 let block_num = 0;
@@ -141,6 +142,30 @@ function shrinkBlockWidth(w, n){
     
 }
 
+function createHighlightBlock(block, x, y){
+    const elem = document.createElement("div");
+    elem.style.left = x + "px";
+    elem.style.top = y + "px";
+    elem.style.width = block[BLOCK_W] + "px";
+    elem.style.height = block[BLOCK_H] + "px";
+    elem.style.opacity = 0.3;
+    elem.classList.add(block[BLOCK_TYPE]);
+    elem.setAttribute("id", "highlight");
+    elem.innerText = block[BLOCK_CONTENT][0];
+    workspace.appendChild(elem);
+
+    block[BLOCK_ELEM].style.opacity = 0;
+
+    return elem;
+}
+
+function deleteHighlightBlock(){
+    if(highlightBlock.length != 0){
+        highlightBlock[0][BLOCK_ELEM].style.opacity = 1.0;
+        workspace.removeChild(highlightBlock[1]);
+        highlightBlock.splice(0);
+    }
+}
 
 // Event/Block
 function funBlockOnMouseDown(block, event) {
@@ -198,6 +223,51 @@ function funBlockOnMouseMove(block, event) {
         trashbox.src = "images/trash-closed.svg";
     }
 
+    //highlight
+    isHighlight = false;
+    for (let i = 0; i < blocks.length; ++i) {
+        if (blocks[i] === block)
+            continue;
+        if ((getCenterY(block) - getCenterY(blocks[i])) ** 2 >= Math.min(block[BLOCK_H], blocks[i][BLOCK_H]) ** 2)
+            continue;
+
+        // (parent, child) = (block[i], block)
+        if (getCenterY(block) > getCenterY(blocks[i])) {
+            // Search nearest parent's connection
+            for(let j = 0; j < blocks[i][BLOCK_CHILDREN_NUM]; ++j){
+                if ((getCenterX(block) - blocks[i][BLOCK_CHILDREN_CONNECTIONS][j] - blocks[i][BLOCK_X]) ** 2 >= Math.min(block[BLOCK_W] / 2.0, blocks[i][BLOCK_W] / 2.0) ** 2 || blocks[i][BLOCK_CHILDREN][j] != null) 
+                    continue;
+                //fit block size
+                if(block[BLOCK_CHILDREN_NUM] > 1){
+                    //Non-Implement
+                    isHighlight = true;
+                    if(highlightBlock.length == 0){
+                        highlightBlock.push(block);
+                        highlightBlock.push(createHighlightBlock(block, blocks[i][BLOCK_CHILDREN_CONNECTIONS][j] + blocks[i][BLOCK_X] - block[BLOCK_W] / 2.0, blocks[i][BLOCK_Y] + blocks[i][BLOCK_H]));
+                    }
+                }else{
+                    isHighlight = true;
+                    if(highlightBlock.length == 0){
+                        highlightBlock.push(block);
+                        highlightBlock.push(createHighlightBlock(block, blocks[i][BLOCK_CHILDREN_CONNECTIONS][j] + blocks[i][BLOCK_X] - block[BLOCK_W] / 2.0, blocks[i][BLOCK_Y] + blocks[i][BLOCK_H]));
+                    }
+                }
+            }
+        // (parent, child) = (block, block[i])
+        } else {
+            if((getCenterX(block) - getCenterX(blocks[i])) ** 2 <= Math.min(block[BLOCK_W] / 2.0, blocks[i][BLOCK_W] / 2.0) ** 2 && block[BLOCK_CHILDREN_NUM] != 0){
+                isHighlight = true;
+                if(highlightBlock.length == 0){
+                    highlightBlock.push(block);
+                    highlightBlock.push(createHighlightBlock(block, getCenterX(blocks[i]) - block[BLOCK_W] / 2.0, blocks[i][BLOCK_Y] - block[BLOCK_H]));
+                }
+            }
+        }
+    }
+    if(!isHighlight && highlightBlock.length > 0){
+        deleteHighlightBlock();
+    }
+
     event.preventDefault();
 }
 function funBlockOnMouseMove2(menublock, event) {
@@ -224,6 +294,7 @@ function funBlockOnMouseUp(block, event) {
                 //fit block size
                 if(block[BLOCK_CHILDREN_NUM] > 1){
                     //Non-Implement
+                    block
                     updatePosition(block, blocks[i][BLOCK_CHILDREN_CONNECTIONS][j] + blocks[i][BLOCK_X] - block[BLOCK_W] / 2.0, blocks[i][BLOCK_Y] + blocks[i][BLOCK_H]);
                 }else{
                     updatePosition(block, blocks[i][BLOCK_CHILDREN_CONNECTIONS][j] + blocks[i][BLOCK_X] - block[BLOCK_W] / 2.0, blocks[i][BLOCK_Y] + blocks[i][BLOCK_H]);
@@ -240,6 +311,7 @@ function funBlockOnMouseUp(block, event) {
             }
         }
     }
+    deleteHighlightBlock();
     document.removeEventListener("mousemove", listener_move, false);
     document.removeEventListener("mouseup", listener_up, false);
     document.removeEventListener("mouseleave", listener_up, false);
