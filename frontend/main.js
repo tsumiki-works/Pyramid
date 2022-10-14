@@ -2,6 +2,7 @@
 const workspace = document.getElementById("workspace");
 const enumerator = document.getElementById("enumerator");
 const reset = document.getElementById("reset");
+const trashbox = document.getElementById("trashbox");
 const BLOCK_X = 0;
 const BLOCK_Y = 1;
 const BLOCK_W = 2;
@@ -140,6 +141,7 @@ function shrinkBlockWidth(w, n){
     
 }
 
+
 // Event/Block
 function funBlockOnMouseDown(block, event) {
     const rect = block[BLOCK_ELEM].getBoundingClientRect();
@@ -187,6 +189,15 @@ function funBlockOnMouseMove(block, event) {
     const x = Math.max(rect.left, Math.min(rect.right, event.pageX - x_dragstart));
     const y = Math.max(rect.top, Math.min(rect.bottom, event.pageY - y_dragstart));
     updatePosition(block, x, y);
+
+    //trashbox
+    trash_rect = trashbox.getBoundingClientRect();
+    if(getSquareDistance(event.pageX, trash_rect.left + trash_rect.width / 2, event.pageY, trash_rect.top + trash_rect.height / 2) < trash_rect.width ** 2){
+        trashbox.src = "images/trash-opened.svg";
+    }else{
+        trashbox.src = "images/trash-closed.svg";
+    }
+
     event.preventDefault();
 }
 function funBlockOnMouseMove2(menublock, event) {
@@ -234,6 +245,11 @@ function funBlockOnMouseUp(block, event) {
     document.removeEventListener("mouseleave", listener_up, false);
     listener_move = null;
     listener_up = null;
+    if(getSquareDistance(event.pageX, trash_rect.left + trash_rect.width / 2, event.pageY, trash_rect.top + trash_rect.height / 2) < trash_rect.width ** 2){
+        workspace.removeChild(block[BLOCK_ELEM]);
+        blocks = blocks.filter(n => n !== block);
+        trashbox.src = "images/trash-closed.svg";
+    }
 }
 
 function funBlockOnMouseUp2(menublock, event) {
