@@ -4,8 +4,10 @@
 #include <math.h>
 #include <stdlib.h>
 
-double diff(double x);
+double id(double f(double), double x);
 
-double intg(double x);
+double diff(double f(double), double x);
+
+double integrate(double f(double), double x);
 
 #endif 
