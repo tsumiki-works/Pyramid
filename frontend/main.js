@@ -294,7 +294,6 @@ function funBlockOnMouseUp(block, event) {
                 //fit block size
                 if(block[BLOCK_CHILDREN_NUM] > 1){
                     //Non-Implement
-                    block
                     updatePosition(block, blocks[i][BLOCK_CHILDREN_CONNECTIONS][j] + blocks[i][BLOCK_X] - block[BLOCK_W] / 2.0, blocks[i][BLOCK_Y] + blocks[i][BLOCK_H]);
                 }else{
                     updatePosition(block, blocks[i][BLOCK_CHILDREN_CONNECTIONS][j] + blocks[i][BLOCK_X] - block[BLOCK_W] / 2.0, blocks[i][BLOCK_Y] + blocks[i][BLOCK_H]);
