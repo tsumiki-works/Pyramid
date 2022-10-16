@@ -7,18 +7,18 @@ body {
 
 div#all {
     width: 100%;
-    height: 92%;
+    height: calc(100% - 40px);
     display: flex;
 }
 
 div#menu {
-    width: 224px;
+    width: 188px;
     height: 80%;
     background-color: gray;
 }
 
 div#workspace {
-    width: 80%;
+    width: calc(100% - 188px);
     height: 100%;
 }
 
@@ -28,14 +28,24 @@ div#trashbox-area {
     bottom: 20%;
 }
 
+div#console {
+    position: fixed;
+    bottom: 0;
+    width: 80%;
+    height: 20%;
+    /* background-color: #41495f; */
+    background-image: url(images/console-bg.svg);
+    background-size: cover;
+    background-repeat:  no-repeat; 
+    background-position: right bottom;
+}
+
 div#runspace {
     position: fixed;
     padding-left: 80%;
-    padding-top: 10%;
     bottom: 0;
     width: 100%;
     height: 20%;
-
 }
 
 .block {
