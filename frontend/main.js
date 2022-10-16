@@ -145,8 +145,9 @@ function shrinkBlockWidth(w, n){
 function createHighlightBlock(block, x, y){
     let isSameBlock = false;
     if(highlightBlock.length > 0){
-        if(highlightBlock[0] !== block){
-            deleteHighlightBlock();
+        if(highlightBlock[2] !== [x, y]){
+            workspace.removeChild(highlightBlock[1]);
+            highlightBlock.splice(0);
         }else{
             isSameBlock = true;
         }
@@ -163,10 +164,11 @@ function createHighlightBlock(block, x, y){
         elem.innerText = block[BLOCK_CONTENT][0];
         workspace.appendChild(elem);
 
-        block[BLOCK_ELEM].style.opacity = 0;
+        block[BLOCK_ELEM].style.opacity = 0.5;
 
         highlightBlock.push(block);
         highlightBlock.push(elem);
+        highlightBlock.push([x, y]);
     }
 }
 
