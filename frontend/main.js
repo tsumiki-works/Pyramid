@@ -258,12 +258,6 @@ function funBlockOnMouseMove(block, event) {
                     createHighlightBlock(block, blocks[i][BLOCK_CHILDREN_CONNECTIONS][j] + blocks[i][BLOCK_X] - block[BLOCK_W] / 2.0, blocks[i][BLOCK_Y] + blocks[i][BLOCK_H]);
                 }
             }
-        // (parent, child) = (block, block[i])
-        } else {
-            if((getCenterX(block) - getCenterX(blocks[i])) ** 2 <= Math.min(block[BLOCK_W] / 2.0, blocks[i][BLOCK_W] / 2.0) ** 2 && block[BLOCK_CHILDREN_NUM] != 0){
-                isHighlight = true;
-                createHighlightBlock(block, getCenterX(blocks[i]) - block[BLOCK_W] / 2.0, blocks[i][BLOCK_Y] - block[BLOCK_H]);
-            }
         }
     }
     if(!isHighlight && highlightBlock.length > 0){
