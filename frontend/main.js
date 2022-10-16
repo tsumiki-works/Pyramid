@@ -143,20 +143,31 @@ function shrinkBlockWidth(w, n){
 }
 
 function createHighlightBlock(block, x, y){
-    const elem = document.createElement("div");
-    elem.style.left = x + "px";
-    elem.style.top = y + "px";
-    elem.style.width = block[BLOCK_W] + "px";
-    elem.style.height = block[BLOCK_H] + "px";
-    elem.style.opacity = 0.3;
-    elem.classList.add(block[BLOCK_TYPE]);
-    elem.setAttribute("id", "highlight");
-    elem.innerText = block[BLOCK_CONTENT][0];
-    workspace.appendChild(elem);
+    let isSameBlock = false;
+    if(highlightBlock.length > 0){
+        if(highlightBlock[0] !== block){
+            deleteHighlightBlock();
+        }else{
+            isSameBlock = true;
+        }
+    }
+    if(!isSameBlock){
+        const elem = document.createElement("div");
+        elem.style.left = x + "px";
+        elem.style.top = y + "px";
+        elem.style.width = block[BLOCK_W] + "px";
+        elem.style.height = block[BLOCK_H] + "px";
+        elem.style.opacity = 0.3;
+        elem.classList.add(block[BLOCK_TYPE]);
+        elem.setAttribute("id", "highlight");
+        elem.innerText = block[BLOCK_CONTENT][0];
+        workspace.appendChild(elem);
 
-    block[BLOCK_ELEM].style.opacity = 0;
+        block[BLOCK_ELEM].style.opacity = 0;
 
-    return elem;
+        highlightBlock.push(block);
+        highlightBlock.push(elem);
+    }
 }
 
 function deleteHighlightBlock(){
@@ -241,26 +252,17 @@ function funBlockOnMouseMove(block, event) {
                 if(block[BLOCK_CHILDREN_NUM] > 1){
                     //Non-Implement
                     isHighlight = true;
-                    if(highlightBlock.length == 0){
-                        highlightBlock.push(block);
-                        highlightBlock.push(createHighlightBlock(block, blocks[i][BLOCK_CHILDREN_CONNECTIONS][j] + blocks[i][BLOCK_X] - block[BLOCK_W] / 2.0, blocks[i][BLOCK_Y] + blocks[i][BLOCK_H]));
-                    }
+                    createHighlightBlock(block, blocks[i][BLOCK_CHILDREN_CONNECTIONS][j] + blocks[i][BLOCK_X] - block[BLOCK_W] / 2.0, blocks[i][BLOCK_Y] + blocks[i][BLOCK_H]);
                 }else{
                     isHighlight = true;
-                    if(highlightBlock.length == 0){
-                        highlightBlock.push(block);
-                        highlightBlock.push(createHighlightBlock(block, blocks[i][BLOCK_CHILDREN_CONNECTIONS][j] + blocks[i][BLOCK_X] - block[BLOCK_W] / 2.0, blocks[i][BLOCK_Y] + blocks[i][BLOCK_H]));
-                    }
+                    createHighlightBlock(block, blocks[i][BLOCK_CHILDREN_CONNECTIONS][j] + blocks[i][BLOCK_X] - block[BLOCK_W] / 2.0, blocks[i][BLOCK_Y] + blocks[i][BLOCK_H]);
                 }
             }
         // (parent, child) = (block, block[i])
         } else {
             if((getCenterX(block) - getCenterX(blocks[i])) ** 2 <= Math.min(block[BLOCK_W] / 2.0, blocks[i][BLOCK_W] / 2.0) ** 2 && block[BLOCK_CHILDREN_NUM] != 0){
                 isHighlight = true;
-                if(highlightBlock.length == 0){
-                    highlightBlock.push(block);
-                    highlightBlock.push(createHighlightBlock(block, getCenterX(blocks[i]) - block[BLOCK_W] / 2.0, blocks[i][BLOCK_Y] - block[BLOCK_H]));
-                }
+                createHighlightBlock(block, getCenterX(blocks[i]) - block[BLOCK_W] / 2.0, blocks[i][BLOCK_Y] - block[BLOCK_H]);
             }
         }
     }
