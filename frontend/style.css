@@ -7,7 +7,7 @@ body {
 
 div#all {
     width: 100%;
-    height: calc(100% - 32px);
+    height: calc(100% - 38px);
     display: flex;
 }
 
@@ -33,7 +33,11 @@ div#console {
     bottom: 0;
     width: 80%;
     height: 20%;
-    background-color: 41495f;
+    /* background-color: #41495f; */
+    background-image: url(images/console-bg.svg);
+    background-size: cover;
+    background-repeat:  no-repeat; 
+    background-position: right bottom;
 }
 
 div#runspace {
