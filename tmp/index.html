@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="ja">
+
+<head>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" href="style.css">
+    <title>Title</title>
+</head>
+<header>
+    <a href="index.html"> 
+        <img src="images/logo.svg" height = "32px" alt="ピラミッドのロゴ">
+    </a>
+</header>
+
+<body>
+    <div id="all">
+        <div id="menu">
+            <button id="enumerator">Enumerate</button>
+            <button id="reset">Reset</button>
+            <!-- for debug -->
+            <form name="integer_form">
+                <input type="text" value="0" id="integer_input" name="integer_num" style="width: 80%; margin-top:320px">
+            </form>
+            <!-- -->
+        </div>
+        <div id="workspace">
+        </div>
+        <div id="trashbox-area">
+            <img id="trashbox" src="images/trash-closed.svg" style="width: 100px">
+        </div>
+        <div id="console">
+        <!-- 実際の機能ではない。 -->
+            <font color="white"># ■</font>
+        </div>
+        <div id="runspace">
+            <button id="runner">Run</button>
+        </div>
+    </div>
+    <script src="main.js"></script>
+</body>
+
+</html>
