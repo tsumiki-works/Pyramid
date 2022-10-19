@@ -15,7 +15,7 @@ impl Ast {
     }
 }
 
-pub fn parse(code: String) -> Result<Ast, String> {
+pub fn parse(code: &str) -> Result<Ast, String> {
     let chars = code.chars().collect::<Vec<char>>();
     if chars.is_empty() {
         return Err(String::from("pyramid backend error: code is empty."));
