@@ -27,3 +27,8 @@ function create_scale(scale) {
     m[10] = scale[2];
     return m;
 }
+
+function create_proj(proj) {
+    let m = create_identity();
+    return m;
+}

@@ -39,9 +39,8 @@ function create_square_model() {
     return create_model(6, vtxs, idxs, uvs);
 }
 
-function create_image_texture(id) {
+function create_image_texture(image) {
     const texture = gl.createTexture();
-    const image = document.getElementById(id);
     gl.bindTexture(gl.TEXTURE_2D, texture);
     gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, gl.RGBA, gl.UNSIGNED_BYTE, image);
     gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.LINEAR);
@@ -84,7 +83,7 @@ function update_webgl(requests) {
     gl.clearColor(0.0, 0.0, 0.0, 1.0);
     gl.clear(gl.COLOR_BUFFER_BIT);
     for (let i = 0; i < requests.length; ++i) {
-        draw_model(squeare_model, requests[i][REQUEST_IDX_IMGTEX], requests[i][REQUEST_IDX_TRANS], request[i][REQUEST_IDX_SCALE]);
+        draw_model(squeare_model, requests[i][REQUEST_IDX_IMGTEX], requests[i][REQUEST_IDX_TRANS], requests[i][REQUEST_IDX_SCALE]);
     }
     gl.flush();
 }
