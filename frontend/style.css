@@ -13,3 +13,6 @@ div#workspace-wrapper {
     height: 100vh;
 }
 
+img {
+    display: none;
+}

@@ -4,5 +4,5 @@ window.onload = () => {
     canvas.width = workspace_wrapper.offsetWidth;
     canvas.height = workspace_wrapper.offsetHeight;
     init_webgl(canvas);
-    update_webgl();
+    update_webgl([]);
 }
