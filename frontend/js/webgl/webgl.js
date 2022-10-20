@@ -44,6 +44,10 @@ function create_square_model() {
     return create_model(6, vtxs, idxs, uvs);
 }
 
+function create_camera(x, y, z) {
+    return create_trans(x, y, z);
+}
+
 function create_image_texture(image) {
     const texture = gl.createTexture();
     gl.bindTexture(gl.TEXTURE_2D, texture);
@@ -55,9 +59,9 @@ function create_image_texture(image) {
     return texture;
 }
 
-function init_webgl(canvas) {
+function init_webgl(target_canvas) {
     // initialize WebGL
-    gl = canvas.getContext("webgl2");
+    gl = target_canvas.getContext("webgl2");
     if (gl === null) {
         alert("pyramid frontend error: failed to initialize WebGL.");
         return;
@@ -86,7 +90,7 @@ function init_webgl(canvas) {
     squeare_model = create_square_model();
 }
 
-function update_webgl(requests, width, height) {
+function update_webgl(requests, width, height, camera) {
     gl.clearColor(1.0, 1.0, 1.0, 1.0);
     gl.clear(gl.COLOR_BUFFER_BIT);
     for (let i = 0; i < requests.length; ++i) {
@@ -94,6 +98,7 @@ function update_webgl(requests, width, height) {
             squeare_model,
             width,
             height,
+            camera,
             requests[i][REQUEST_IDX_TRANS],
             requests[i][REQUEST_IDX_SCALE],
             requests[i][REQUEST_IDX_COLOR],

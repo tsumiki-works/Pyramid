@@ -1,7 +1,6 @@
 // A module for creating model
 //   * create_model
 //   * draw_model
-//   * draw_ui
 
 function create_vbo(data) {
     let vbo = gl.createBuffer();
@@ -31,7 +30,7 @@ function create_model(index_count, vtxs, idxs, uvs) {
     return [index_count, create_vbo(vtxs), create_ibo(idxs), create_tcbo(uvs)]
 }
 
-function draw_model(model, width, height, trans, scale, color, img_tex, uv_scale_offset, is_ui) {
+function draw_model(model, width, height, camera, trans, scale, color, img_tex, uv_scale_offset, is_ui) {
     gl.bindBuffer(gl.ARRAY_BUFFER, model[MODEL_IDX_VBO]);
     gl.vertexAttribPointer(location_position, 3, gl.FLOAT, false, 0, 0);
     gl.bindBuffer(gl.ARRAY_BUFFER, model[MODEL_IDX_TCBO]);
@@ -56,7 +55,7 @@ function draw_model(model, width, height, trans, scale, color, img_tex, uv_scale
         mat_view = create_identity();
         mat_proj = create_ortho(width, height, 1000.0);
     } else {
-        mat_view = create_identity();
+        mat_view = create_trans(camera);
         mat_proj = create_perse(45.0, width / height, 0.1, 1000.0);
     }
     gl.uniformMatrix4fv(uniform_location_mat_trs, false, mat_trs);
