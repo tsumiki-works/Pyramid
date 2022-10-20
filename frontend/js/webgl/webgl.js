@@ -79,11 +79,11 @@ function init_webgl(canvas) {
     squeare_model = create_square_model();
 }
 
-function update_webgl(requests) {
+function update_webgl(requests, aspect) {
     gl.clearColor(0.0, 0.0, 0.0, 1.0);
     gl.clear(gl.COLOR_BUFFER_BIT);
     for (let i = 0; i < requests.length; ++i) {
-        draw_model(squeare_model, requests[i][REQUEST_IDX_IMGTEX], requests[i][REQUEST_IDX_TRANS], requests[i][REQUEST_IDX_SCALE]);
+        draw_model(squeare_model, aspect, requests[i][REQUEST_IDX_IMGTEX], requests[i][REQUEST_IDX_TRANS], requests[i][REQUEST_IDX_SCALE]);
     }
     gl.flush();
 }

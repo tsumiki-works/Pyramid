@@ -28,7 +28,18 @@ function create_scale(scale) {
     return m;
 }
 
-function create_proj(proj) {
+function create_proj(theta, aspect, near, far) {
     let m = create_identity();
+    const t = near * Math.tan(theta * Math.PI / 180.0);
+    const r = t * aspect;
+    const a = r * 2.0;
+    const b = t * 2.0;
+    const c = far - near;
+    m[0] = near * 2 / a;
+    m[5] = near * 2 / b;
+    m[10] = -(far + near) / c;
+    m[11] = -1;
+    m[14] = -(far * near * 2) / c;
+    m[15] = 0;
     return m;
 }

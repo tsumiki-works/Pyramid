@@ -30,7 +30,7 @@ function create_model(index_count, vtxs, idxs, uvs) {
     return [index_count, create_vbo(vtxs), create_ibo(idxs), create_tcbo(uvs)]
 }
 
-function draw_model(model, img_tex, trans, scale) {
+function draw_model(model, aspect, img_tex, trans, scale) {
     gl.bindBuffer(gl.ARRAY_BUFFER, model[MODEL_IDX_VBO]);
     gl.vertexAttribPointer(location_position, 3, gl.FLOAT, false, 0, 0);
     gl.bindBuffer(gl.ARRAY_BUFFER, model[MODEL_IDX_TCBO]);
@@ -48,7 +48,7 @@ function draw_model(model, img_tex, trans, scale) {
     let mat_trs = create_trans(trans);
     var mat_scl = create_scale(scale);
     var mat_view = create_identity();
-    var mat_proj = create_identity();
+    var mat_proj = create_proj(45.0, aspect, 0.1, 1000.0);
     gl.uniformMatrix4fv(uniform_location_mat_trs, false, mat_trs);
     gl.uniformMatrix4fv(uniform_location_mat_scl, false, mat_scl);
     gl.uniformMatrix4fv(uniform_location_mat_view, false, mat_view);
