@@ -20,13 +20,20 @@ void main(void){
 const FRAGMENT_SHADER_CODE = `#version 300 es
 precision highp float;
 uniform vec4 frag_option;
+uniform vec4 uv_scale_offset;
 uniform sampler2D tex_sampler;
 in vec2 tex_coord_in_frag;
 out vec4 outColor;
 void main(void) {
     if (frag_option.x > 0.5) {
-        vec4 res = texture(tex_sampler, tex_coord_in_frag);
-        outColor = res;
+        float u = tex_coord_in_frag.x * uv_scale_offset.x + uv_scale_offset.z;
+        float v = tex_coord_in_frag.y * uv_scale_offset.y + uv_scale_offset.w;
+        if (u < 0.0 || u > 1.0 || v < 0.0 || v > 1.0) {
+            outColor = vec4(0.0, 0.0, 0.0, 0.0);
+        } else {
+            vec4 res = texture(tex_sampler, vec2(u, v));
+            outColor = res;
+        }
     } else {
         outColor = vec4(1.0, 1.0, 1.0, 1.0);
     }

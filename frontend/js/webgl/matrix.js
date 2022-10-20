@@ -2,6 +2,8 @@
 //   * create_identity
 //   * create_trans
 //   * create_scale
+//   * create_perse
+//   * create_ortho
 
 function create_identity() {
     return [
@@ -28,7 +30,7 @@ function create_scale(scale) {
     return m;
 }
 
-function create_proj(theta, aspect, near, far) {
+function create_perse(theta, aspect, near, far) {
     let m = create_identity();
     const t = near * Math.tan(theta * Math.PI / 180.0);
     const r = t * aspect;
@@ -41,5 +43,13 @@ function create_proj(theta, aspect, near, far) {
     m[11] = -1;
     m[14] = -(far * near * 2) / c;
     m[15] = 0;
+    return m;
+}
+
+function create_ortho(width, height, depth) {
+    let m = create_identity();
+    m[0] = 2.0 / width;
+    m[5] = 2.0 / height;
+    m[10] = 2.0 / depth;
     return m;
 }
