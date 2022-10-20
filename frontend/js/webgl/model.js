@@ -31,12 +31,13 @@ function create_model(index_count, vtxs, idxs, uvs) {
     return [index_count, create_vbo(vtxs), create_ibo(idxs), create_tcbo(uvs)]
 }
 
-function draw_model(model, width, height, trans, scale, img_tex, uv_scale_offset, is_ui) {
+function draw_model(model, width, height, trans, scale, color, img_tex, uv_scale_offset, is_ui) {
     gl.bindBuffer(gl.ARRAY_BUFFER, model[MODEL_IDX_VBO]);
     gl.vertexAttribPointer(location_position, 3, gl.FLOAT, false, 0, 0);
     gl.bindBuffer(gl.ARRAY_BUFFER, model[MODEL_IDX_TCBO]);
     gl.vertexAttribPointer(location_tex_coord, 2, gl.FLOAT, false, 0, 0);
     gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, model[MODEL_IDX_IBO]);
+    gl.uniform4fv(uniform_location_base_color, color);
     gl.uniform4fv(uniform_location_uv_scale_offset, uv_scale_offset);
     if (img_tex == null) {
         gl.uniform4fv(uniform_location_frag_option, [0.0, 0.0, 0.0, 0.0]);

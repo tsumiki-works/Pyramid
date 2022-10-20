@@ -11,6 +11,7 @@ let uniform_location_mat_trs = null;
 let uniform_location_mat_scl = null;
 let uniform_location_mat_view = null;
 let uniform_location_mat_proj = null;
+let uniform_location_base_color = null;
 let uniform_location_frag_option = null;
 let uniform_location_uv_scale_offset = null;
 let uniform_location_sampler = null;
@@ -21,9 +22,10 @@ const MODEL_IDX_IBO = 2;
 const MODEL_IDX_TCBO = 3;
 const REQUEST_IDX_TRANS = 0;
 const REQUEST_IDX_SCALE = 1;
-const REQUEST_IDX_IMGTEX = 2;
-const REQUEST_IDX_UV_SCALE_OFFSET = 3;
-const REQUEST_IDX_IS_UI = 4;
+const REQUEST_IDX_COLOR = 2;
+const REQUEST_IDX_IMGTEX = 3;
+const REQUEST_IDX_UV_SCALE_OFFSET = 4;
+const REQUEST_IDX_IS_UI = 5;
 
 function create_square_model() {
     let vtxs = [
@@ -70,6 +72,7 @@ function init_webgl(canvas) {
     uniform_location_mat_scl = gl.getUniformLocation(program, "mat_scl");
     uniform_location_mat_view = gl.getUniformLocation(program, "mat_view");
     uniform_location_mat_proj = gl.getUniformLocation(program, "mat_proj");
+    uniform_location_base_color = gl.getUniformLocation(program, "base_color");
     uniform_location_frag_option = gl.getUniformLocation(program, "frag_option");
     uniform_location_uv_scale_offset = gl.getUniformLocation(program, "uv_scale_offset");
     uniform_location_sampler = gl.getUniformLocation(program, "tex_sampler");
@@ -84,7 +87,7 @@ function init_webgl(canvas) {
 }
 
 function update_webgl(requests, width, height) {
-    gl.clearColor(0.0, 0.0, 0.0, 1.0);
+    gl.clearColor(1.0, 1.0, 1.0, 1.0);
     gl.clear(gl.COLOR_BUFFER_BIT);
     for (let i = 0; i < requests.length; ++i) {
         draw_model(
@@ -93,6 +96,7 @@ function update_webgl(requests, width, height) {
             height,
             requests[i][REQUEST_IDX_TRANS],
             requests[i][REQUEST_IDX_SCALE],
+            requests[i][REQUEST_IDX_COLOR],
             requests[i][REQUEST_IDX_IMGTEX],
             requests[i][REQUEST_IDX_UV_SCALE_OFFSET],
             requests[i][REQUEST_IDX_IS_UI]

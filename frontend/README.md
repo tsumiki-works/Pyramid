@@ -16,9 +16,10 @@ WebGLに関するすべて処理はjs/webgl内のスクリプトで閉じてい�
   * 各描画リクエストは次の配列
     1. 移動量 (vec3)
     2. 拡縮率 (vec3)
-    3. テクスチャ (*create_image_texture関数で生成されたオブジェクト*)
-    4. UVのオフセット (vec4)
-    5. UIであるか (boolean)
+    3. 基本色 (vec4)
+    4. テクスチャ (*create_image_texture関数で生成されたオブジェクト*)
+    5. UVのオフセット (vec4)
+    6. UIであるか (boolean)
 * create_image_texture
   * テクスチャをimgエレメントから生成する関数
   * imgエレメントを指定する

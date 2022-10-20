@@ -4,7 +4,8 @@ const IMGTEX_IDX_TEX01 = 0;
 
 function render() {
     let requests = [];
-    requests.push([[1.0, 0.0, -1.0], [1.0, 1.0, 1.0], img_texs[IMGTEX_IDX_TEX01], [1.0, 0.166, 0.0, 0.0], false]);
+    requests.push(logo());
+    requests.push(menu());
     update_webgl(requests, canvas.width, canvas.height);
 }
 
