@@ -1,6 +1,6 @@
 const canvas = document.querySelector("#workspace");
 
-let camera = [0.0, 0.0, -1.0];
+let camera = [0.0, 0.0, -5.0];
 let img_texs = [];
 const IMGTEX_IDX_TEX01 = 0;
 
@@ -16,8 +16,7 @@ window.onload = () => {
     const workspace_wrapper = document.getElementById("workspace-wrapper");
     canvas.width = workspace_wrapper.offsetWidth;
     canvas.height = workspace_wrapper.offsetHeight;
-    canvas.addEventListener("click", fun_click);
-    canvas.addEventListener("contextmenu", fun_right_click);
+    canvas.addEventListener("mousedown", fun_mousedown);
     canvas.addEventListener("wheel", fun_wheel);
     init_webgl(canvas);
     img_texs.push(create_image_texture(document.getElementById("tex01")));
