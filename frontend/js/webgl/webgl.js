@@ -2,6 +2,7 @@
 //   * init_webgl
 //   * update_webgl
 //   * create_image_texture
+//   * convert_clipping_to_view
 
 let gl = null;
 let program = null;
@@ -28,14 +29,14 @@ const REQUEST_IDX_UV_SCALE_OFFSET = 4;
 const REQUEST_IDX_IS_UI = 5;
 
 function create_square_model() {
-    let vtxs = [
+    const vtxs = [
         -0.5, -0.5, 0.0,
         -0.5, 0.5, 0.0,
         0.5, 0.5, 0.0,
         0.5, -0.5, 0.0,
     ];
-    let idxs = [0, 1, 2, 0, 2, 3];
-    let uvs = [
+    const idxs = [0, 1, 2, 0, 2, 3];
+    const uvs = [
         0.0, 1.0,
         0.0, 0.0,
         1.0, 0.0,
@@ -108,4 +109,10 @@ function update_webgl(requests, width, height, camera) {
         );
     }
     gl.flush();
+}
+
+function convert_clipping_to_view(pos, width, height) {
+    const mat_proj = create_perse(45.0, width / height, 0.1, 1000.0);
+    const inv_proj = inverse_matrix(mat_proj);
+    return multiple_matrix_vector(inv_proj, pos);
 }

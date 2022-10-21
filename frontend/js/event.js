@@ -18,7 +18,8 @@ function fun_mousedown(event) {
         if (event.pageX < MENU_WIDTH) {
             alert("clicked menu");
         } else {
-            create_block(0.0, 0.0, 0, "");
+            const pos = convert_clipping_to_view([get_workspace_x(event.pageX), get_workspace_y(event.pageY), camera[2], 1.0], canvas.width, canvas.height);
+            create_block(pos[0] * camera[2] * -1.0 - camera[0], pos[1] * camera[2] * -1.0 - camera[1], 0, "");
         }
     } else if (event.which == 3) {
         mouse_pos_before_drag_x = event.pageX;
