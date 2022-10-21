@@ -34,3 +34,14 @@ function entity_block(x, y, width, height) {
         false,
     ];
 }
+
+function entity_character(x, y, width, height, tex_scale_offset, is_ui) {
+    return [
+        [x, y, 0.0],
+        [width, height, 1.0],
+        [1.0, 0.0, 1.0, 1.0],
+        img_texs[IMGTEX_IDX_TEX_FONT],
+        tex_scale_offset,
+        is_ui,
+    ];
+}

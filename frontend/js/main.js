@@ -3,12 +3,14 @@ const canvas = document.querySelector("#workspace");
 let camera = [0.0, 0.0, -5.0];
 let img_texs = [];
 const IMGTEX_IDX_TEX01 = 0;
+const IMGTEX_IDX_TEX_FONT = 1;
 
 function render() {
     let requests = [];
     push_requests_blocks(requests);
     requests.push(entity_logo());
     requests.push(entity_menu());
+    push_requests_text("hoge", 0.0, 0.0, 50.0, 100.0, true, requests);
     update_webgl(requests, canvas.width, canvas.height, camera);
 }
 
@@ -20,5 +22,6 @@ window.onload = () => {
     canvas.addEventListener("wheel", fun_wheel);
     init_webgl(canvas);
     img_texs.push(create_image_texture(document.getElementById("tex01")));
+    img_texs.push(create_image_texture(document.getElementById("tex_font")));
     render();
 }
