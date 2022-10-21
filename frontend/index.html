@@ -4,39 +4,22 @@
 <head>
     <meta charset="UTF-8">
     <link rel="stylesheet" href="style.css">
-    <title>Title</title>
+    <title>Pyramid</title>
 </head>
-<header>
-    <a href="index.html"> 
-        <img src="images/logo.svg" height = "32px" alt="ピラミッドのロゴ">
-    </a>
-</header>
 
-<body>
-    <div id="all">
-        <div id="menu">
-            <button id="enumerator">Enumerate</button>
-            <button id="reset">Reset</button>
-            <!-- for debug -->
-            <form name="integer_form">
-                <input type="text" value="0" id="integer_input" name="integer_num" style="width: 80%; margin-top:320px">
-            </form>
-            <!-- -->
-        </div>
-        <div id="workspace">
-        </div>
-        <div id="trashbox-area">
-            <img id="trashbox" src="images/trash-closed.svg" style="width: 100px">
-        </div>
-        <div id="console">
-        <!-- 実際の機能ではない。 -->
-            <font color="white"># ■</font>
-        </div>
-        <div id="runspace">
-            <button id="runner">Run</button>
-        </div>
+<body oncontextmenu="return false;">
+    <div id="workspace-wrapper">
+        <canvas id="workspace"></canvas>
     </div>
-    <script src="main.js"></script>
+    <img crossOrigin="anonymous" id="tex01" src="images/tex01.png">
+    <script src="js/webgl/matrix.js"></script>
+    <script src="js/webgl/model.js"></script>
+    <script src="js/webgl/shaders.js"></script>
+    <script src="js/webgl/webgl.js"></script>
+    <script src="js/block.js"></script>
+    <script src="js/event.js"></script>
+    <script src="js/entity.js"></script>
+    <script src="js/main.js"></script>
 </body>
 
 </html>
