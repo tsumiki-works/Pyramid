@@ -26,7 +26,7 @@ function fun_mousedown(event) {
         mouse_pos_before_drag_y = event.pageY;
         camera_pos_before_drag_x = camera[0];
         camera_pos_before_drag_y = camera[1];
-        canvas.addEventListener("mousemove", fun_mousemove);
+        canvas.addEventListener("mousemove", fun_right_mousemove);
         canvas.addEventListener("mouseup", fun_right_mouseup);
         canvas.removeEventListener("mousedown", fun_mousedown);
     }
@@ -34,13 +34,13 @@ function fun_mousedown(event) {
 }
 
 function fun_right_mouseup(_) {
-    canvas.removeEventListener("mousemove", fun_mousemove);
+    canvas.removeEventListener("mousemove", fun_right_mousemove);
     canvas.removeEventListener("mouseup", fun_right_mouseup);
     canvas.addEventListener("mousedown", fun_mousedown);
     render();
 }
 
-function fun_mousemove(event) {
+function fun_right_mousemove(event) {
     const c = 0.01;
     camera[0] = camera_pos_before_drag_x - (mouse_pos_before_drag_x - event.pageX) * c;
     camera[1] = camera_pos_before_drag_y + (mouse_pos_before_drag_y - event.pageY) * c;
