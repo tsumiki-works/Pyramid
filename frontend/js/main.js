@@ -1,4 +1,4 @@
-const canvas = document.querySelector("#workspace");
+const canvas = document.getElementById("workspace");
 
 let camera = [0.0, 0.0, -5.0];
 let img_texs = [];
