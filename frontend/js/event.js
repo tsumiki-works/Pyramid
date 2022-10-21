@@ -3,6 +3,14 @@ let mouse_pos_before_drag_y = 0.0;
 let camera_pos_before_drag_x = 0.0;
 let camera_pos_before_drag_y = 0.0;
 
+function get_world_pos(x, y) {
+    let pos = convert_clipping_to_view([get_workspace_x(x), get_workspace_y(y), camera[2], 1.0], canvas.width, canvas.height);
+    pos[0] = pos[0] * camera[2] * -1.0 - camera[0];
+    pos[1] = pos[1] * camera[2] * -1.0 - camera[1];
+    pos[2] = pos[2] * camera[2] * -1.0 - camera[2];
+    return pos;
+}
+
 function get_workspace_x(pageX) {
     const c = canvas.width * 0.5;
     return (pageX - c) / c;
@@ -18,8 +26,8 @@ function fun_mousedown(event) {
         if (event.pageX < MENU_WIDTH) {
             alert("clicked menu");
         } else {
-            const pos = convert_clipping_to_view([get_workspace_x(event.pageX), get_workspace_y(event.pageY), camera[2], 1.0], canvas.width, canvas.height);
-            create_block(pos[0] * camera[2] * -1.0 - camera[0], pos[1] * camera[2] * -1.0 - camera[1], 0, "");
+            const pos = get_world_pos(event.pageX, event.pageY);
+            create_block(pos[0], pos[1], 0, "");
         }
     } else if (event.which == 3) {
         mouse_pos_before_drag_x = event.pageX;
