@@ -21,14 +21,24 @@ function enter() {
 // A function push requests for drawing console
 function push_requests_console(requests) {
     requests.push(entity_console());
-    push_requests_text(
-        log + cur,
-        get_centered_screen_x(MENU_WIDTH) + 20.0,
-        -get_centered_screen_y(CONSOLE_HEIGHT) - 20.0,
-        10.0,
-        20.0,
-        [1.0, 1.0, 1.0, 1.0],
-        true,
-        requests
-    );
+    const text = log + cur;
+    if (text.length == 0)
+        return;
+    const lines = text.split("\n");
+    let cnt = 0;
+    for (let i = Math.max(lines.length - 9, 0); i < lines.length; ++i) {
+        if (cnt > 9)
+            break;
+        push_requests_text(
+            lines[i],
+            get_centered_screen_x(MENU_WIDTH) + 20.0,
+            -get_centered_screen_y(CONSOLE_HEIGHT) - 20.0 - cnt * 20.0,
+            10.0,
+            20.0,
+            [1.0, 1.0, 1.0, 1.0],
+            true,
+            requests
+        );
+        cnt += 1;
+    }
 }
