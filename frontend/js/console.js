@@ -12,7 +12,7 @@ function remove_char() {
 // A function to send current command with enter
 async function enter() {
     log += cur;
-    log += "\n# ";
+    log += "\n";
     if (cur.length > 0) {
         const res = await fetch("http://127.0.0.1:7878", {
             method: "POST",
@@ -23,7 +23,7 @@ async function enter() {
         }).catch(err => console.log(err))
         .then(data => {return data.text()})
         log += res;
-        log += "\n# ";
+        log += "\n\n# ";
     }
     cur = "";
 }
