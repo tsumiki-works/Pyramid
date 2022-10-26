@@ -68,6 +68,7 @@ function fun_wheel(event) {
         camera[2] -= 0.5;
     }
     camera[2] = Math.max(Math.min(camera[2], -1.5), -10.0);
+    event.preventDefault();
     render();
 }
 
