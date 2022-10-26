@@ -16,7 +16,10 @@ impl Ast {
 }
 
 pub fn parse(code: &str) -> Result<Ast, String> {
-    let chars = code.chars().collect::<Vec<char>>();
+    let chars = code
+        .chars()
+        .filter(|&n| n as u32 != 0)
+        .collect::<Vec<char>>();
     if chars.is_empty() {
         return Err(String::from("pyramid backend error: code is empty."));
     }
