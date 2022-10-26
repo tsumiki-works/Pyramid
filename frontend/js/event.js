@@ -72,14 +72,14 @@ function fun_wheel(event) {
     render();
 }
 
-function fun_keydown(event) {
+async function fun_keydown(event) {
     if (event.key.length == 1 && event.key.charCodeAt(0) >= 32 && event.key.charCodeAt(0) <= 126) {
         event.preventDefault(); // disable browser shortcut
         input_char(event.key);
     } else if (event.key == "Backspace") {
         remove_char();
     } else if (event.key == "Enter") {
-        enter();
+        await enter();
     }
     render();
 }

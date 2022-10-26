@@ -10,11 +10,21 @@ function remove_char() {
     cur = cur.slice(0, -1);
 }
 // A function to send current command with enter
-function enter() {
-    if (cur.length > 0) {
-    }
+async function enter() {
     log += cur;
     log += "\n# ";
+    if (cur.length > 0) {
+        const res = await fetch("http://127.0.0.1:7878", {
+            method: "POST",
+            header: {
+                "Content-Type": "application/json"
+            },
+            body: cur
+        }).catch(err => console.log(err))
+        .then(data => {return data.text()})
+        log += res;
+        log += "\n# ";
+    }
     cur = "";
 }
 
