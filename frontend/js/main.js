@@ -5,17 +5,6 @@ let img_texs = [];
 const IMGTEX_IDX_TEX01 = 0;
 const IMGTEX_IDX_TEX_FONT = 1;
 
-// A functions to get x or y UNNORMALIZED coord at which (0, 0) is at center of screen
-// For example,
-//   if canvas width is 1280, get_centerd_screen_x(0) = -640
-//   if canvas height is 640, get_centerd_screen_y(0) = 320
-function get_centered_screen_x(x) {
-    return canvas.width * -0.5 + x;
-}
-function get_centered_screen_y(y) {
-    return canvas.height * 0.5 - y;
-}
-
 function render() {
     let requests = [];
     push_requests_blocks(requests);
