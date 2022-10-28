@@ -39,10 +39,11 @@ function push_requests_console(requests) {
     for (let i = Math.max(lines.length - 9, 0); i < lines.length; ++i) {
         if (cnt > 9)
             break;
+        const pos = convert_2dscreen_to_2dunnormlizedviewport(canvas.width, canvas.height, [MENU_WIDTH, CONSOLE_HEIGHT]);
         push_requests_text(
             lines[i],
-            get_centered_screen_x(MENU_WIDTH) + 20.0,
-            -get_centered_screen_y(CONSOLE_HEIGHT) - 20.0 - cnt * 20.0,
+            pos[0] + 20.0,
+            -pos[1] - 20.0 - cnt * 20.0,
             10.0,
             20.0,
             [1.0, 1.0, 1.0, 1.0],

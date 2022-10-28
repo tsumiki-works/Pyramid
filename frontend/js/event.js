@@ -3,35 +3,17 @@ let mouse_pos_before_drag_y = 0.0;
 let camera_pos_before_drag_x = 0.0;
 let camera_pos_before_drag_y = 0.0;
 
-function get_world_pos(x, y) {
-    let pos = convert_clipping_to_view(
-        [get_workspace_x(x), get_workspace_y(y), camera[2], 1.0],
-        canvas.width,
-        canvas.height
-    );
-    pos[0] = pos[0] * camera[2] * -1.0 - camera[0];
-    pos[1] = pos[1] * camera[2] * -1.0 - camera[1];
-    pos[2] = pos[2] * camera[2] * -1.0 - camera[2];
-    return pos;
-}
-
-function get_workspace_x(pageX) {
-    const c = canvas.width * 0.5;
-    return (pageX - c) / c;
-}
-function get_workspace_y(pageY) {
-    const c = canvas.height * 0.5;
-    return -1.0 * (pageY - c) / c;
-}
-
 function fun_mousedown(event) {
     // mouseleft down
     if (event.which == 1) {
         if (event.pageX < MENU_WIDTH) {
             alert("clicked menu");
         } else {
-            const pos = get_world_pos(event.pageX, event.pageY);
-            create_block(pos[0], pos[1], 0, "");
+            const pos_viewport = convert_2dscreen_to_2dviewport(canvas.width, canvas.height, [event.pageX, event.pageY]);
+            const pos_clipping = convert_2dviewport_to_3dclipping(camera[2], pos_viewport);
+            const pos_view = convert_3dclipping_to_3dview(canvas.width, canvas.height, pos_clipping);
+            const pos_world = convert_3dview_to_3dworld(camera, pos_view);
+            create_block(pos_world[0], pos_world[1], 0, "");
         }
     }
     // mouseright down : move around workspace
@@ -72,14 +54,14 @@ function fun_wheel(event) {
     render();
 }
 
-async function fun_keydown(event) {
+function fun_keydown(event) {
     if (event.key.length == 1 && event.key.charCodeAt(0) >= 32 && event.key.charCodeAt(0) <= 126) {
         event.preventDefault(); // disable browser shortcut
         input_char(event.key);
     } else if (event.key == "Backspace") {
         remove_char();
     } else if (event.key == "Enter") {
-        await enter();
+        enter();
     }
     render();
 }
