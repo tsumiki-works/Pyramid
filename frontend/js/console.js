@@ -20,7 +20,8 @@ async function enter() {
                 "Content-Type": "application/json"
             },
             body: cur
-        }).catch(err => console.log(err))
+        })
+        .catch(err => console.log(err))
         .then(data => {return data.text()})
         log += res;
         log += "\n\n# ";
