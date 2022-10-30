@@ -56,6 +56,7 @@ fn diff_test(){
     //type intrin = intrinsic_func;
     let threshold = f64::EPSILON*100.;
     assert!(intrinsic_func::diff(Box::new(|x| x*x/2.))(1.) - 1. < threshold);
+    assert!(intrinsic_func::diff(intrinsic_func::diff(Box::new(|x| x*x*x/6.)))(1.) - 1. < threshold);
 }
 
 #[test]
