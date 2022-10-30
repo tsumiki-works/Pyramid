@@ -50,3 +50,15 @@ fn eval_test_add_wrong() {
     let code = "(+ 1 2 3)";
     assert!(evaluater::eval(parser::parse(code).unwrap()).is_err());
 }
+
+#[test]
+fn diff_test(){
+    //type intrin = intrinsic_func;
+    let threshold = f64::EPSILON*100.;
+    assert!(intrinsic_func::diff(Box::new(|x| x*x/2.))(1.) - 1. < threshold);
+}
+
+#[test]
+fn integrate_test(){
+
+}
