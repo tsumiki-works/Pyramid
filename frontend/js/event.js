@@ -1,7 +1,15 @@
 let mouse_pos_before_drag_x = 0.0;
-let mouse_pos_before_drag_y = 0.0; 
+let mouse_pos_before_drag_y = 0.0;
 let camera_pos_before_drag_x = 0.0;
 let camera_pos_before_drag_y = 0.0;
+
+function convert_cursorpos_to_worldpos(x, y) {
+    const pos_viewport = convert_2dscreen_to_2dviewport(canvas.width, canvas.height, [x, y]);
+    const pos_clipping = convert_2dviewport_to_3dclipping(camera[2], pos_viewport);
+    const pos_view = convert_3dclipping_to_3dview(canvas.width, canvas.height, pos_clipping);
+    const pos_world = convert_3dview_to_3dworld(camera, pos_view);
+    return pos_world;
+}
 
 function fun_mousedown(event) {
     // mouseleft down
@@ -37,19 +45,25 @@ function fun_right_mouseup(_) {
 }
 
 function fun_right_mousemove(event) {
-    const c = 0.01;
+    const c = -0.00176 * camera[2] + 0.00235;
     camera[0] = camera_pos_before_drag_x - (mouse_pos_before_drag_x - event.pageX) * c;
     camera[1] = camera_pos_before_drag_y + (mouse_pos_before_drag_y - event.pageY) * c;
     render();
 }
 
 function fun_wheel(event) {
+    if (event.wheelDelta == 0)
+        return;
+    const prev_pos = convert_cursorpos_to_worldpos(event.pageX, event.pageY);
     if (event.wheelDelta > 0) {
         camera[2] += 0.5;
     } else if (event.wheelDelta < 0) {
         camera[2] -= 0.5;
     }
     camera[2] = Math.max(Math.min(camera[2], -1.5), -10.0);
+    const next_pos = convert_cursorpos_to_worldpos(event.pageX, event.pageY);
+    camera[0] += next_pos[0] - prev_pos[0];
+    camera[1] += next_pos[1] - prev_pos[1];
     event.preventDefault();
     render();
 }
