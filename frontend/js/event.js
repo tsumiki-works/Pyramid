@@ -16,6 +16,7 @@ function fun_mousedown(event) {
             hit_result = hit_block(pos_world);
             if(hit_result[0]){
                 holding_block = search_block_from_id(hit_result[1]);
+                block_remove_relationship();
                 canvas.addEventListener("mousemove", fun_left_mousemove);
                 canvas.addEventListener("mouseup", fun_left_mouseup);
                 canvas.removeEventListener("mousedown", fun_mousedown);
