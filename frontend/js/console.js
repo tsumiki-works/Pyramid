@@ -14,15 +14,46 @@ async function enter() {
     log += cur;
     log += "\n";
     if (cur.length > 0) {
-        const res = await fetch("http://127.0.0.1:7878", {
-            method: "POST",
-            header: {
-                "Content-Type": "application/json"
-            },
-            body: cur
-        }).catch(err => console.log(err))
-        .then(data => {return data.text()})
-        log += res;
+        if(cur[0] == '$'){
+            // Console Commands for debug
+            cmd = cur.slice(1, cur.length);
+            cmd_array = cmd.split(" ");
+            if(cmd_array.length == 1){
+                switch (cmd_array[0]){
+                    case "enumerate":
+                        log += enumerate();
+                        break;
+                    case "generate":
+                        const pos_world = convert_2dscreen_to_3dworld([400, 200]);
+                        create_block(pos_world[0], pos_world[1], 0, "");
+                        log += "generated at (400, 200) in screen";
+                        break;
+                    default:
+                        log += "Console Error: Invalud Command"
+                }
+            }else if(cmd_array.length == 3){
+                switch(cmd_array[0]){
+                    case "generate":
+                        const pos_world = convert_2dscreen_to_3dworld([cmd_array[1], cmd_array[2]]);
+                        create_block(pos_world[0], pos_world[1], 0, "");
+                        log += "generated at (" + cmd_array[1] + ", " + cmd_array[2] + ") in screen";
+                        break;
+                    default:
+                        log += "Console Error: Invalud Command"
+                }
+            }
+        }else{
+            const res = await fetch("http://127.0.0.1:7878", {
+                method: "POST",
+                header: {
+                    "Content-Type": "application/json"
+                },
+                body: cur
+            })
+            .catch(err => console.log(err))
+            .then(data => {return data.text()})
+            log += res;
+        }
         log += "\n\n# ";
     }
     cur = "";

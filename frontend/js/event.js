@@ -21,8 +21,17 @@ function fun_mousedown(event) {
             const pos_clipping = convert_2dviewport_to_3dclipping(camera[2], pos_viewport);
             const pos_view = convert_3dclipping_to_3dview(canvas.width, canvas.height, pos_clipping);
             const pos_world = convert_3dview_to_3dworld(camera, pos_view);
-            create_block(pos_world[0], pos_world[1], 0, "");
-        }
+            hit_result = hit_block(pos_world);
+            if(hit_result[0]){
+                holding_block = search_block_from_id(hit_result[1]);
+                block_remove_relationship();
+                canvas.addEventListener("mousemove", fun_left_mousemove);
+                canvas.addEventListener("mouseup", fun_left_mouseup);
+                canvas.removeEventListener("mousedown", fun_mousedown);
+            }else{
+                console.log("MOUSEPOS: " + event.pageX + ", " + event.pageY);
+            }
+        }   
     }
     // mouseright down : move around workspace
     else if (event.which == 3) {
@@ -36,6 +45,23 @@ function fun_mousedown(event) {
     }
     render();
 }
+
+function fun_left_mouseup(event){
+    block_connect();
+    canvas.removeEventListener("mousemove", fun_left_mousemove);
+    canvas.removeEventListener("mouseup", fun_left_mouseup);
+    canvas.addEventListener("mousedown", fun_mousedown);
+    holding_block = null;
+    render();
+}  
+
+function fun_left_mousemove(event){
+    const pos_world = convert_2dscreen_to_3dworld([event.pageX, event.pageY]);
+    holding_block[BLOCK_IDX_X] = pos_world[0];
+    holding_block[BLOCK_IDX_Y] = pos_world[1];
+    render();
+}
+
 
 function fun_right_mouseup(_) {
     canvas.removeEventListener("mousemove", fun_right_mousemove);
@@ -68,14 +94,14 @@ function fun_wheel(event) {
     render();
 }
 
-function fun_keydown(event) {
+async function fun_keydown(event) {
     if (event.key.length == 1 && event.key.charCodeAt(0) >= 32 && event.key.charCodeAt(0) <= 126) {
         event.preventDefault(); // disable browser shortcut
         input_char(event.key);
     } else if (event.key == "Backspace") {
         remove_char();
     } else if (event.key == "Enter") {
-        enter();
+        await enter();
     }
     render();
 }
