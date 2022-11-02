@@ -13,13 +13,16 @@ function fun_mousedown(event) {
             const pos_clipping = convert_2dviewport_to_3dclipping(camera[2], pos_viewport);
             const pos_view = convert_3dclipping_to_3dview(canvas.width, canvas.height, pos_clipping);
             const pos_world = convert_3dview_to_3dworld(camera, pos_view);
-            holding_block = search_block_from_id(hit_block(pos_world));
-            if(holding_block != null){
+            hit_result = hit_block(pos_world);
+            if(hit_result[0]){
+                holding_block = search_block_from_id(hit_result[1]);
                 canvas.addEventListener("mousemove", fun_left_mousemove);
                 canvas.addEventListener("mouseup", fun_left_mouseup);
                 canvas.removeEventListener("mousedown", fun_mousedown);
+            }else{
+                console.log("MOUSEPOS: " + event.pageX + ", " + event.pageY);
             }
-        }
+        }   
     }
     // mouseright down : move around workspace
     else if (event.which == 3) {
@@ -35,6 +38,7 @@ function fun_mousedown(event) {
 }
 
 function fun_left_mouseup(event){
+    block_connect();
     canvas.removeEventListener("mousemove", fun_left_mousemove);
     canvas.removeEventListener("mouseup", fun_left_mouseup);
     canvas.addEventListener("mousedown", fun_mousedown);
