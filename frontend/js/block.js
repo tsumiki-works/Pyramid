@@ -1,22 +1,26 @@
-let next_id = 0;
-let blocks = [];
+let roots = [];
 let holding_block = null;
-const BLOCK_IDX_ID = 0;
-const BLOCK_IDX_PARENT = 1;
-const BLOCK_IDX_CHILDREN = 2;
-const BLOCK_IDX_CHILDREN_NUM = 3;
-const BLOCK_IDX_X = 4;
-const BLOCK_IDX_Y = 5;
-const BLOCK_IDX_WIDTH = 6;
-const BLOCK_IDX_HEIGHT = 7;
-const BLOCK_IDX_TYPE = 8;
-const BLOCK_IDX_CONTENT = 9;
+const BLOCK_IDX_PARENT = 0;
+const BLOCK_IDX_CHILDREN = 1;
+const BLOCK_IDX_CHILDREN_NUM = 2;
+const BLOCK_IDX_X = 3;
+const BLOCK_IDX_Y = 4;
+const BLOCK_IDX_WIDTH = 5;
+const BLOCK_IDX_HEIGHT = 6;
+const BLOCK_IDX_TYPE = 7;
+const BLOCK_IDX_CONTENT = 8;
 
-function create_block(x, y, type, content) {
-    let block = [
-        next_id,
+/**
+ * A function to push new root to roots array.
+ */
+function create_and_push_root(x, y, type, content) {
+    let children = [];
+    for (let i = 0; i < 1; ++i) {
+        children.push(null);
+    }
+    const root = [
         null,
-        [],
+        children,
         1,
         x,
         y,
@@ -25,36 +29,114 @@ function create_block(x, y, type, content) {
         type,
         content,
     ];
-    blocks.push(block);
-    next_id += 1;
+    roots.push(root);
 }
-
+/**
+ * A function to push block to roots.
+ */
+function push_block_to_roots(block) {
+    roots.push(block);
+}
+/**
+ * A function to remove block from tree.
+ */
+function remove_block(block_removing) {
+    function remove_block_(children) {
+        if (children.length == 0)
+            return;
+        for (let i = 0; i < children.length; ++i) {
+            if (children[i] == null)
+                continue;
+            if (children[i] === block_removing) {
+                console.log("remove");
+                children[i] = null;
+                return;
+            }
+            remove_block_(children[i][BLOCK_IDX_CHILDREN]);
+        }
+    }
+    remove_block_(roots);
+}
+/**
+ * A function to remove null from roots.
+ */
+function arrangement_tree() {
+    roots = roots.filter(block => block != null);
+    map_block(block => {
+        for (const child of block[BLOCK_IDX_CHILDREN]) {
+            if (child == null)
+                continue;
+            child[BLOCK_IDX_X] = block[BLOCK_IDX_X];
+            child[BLOCK_IDX_Y] = block[BLOCK_IDX_Y] - block[BLOCK_IDX_HEIGHT];
+        }
+    });
+}
+/**
+ * A function to push all of block entity requests to requests array.
+ */
 function push_requests_blocks(requests) {
-    for (let i = 0; i < blocks.length; ++i) {
-        requests.push(entity_block(blocks[i][BLOCK_IDX_X], blocks[i][BLOCK_IDX_Y], blocks[i][BLOCK_IDX_WIDTH], blocks[i][BLOCK_IDX_HEIGHT]));
+    arrangement_tree();
+    function push_requests_blocks_(requests, tree) {
+        if (tree == null)
+            return;
+        requests.push(
+            entity_block(
+                tree[BLOCK_IDX_X],
+                tree[BLOCK_IDX_Y],
+                1.0,
+                0.5
+            )
+        );
+        for (const child of tree[BLOCK_IDX_CHILDREN]) {
+            push_requests_blocks_(requests, child);
+        }
+    }    
+    for (const root of roots) {
+        push_requests_blocks_(requests, root);
     }
 }
-
-function hit_block(pos){
-    for(const b of blocks){
-        let block_half_width = b[BLOCK_IDX_WIDTH] * 0.5;
-        let block_half_height = b[BLOCK_IDX_HEIGHT] * 0.5;
-        if(Math.abs(b[BLOCK_IDX_X] - pos[0]) > block_half_width){
-            continue;
+/**
+ * A function to do f for tree.
+ * @param f fn(block)->void
+ */
+function map_block(f) {
+    function map_block_(blocks) {
+        if (blocks.length == 0)
+            return null;
+        for (const block of blocks) {
+            if (block == null)
+                continue;
+            f(block);
+            map_block_(block[BLOCK_IDX_CHILDREN]);
         }
-        if(Math.abs(b[BLOCK_IDX_Y] - pos[1]) > block_half_height){
-            continue;
-        }
-        return [true, b[BLOCK_IDX_ID]];
     }
-    return [false, -1];
+    map_block_(roots);
 }
-
-function search_block_from_id(id){
-    for(const b of blocks){
-        if(b[BLOCK_IDX_ID] == id){
-            return b;
+/**
+ * A function to find a block that f(block) is true.
+ * @param f fn(block)->bool 
+ * @returns If it's found, then it. Otherwise, null.
+ */
+function find_block(f) {
+    function find_block_(blocks) {
+        if (blocks.length == 0)
+            return null;
+        for (const block of blocks) {
+            if (block == null)
+                continue;
+            if (f(block))
+                return block;
+            const res_finding_from_children = find_block_(block[BLOCK_IDX_CHILDREN]);
+            if (res_finding_from_children != null)
+                return res_finding_from_children;
         }
+        return null;
     }
-    return null;
+    return find_block_(roots);
+}
+/**
+ * A function to 
+ */
+function enumerate() {
+    console.log(roots);
 }

@@ -21,10 +21,16 @@ function fun_mousedown(event) {
             const pos_clipping = convert_2dviewport_to_3dclipping(camera[2], pos_viewport);
             const pos_view = convert_3dclipping_to_3dview(canvas.width, canvas.height, pos_clipping);
             const pos_world = convert_3dview_to_3dworld(camera, pos_view);
-            hit_result = hit_block(pos_world);
-            if(hit_result[0]){
-                holding_block = search_block_from_id(hit_result[1]);
-                block_remove_relationship();
+            const hit_result = find_block((block) => {
+                const block_half_width = block[BLOCK_IDX_WIDTH] * 0.5;
+                const block_half_height = block[BLOCK_IDX_HEIGHT] * 0.5;
+                return Math.abs(block[BLOCK_IDX_X] - pos_world[0]) < block_half_width
+                    && Math.abs(block[BLOCK_IDX_Y] - pos_world[1]) < block_half_height;
+            });
+            if(hit_result != null){
+                holding_block = hit_result;
+                remove_block(hit_result);
+                //block_remove_relationship();
                 canvas.addEventListener("mousemove", fun_left_mousemove);
                 canvas.addEventListener("mouseup", fun_left_mouseup);
                 canvas.removeEventListener("mousedown", fun_mousedown);
@@ -47,7 +53,7 @@ function fun_mousedown(event) {
 }
 
 function fun_left_mouseup(event){
-    block_connect();
+    connect_block();
     canvas.removeEventListener("mousemove", fun_left_mousemove);
     canvas.removeEventListener("mouseup", fun_left_mouseup);
     canvas.addEventListener("mousedown", fun_mousedown);
