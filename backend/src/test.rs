@@ -54,12 +54,11 @@ fn eval_test_add_wrong() {
 #[test]
 fn diff_test(){
     let threshold = f64::EPSILON*1000.;
-    assert!(intrinsic_func::diff(|x| x*x/2., 1.) - 1. < threshold);
-    //assert!(intrinsic_func::diff(intrinsic_func::diff(Box::new(|x| x*x*x/6.)))(1.) - 1. < threshold);
+    assert!((intrinsic_func::diff(|x| x*x/2., 1.) - 1.).abs() < threshold);
 }
 
 #[test]
 fn integrate_test(){
     let threshold = f64::EPSILON*1000.;
-    assert!(intrinsic_func::integrate(|x: f64| (-x*x).exp_m1(), -1., 1.) - 0.842700792949714869 < threshold)
+    assert!((intrinsic_func::integrate(|x: f64| (-x*x).exp(), 0., 1.)*2./std::f64::consts::PI.sqrt() - 0.842700792949714869).abs() < threshold)
 }
