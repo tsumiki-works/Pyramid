@@ -53,13 +53,13 @@ fn eval_test_add_wrong() {
 
 #[test]
 fn diff_test(){
-    //type intrin = intrinsic_func;
-    let threshold = f64::EPSILON*100.;
-    assert!(intrinsic_func::diff(Box::new(|x| x*x/2.))(1.) - 1. < threshold);
-    assert!(intrinsic_func::diff(intrinsic_func::diff(Box::new(|x| x*x*x/6.)))(1.) - 1. < threshold);
+    let threshold = f64::EPSILON*1000.;
+    assert!(intrinsic_func::diff(|x| x*x/2., 1.) - 1. < threshold);
+    //assert!(intrinsic_func::diff(intrinsic_func::diff(Box::new(|x| x*x*x/6.)))(1.) - 1. < threshold);
 }
 
 #[test]
 fn integrate_test(){
-
+    let threshold = f64::EPSILON*1000.;
+    assert!(intrinsic_func::integrate(|x: f64| (-x*x).exp_m1(), -1., 1.) - 0.842700792949714869 < threshold)
 }
