@@ -116,3 +116,8 @@ function convert_clipping_to_view(pos, width, height) {
     const inv_proj = inverse_matrix(mat_proj);
     return multiple_matrix_vector(inv_proj, pos);
 }
+
+function convert_view_to_clipping(pos, width, height) {
+    const mat_proj = create_perse(45.0, width / height, 0.1, 1000.0);
+    return multiple_matrix_vector(mat_proj, pos);
+}

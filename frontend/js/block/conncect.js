@@ -2,7 +2,7 @@
  * A function to connect block if it can be connected.
  */
 function connect_block(){
-    const nearest_block = find_block((block) => {
+    const nearest_block = find_block(roots, (block) => {
         return Math.abs(block[BLOCK_IDX_X] - holding_block[BLOCK_IDX_X]) <
                     (block[BLOCK_IDX_WIDTH] + holding_block[BLOCK_IDX_WIDTH]) / 2
             && Math.abs(block[BLOCK_IDX_Y] - holding_block[BLOCK_IDX_Y]) <
@@ -17,6 +17,7 @@ function connect_block(){
         nearest_block[BLOCK_IDX_CHILDREN][index] = holding_block;
         holding_block[BLOCK_IDX_PARENT] = nearest_block;
     } else {
+        remove_block_from_roots(nearest_block);
         push_block_to_roots(holding_block);
         let index = 0;
         holding_block[BLOCK_IDX_CHILDREN][index] = nearest_block;

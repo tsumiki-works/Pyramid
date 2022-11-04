@@ -78,7 +78,7 @@ function push_requests_console(requests) {
     for (let i = Math.max(lines.length - 9, 0); i < lines.length; ++i) {
         if (cnt > 9)
             break;
-        const pos = convert_2dscreen_to_2dunnormlizedviewport(canvas.width, canvas.height, [MENU_WIDTH, CONSOLE_HEIGHT]);
+        const pos = convert_2dscreen_to_2dunnormalizedviewport(canvas.width, canvas.height, [MENU_WIDTH, CONSOLE_HEIGHT]);
         push_requests_text(
             lines[i],
             pos[0] + 20.0,
