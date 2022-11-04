@@ -11,6 +11,7 @@ function render() {
     requests.push(entity_logo());
     requests.push(entity_menu());
     push_requests_console(requests);
+    push_requests_holding_blocks(requests);
     update_webgl(requests, canvas.width, canvas.height, camera);
 }
 

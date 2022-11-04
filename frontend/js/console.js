@@ -1,15 +1,22 @@
 let log = "# ";
 let cur = "";
 
-// A funciton to add input charactor to the tail of current command line
+/**
+ * A funciton to add input charactor to the tail of current command line.
+*/
 function input_char(char) {
     cur += char;
 }
-// A function to remove 1 charactor from the tail of current command line
+/**
+ * A function to remove 1 charactor from the tail of current command line.
+*/
 function remove_char() {
     cur = cur.slice(0, -1);
 }
-// A function to send current command with enter
+let content = 1;
+/**
+ * A function to send current command with enter.
+*/
 async function enter() {
     log += cur;
     log += "\n";
@@ -25,7 +32,7 @@ async function enter() {
                         break;
                     case "generate":
                         const pos_world = convert_2dscreen_to_3dworld([400, 200]);
-                        create_block(pos_world[0], pos_world[1], 0, "");
+                        create_and_push_root(pos_world[0], pos_world[1], 0, content++);
                         log += "generated at (400, 200) in screen";
                         break;
                     default:
@@ -35,7 +42,7 @@ async function enter() {
                 switch(cmd_array[0]){
                     case "generate":
                         const pos_world = convert_2dscreen_to_3dworld([cmd_array[1], cmd_array[2]]);
-                        create_block(pos_world[0], pos_world[1], 0, "");
+                        create_and_push_root(pos_world[0], pos_world[1], 0, "");
                         log += "generated at (" + cmd_array[1] + ", " + cmd_array[2] + ") in screen";
                         break;
                     default:
@@ -58,8 +65,9 @@ async function enter() {
     }
     cur = "";
 }
-
-// A function push requests for drawing console
+/**
+ * A function push requests for drawing console.
+*/
 function push_requests_console(requests) {
     requests.push(entity_console());
     const text = log + cur;
@@ -70,7 +78,7 @@ function push_requests_console(requests) {
     for (let i = Math.max(lines.length - 9, 0); i < lines.length; ++i) {
         if (cnt > 9)
             break;
-        const pos = convert_2dscreen_to_2dunnormlizedviewport(canvas.width, canvas.height, [MENU_WIDTH, CONSOLE_HEIGHT]);
+        const pos = convert_2dscreen_to_2dunnormalizedviewport(canvas.width, canvas.height, [MENU_WIDTH, CONSOLE_HEIGHT]);
         push_requests_text(
             lines[i],
             pos[0] + 20.0,
