@@ -1,7 +1,7 @@
 /**
  * A function to do f for blocks.
- * @param blocks [block; _]
- * @param f fn(block)->void
+ * @param {[object]} blocks which you want to proceed
+ * @param {function(object):void} f which you want to apply to all block in blocks
  */
  function for_each_blocks(blocks, f) {
     if (blocks.length == 0)
@@ -15,9 +15,9 @@
 }
 /**
  * A function to find a block that f(block) is true.
- * @param blocks [block; _]
- * @param f fn(block)->bool 
- * @returns If it's found, then it. Otherwise, null.
+ * @param {[object]} blocks which you want to find a block in
+ * @param {function(object):boolean} f which is true then block is found
+ * @returns {object} If it's found, then it. Otherwise, null.
  */
 function find_block(blocks, f) {
     if (blocks.length == 0)
