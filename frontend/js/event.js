@@ -7,7 +7,26 @@ function fun_mousedown(event) {
     // mouseleft down
     if (event.which == 1) {
         if (event.pageX < MENU_WIDTH) {
-            alert("clicked menu");
+         //  const pos_world = convert_2dscreen_to_3dworld([event.pageX, event.pageY]);
+
+            if(event.pageX > 40 && event.pageX < 140){
+                const pos_world = convert_2dscreen_to_3dworld([event.pageX + 350, event.pageY]);
+                if(event.pageY > 75 && event.pageY < 125) {
+                    push_block_to_roots(create_block(pos_world[0], pos_world[1], 1, "plus"));
+                }
+                if(event.pageY > 135 && event.pageY < 185) {
+                    push_block_to_roots(create_block(pos_world[0], pos_world[1], 2, "minus"));
+                }
+                if(event.pageY > 195 && event.pageY < 245) {
+                    push_block_to_roots(create_block(pos_world[0], pos_world[1], 3, "times"));
+                }
+                if(event.pageY > 255 && event.pageY < 305) {
+                    push_block_to_roots(create_block(pos_world[0], pos_world[1], 4, "divide"));
+                }
+                if(event.pageY > 315 && event.pageY < 365) {
+                    push_block_to_roots(create_block(pos_world[0], pos_world[1], 0, content++));
+                }
+           }
         } else {
             const pos_world = convert_2dscreen_to_3dworld([event.pageX, event.pageY]);
             const hit_result = find_block_from_roots((block) => {
