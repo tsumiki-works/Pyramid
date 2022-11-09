@@ -32,7 +32,7 @@ async function enter() {
                         break;
                     case "generate":
                         const pos_world = convert_2dscreen_to_3dworld([400, 200]);
-                        create_and_push_root(pos_world[0], pos_world[1], 0, content++);
+                        push_block_to_roots(create_block(pos_world[0], pos_world[1], 0, content++));
                         log += "generated at (400, 200) in screen";
                         break;
                     default:
@@ -42,7 +42,7 @@ async function enter() {
                 switch(cmd_array[0]){
                     case "generate":
                         const pos_world = convert_2dscreen_to_3dworld([cmd_array[1], cmd_array[2]]);
-                        create_and_push_root(pos_world[0], pos_world[1], 0, "");
+                        push_block_to_roots(create_block(pos_world[0], pos_world[1], 0, ""));
                         log += "generated at (" + cmd_array[1] + ", " + cmd_array[2] + ") in screen";
                         break;
                     default:

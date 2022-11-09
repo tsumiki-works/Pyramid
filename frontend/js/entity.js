@@ -27,19 +27,9 @@ function entity_menu() {
 }
 
 function entity_block(x, y, width, height, is_ui) {
-    let w = width;
-    let h = height;
-    if (is_ui) {
-        const half_width = width * 0.5;
-        const half_height = height * 0.5;
-        const pos_view_1 = convert_view_to_clipping([x - half_width, y - half_height, camera[2], 1.0], canvas.width, canvas.height);
-        const pos_view_2 = convert_view_to_clipping([x + half_width, y + half_height, camera[2], 1.0], canvas.width, canvas.height);
-        w = canvas.width * 0.5 * (pos_view_2[0] / pos_view_2[3] - pos_view_1[0] / pos_view_1[3]);
-        h = canvas.height * 0.5 * (pos_view_2[1] / pos_view_2[3] - pos_view_1[1] / pos_view_2[3]);
-    }
     return [
         [x, y, 0.0],
-        [w, h, 1.0],
+        [width, height, 1.0],
         [0.0, 0.0, 1.0, 1.0],
         null,
         [0.0, 0.0, 0.0, 0.0],
