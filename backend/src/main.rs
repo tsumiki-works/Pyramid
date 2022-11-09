@@ -1,5 +1,6 @@
 mod evaluater;
 mod parser;
+mod intrinsic_func;
 #[cfg(test)]
 mod test;
 

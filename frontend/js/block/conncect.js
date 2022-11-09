@@ -4,9 +4,8 @@
 function connect_block(){
     const nearest_block = find_block(roots, (block) => {
         return Math.abs(block[BLOCK_IDX_X] - holding_block[BLOCK_IDX_X]) <
-                    (block[BLOCK_IDX_WIDTH] + holding_block[BLOCK_IDX_WIDTH]) / 2
-            && Math.abs(block[BLOCK_IDX_Y] - holding_block[BLOCK_IDX_Y]) <
-                    (block[BLOCK_IDX_HEIGHT] + holding_block[BLOCK_IDX_HEIGHT]) / 2;
+                    (block[BLOCK_IDX_WIDTH] + holding_block[BLOCK_IDX_WIDTH]) * 0.5
+            && Math.abs(block[BLOCK_IDX_Y] - holding_block[BLOCK_IDX_Y]) < BLOCK_HEIGHT;
     });
     if (nearest_block == null) {
         push_block_to_roots(holding_block);
