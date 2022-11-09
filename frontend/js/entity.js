@@ -60,3 +60,15 @@ function entity_character(x, y, width, height, color, tex_scale_offset, is_ui) {
         is_ui,
     ];
 }
+
+const TRASHBOX_WIDTH = 128.0;
+const TRASHBOX_HEIGHT = 128.0;
+function entity_trashbox(isopen) {
+    const pos =  convert_2dscreen_to_2dunnormalizedviewport(canvas.width, canvas.height, [canvas.width - TRASHBOX_HEIGHT *0.5 ,canvas.height-CONSOLE_HEIGHT + TRASHBOX_HEIGHT *0.5]);
+    const texture = create_image_texture();
+    return [
+        [pos[0], pos[1], 0.0],
+        [TRASHBOX_WIDTH, TRASHBOX_HEIGHT, 1.0],
+        [1.0, 1.0, 1.0, 1.0]
+    ];
+}
