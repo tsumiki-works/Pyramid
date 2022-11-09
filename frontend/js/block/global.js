@@ -1,5 +1,6 @@
 let roots = [];
 let holding_block = null;
+let open_trashbox = false;
 
 const BLOCK_IDX_PARENT = 0;
 const BLOCK_IDX_CHILDREN = 1;

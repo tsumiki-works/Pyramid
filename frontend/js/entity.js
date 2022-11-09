@@ -62,13 +62,16 @@ function entity_character(x, y, width, height, color, tex_scale_offset, is_ui) {
 }
 
 const TRASHBOX_WIDTH = 128.0;
-const TRASHBOX_HEIGHT = 128.0;
+const TRASHBOX_HEIGHT = 179.2;
+
 function entity_trashbox(isopen) {
-    const pos =  convert_2dscreen_to_2dunnormalizedviewport(canvas.width, canvas.height, [canvas.width - TRASHBOX_HEIGHT *0.5 ,canvas.height-CONSOLE_HEIGHT + TRASHBOX_HEIGHT *0.5]);
-    const texture = create_image_texture();
+    const pos =  convert_2dscreen_to_2dunnormalizedviewport(canvas.width, canvas.height, [canvas.width - TRASHBOX_WIDTH *0.5, canvas.height-CONSOLE_HEIGHT - TRASHBOX_HEIGHT*0.5]);
     return [
         [pos[0], pos[1], 0.0],
         [TRASHBOX_WIDTH, TRASHBOX_HEIGHT, 1.0],
-        [1.0, 1.0, 1.0, 1.0]
+        [1.0, 1.0, 1.0, 1.0],
+        img_texs[IMGTEX_IDX_TEX_TRASHBOX],
+        [0.5, 0.7, (isopen ? 0.5 : 0.0), 0.3],
+        true
     ];
 }

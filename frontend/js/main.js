@@ -4,12 +4,14 @@ let camera = [0.0, 0.0, -5.0];
 let img_texs = [];
 const IMGTEX_IDX_TEX01 = 0;
 const IMGTEX_IDX_TEX_FONT = 1;
+const IMGTEX_IDX_TEX_TRASHBOX = 2;
 
 function render() {
     let requests = [];
     push_requests_blocks(requests);
     requests.push(entity_logo());
     requests.push(entity_menu());
+    requests.push(entity_trashbox(open_trashbox));
     push_requests_console(requests);
     push_requests_holding_blocks(requests);
     update_webgl(requests, canvas.width, canvas.height, camera);
@@ -25,5 +27,6 @@ window.onload = () => {
     init_webgl(canvas);
     img_texs.push(create_image_texture(document.getElementById("tex01")));
     img_texs.push(create_image_texture(document.getElementById("tex_font")));
+    img_texs.push(create_image_texture(document.getElementById("tex_trashbox")));
     render();
 }
