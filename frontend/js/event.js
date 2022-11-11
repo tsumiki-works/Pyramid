@@ -7,12 +7,43 @@ function fun_mousedown(event) {
     // mouseleft down
     if (event.which == 1) {
         if (event.pageX < MENU_WIDTH) {
-         //  const pos_world = convert_2dscreen_to_3dworld([event.pageX, event.pageY]);
-
             if(event.pageX > 40 && event.pageX < 140){
-                const pos_world = convert_2dscreen_to_3dworld([event.pageX + 350, event.pageY]);
+                const pos_world = convert_2dscreen_to_3dworld([event.pageX, event.pageY]);
                 if(event.pageY > 75 && event.pageY < 125) {
-                    push_block_to_roots(create_block(pos_world[0], pos_world[1], 1, "plus"));
+                    let holding_block = create_block(pos_world[0], pos_world[1], 1, "plus");
+                    /*
+                    holding_block = find_block_from_roots((block) => {
+                        const block_half_width = block[BLOCK_IDX_WIDTH] * 0.5;
+                        return Math.abs(block[BLOCK_IDX_X] - pos_world[0]) < block[BLOCK_IDX_WIDTH]
+                            && Math.abs(block[BLOCK_IDX_Y] - pos_world[1]) < block[BLOCK_HEIGHT];
+                    });
+
+                    remove_block_from_roots(holding_block);
+                    */
+                    const pos = convert_2dscreen_to_2dunnormalizedviewport(canvas.width, canvas.height, [event.pageX, event.pageY]);
+                    console.log(holding_block);
+                    holding_block[BLOCK_IDX_X] = pos[0];
+                    holding_block[BLOCK_IDX_Y] = pos[1];
+                    canvas.addEventListener("mousemove", fun_left_mousemove);
+                    canvas.addEventListener("mouseup", fun_left_mouseup);
+                    canvas.removeEventListener("mousedown", fun_mousedown);
+                    /*
+                    // ブロックをつかむ
+                    start_menublockX = event.pageX
+                    start_menublockY = event.pageY
+//                    hit_result = [ , , 1, pos_world[0], pos_world[1], 1, 1, "plus"]
+
+                    if(hit_result != null){
+                        holding_block = hit_result;
+                        remove_block_from_roots(hit_result);
+                        const pos = convert_2dscreen_to_2dunnormalizedviewport(canvas.width, canvas.height, [event.pageX, event.pageY]);
+                        holding_block[BLOCK_IDX_X] = pos[0];
+                        holding_block[BLOCK_IDX_Y] = pos[1];
+                        canvas.addEventListener("mousemove", fun_left_mousemove);
+                        canvas.addEventListener("mouseup", fun_left_mouseup);
+                        canvas.removeEventListener("mousedown", fun_mousedown);
+                    }
+                    //*/
                 }
                 if(event.pageY > 135 && event.pageY < 185) {
                     push_block_to_roots(create_block(pos_world[0], pos_world[1], 2, "minus"));
@@ -26,7 +57,7 @@ function fun_mousedown(event) {
                 if(event.pageY > 315 && event.pageY < 365) {
                     push_block_to_roots(create_block(pos_world[0], pos_world[1], 0, content++));
                 }
-           }
+            }
         } else {
             const pos_world = convert_2dscreen_to_3dworld([event.pageX, event.pageY]);
             const hit_result = find_block_from_roots((block) => {
@@ -36,6 +67,7 @@ function fun_mousedown(event) {
             });
             if(hit_result != null){
                 holding_block = hit_result;
+                console.log("hit_result = "+ hit_result)
                 remove_block_from_roots(hit_result);
                 const pos = convert_2dscreen_to_2dunnormalizedviewport(canvas.width, canvas.height, [event.pageX, event.pageY]);
                 holding_block[BLOCK_IDX_X] = pos[0];
@@ -74,7 +106,7 @@ function fun_left_mouseup(_) {
     canvas.addEventListener("mousedown", fun_mousedown);
     holding_block = null;
     render();
-}  
+}
 
 function fun_left_mousemove(event){
     const pos = convert_2dscreen_to_2dunnormalizedviewport(canvas.width, canvas.height, [event.pageX, event.pageY]);
@@ -116,6 +148,7 @@ function fun_wheel(event) {
         render();
     }
     else {
+        // メニューバーをスクロールさせるかも
         event.preventDefault();
     }
 }
