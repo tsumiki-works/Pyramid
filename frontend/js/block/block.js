@@ -60,6 +60,8 @@ function find_block_from_roots(f) {
 /**
  * A function to 
  */
-function enumerate() {
+/**
+ function enumerate() {
     console.log(roots);
 }
+*/
