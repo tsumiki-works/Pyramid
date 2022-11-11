@@ -101,18 +101,20 @@ function fun_right_mousemove(event) {
 function fun_wheel(event) {
     if (event.wheelDelta == 0)
         return;
-    const prev_pos = convert_2dscreen_to_3dworld([event.pageX, event.pageY]);
-    if (event.wheelDelta > 0) {
-        camera[2] += 0.5;
-    } else if (event.wheelDelta < 0) {
-        camera[2] -= 0.5;
+    if (event.pageX > MENU_WIDTH ) {
+        const prev_pos = convert_2dscreen_to_3dworld([event.pageX, event.pageY]);
+        if (event.wheelDelta > 0) {
+            camera[2] = camera[2] * 1.1;
+        } else if (event.wheelDelta < 0) {
+            camera[2] = camera[2] * 0.89;
+        }
+        camera[2] = Math.max(Math.min(camera[2], -1.5), -10.0);
+        const next_pos = convert_2dscreen_to_3dworld([event.pageX, event.pageY]);
+        camera[0] += next_pos[0] - prev_pos[0];
+        camera[1] += next_pos[1] - prev_pos[1];
+        event.preventDefault();
+        render();
     }
-    camera[2] = Math.max(Math.min(camera[2], -1.5), -10.0);
-    const next_pos = convert_2dscreen_to_3dworld([event.pageX, event.pageY]);
-    camera[0] += next_pos[0] - prev_pos[0];
-    camera[1] += next_pos[1] - prev_pos[1];
-    event.preventDefault();
-    render();
 }
 
 async function fun_keydown(event) {
