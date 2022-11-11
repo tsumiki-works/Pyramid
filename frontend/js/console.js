@@ -1,18 +1,72 @@
-let log = "# ";
-let cur = "";
-let content = 1;
+let content = 1; // unneccessary variable
+const console_div = document.getElementById("console");
 
 /**
- * A funciton to add input charactor to the tail of current command line.
-*/
-function input_char(char) {
-    cur += char;
+ * A function to initialize console.
+ */
+function init_console() {
+    console_div.addEventListener("click", fun_click_console);
+    console_div.addEventListener("keydown", fun_keydown_console);
+    const observer = new MutationObserver(() => render());
+    const options = {
+        attriblutes: true,
+        attributeFilter: ["style"]
+    };
+    observer.observe(console_div, options);
+    document.getElementById("console-line").addEventListener("keydown", fun_prevent_enter_console_line);
 }
 /**
- * A function to remove 1 charactor from the tail of current command line.
-*/
-function remove_char() {
-    cur = cur.slice(0, -1);
+ * A function to get console element's height.
+ * @return {float} the offfset height of console element.
+ */
+function get_console_height() {
+    return console_div.offsetHeight;
+}
+/**
+ * An event handler for console.onclick.
+ * Wherever you click on console, you're focused on console line.
+ */
+function fun_click_console(_) {
+    document.getElementById("console-line").focus();
+}
+/**
+ * An event handler for console.onkeydown.
+ * Detecting enter hit and run command inputed.
+ */
+async function fun_keydown_console(event) {
+    if (event.key == "Enter") {
+        const content = document.getElementById("console-content");
+        const prev_line = document.getElementById("console-line");
+        const line_head = document.createElement("label");
+        const new_line = document.createElement("label");
+        prev_line.contentEditable = false;
+        prev_line.id = "";
+        line_head.innerText = "# ";
+        new_line.contentEditable = true;
+        new_line.id = "console-line";
+        content.appendChild(document.createElement("br"));
+        if (prev_line.innerText.length > 0) {
+            const res_label = document.createElement("label");
+            const res = await run_command(prev_line.innerText);
+            res_label.innerHTML = res[0];
+            content.appendChild(res_label);
+            content.appendChild(document.createElement("br"));
+        }
+        content.appendChild(line_head);
+        content.appendChild(new_line);
+        new_line.focus();
+        new_line.addEventListener("keydown", fun_prevent_enter_console_line);
+        render();
+    }
+}
+/**
+ * An event handler for console-line.onkeydown.
+ * It prevents enter and make a newline in console-line.
+ */
+function fun_prevent_enter_console_line(event) {
+    if (event.key === 'Enter') {
+        return event.preventDefault();
+    }
 }
 /**
  * A function to send calculation request to backend server.
@@ -47,7 +101,7 @@ async function run_command(command) {
             if (words.length == 1) {
                 return [enumerate(), true];
             } else {
-                return ["pyramid frontend exception: 'enumerate' has to have 0 parameter.", false];
+                return [exception_message("'enumerate' has to have 0 parameter."), false];
             }
         case "generate":
             if (words.length == 1) {
@@ -59,66 +113,23 @@ async function run_command(command) {
                 const y = parseInt(words[2]);
                 const type = parseInt(words[3]);
                 if (isNaN(x)) {
-                    return ["pyramid frontend exception: x is not integer.", false];
+                    return [exception_message("x is not integer."), false];
                 } else if (isNaN(y)) {
-                    return ["pyramid frontend exception: y is not integer.", false];
+                    return [exception_message("y is not integer."), false];
                 } else if (isNaN(type)) {
-                    return ["pyramid frontend exception: type is not integer.", false];
+                    return [exception_message("type is not integer."), false];
                 } else {
                     const pos_world = convert_2dscreen_to_3dworld([x, y]);
                     push_block_to_roots(create_block(pos_world[0], pos_world[1], type, ""));
                     return ["generated at (" + x + ", " + y + ") in screen", true];
                 }
             } else {
-                return ["pyramid frontend exception: 'generate' has to have 0 or 3 parameters.", false];
+                return [exception_message("'generate' has to have 0 or 3 parameters."), false];
             }
         case "send":
             const res = await send_calc_request_to_server("(+ (+ 1 2) 3)", "console");
             return [res["result"], true];
         default:
-            return ["pyramid frontend exception: invalid command", false];
-    }
-}
-/**
- * A function to enter and run command.
- */
-async function enter() {
-    log += cur;
-    log += "\n";
-    if (cur.length == 0) {
-        log += "# ";
-        cur = "";
-    } else {
-        const res = await run_command(cur);
-        log += res[0];
-        log += "\n\n# ";
-        cur = "";
-    }
-}
-/**
- * A function push requests for drawing console.
-*/
-function push_requests_console(requests) {
-    requests.push(entity_console());
-    const text = log + cur;
-    if (text.length == 0)
-        return;
-    const lines = text.split("\n");
-    let cnt = 0;
-    for (let i = Math.max(lines.length - 9, 0); i < lines.length; ++i) {
-        if (cnt > 9)
-            break;
-        const pos = convert_2dscreen_to_2dunnormalizedviewport(canvas.width, canvas.height, [MENU_WIDTH, CONSOLE_HEIGHT]);
-        push_requests_text(
-            lines[i],
-            pos[0] + 20.0,
-            -pos[1] - 20.0 - cnt * 20.0,
-            10.0,
-            20.0,
-            [1.0, 1.0, 1.0, 1.0],
-            true,
-            requests
-        );
-        cnt += 1;
+            return [exception_message("invalid command"), false];
     }
 }

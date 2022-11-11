@@ -6,6 +6,10 @@ const IMGTEX_IDX_TEX01 = 0;
 const IMGTEX_IDX_TEX_FONT = 1;
 const IMGTEX_IDX_TEX_TRASHBOX = 2;
 
+function exception_message(message) {
+    return "<span class=\"exception\">pyramid frontend exception:</span> " + message;
+}
+
 function render() {
     let requests = [];
     push_requests_blocks(requests);
@@ -13,18 +17,25 @@ function render() {
     requests.push(entity_menu());
     push_requests_menublocks(requests);
     requests.push(entity_trashbox(open_trashbox));
-    push_requests_console(requests);
     push_requests_holding_blocks(requests);
-    update_webgl(requests, canvas.width, canvas.height, camera);
+    update_webgl(canvas, requests, camera);
 }
 
 window.onload = () => {
-    const workspace_wrapper = document.getElementById("workspace-wrapper");
-    canvas.width = workspace_wrapper.offsetWidth;
-    canvas.height = workspace_wrapper.offsetHeight;
+    // canvas
+    canvas.width = canvas.clientWidth;
+    canvas.height = canvas.clientHeight;
     canvas.addEventListener("mousedown", fun_mousedown);
     canvas.addEventListener("wheel", fun_wheel);
-    document.body.addEventListener("keydown", fun_keydown);
+    // window
+    window.addEventListener("resize", () => {
+        canvas.width = canvas.clientWidth;
+        canvas.height = canvas.clientHeight;
+        render();
+    });
+    // console
+    init_console();
+    // webgl
     init_webgl(canvas);
     img_texs.push(create_image_texture(document.getElementById("tex01")));
     img_texs.push(create_image_texture(document.getElementById("tex_font")));

@@ -15,7 +15,11 @@ function entity_logo() {
 const MENU_WIDTH = 190.0;
 function entity_menu() {
     const MENU_HEIGHT = canvas.height - LOGO_HEIGHT;
-    const pos = convert_2dscreen_to_2dunnormalizedviewport(canvas.width, canvas.height, [MENU_WIDTH * 0.5, MENU_HEIGHT * 0.5]);
+    const pos = convert_2dscreen_to_2dunnormalizedviewport(
+        canvas.width,
+        canvas.height,
+        [MENU_WIDTH * 0.5, MENU_HEIGHT * 0.5]
+    );
     return [
         [pos[0], pos[1] - LOGO_HEIGHT - 8.0, 0.0],
         [MENU_WIDTH, MENU_HEIGHT, 1.0],
@@ -37,19 +41,6 @@ function entity_block(x, y, width, height, is_ui) {
     ];
 }
 
-const CONSOLE_HEIGHT = 200.0;
-function entity_console() {
-    const pos = convert_2dscreen_to_2dunnormalizedviewport(canvas.width, canvas.height, [0, CONSOLE_HEIGHT * 0.5]);
-    return [
-        [MENU_WIDTH * 0.5, -pos[1], 0.0],
-        [canvas.width - MENU_WIDTH, CONSOLE_HEIGHT, 1.0],
-        [0.25, 0.28, 0.37, 1.0],
-        null,
-        [0.0, 0.0, 0.0, 0.0],
-        true,
-    ];
-}
-
 function entity_character(x, y, width, height, color, tex_scale_offset, is_ui) {
     return [
         [x, y, 0.0],
@@ -65,7 +56,12 @@ const TRASHBOX_WIDTH = 128.0;
 const TRASHBOX_HEIGHT = 179.2;
 
 function entity_trashbox(isopen) {
-    const pos =  convert_2dscreen_to_2dunnormalizedviewport(canvas.width, canvas.height, [canvas.width - TRASHBOX_WIDTH *0.5, canvas.height-CONSOLE_HEIGHT - TRASHBOX_HEIGHT*0.5]);
+    const console_height = get_console_height();
+    const pos = convert_2dscreen_to_2dunnormalizedviewport(
+        canvas.width,
+        canvas.height,
+        [canvas.width - TRASHBOX_WIDTH * 0.5, canvas.height - console_height - TRASHBOX_HEIGHT * 0.5]
+    );
     return [
         [pos[0], pos[1], 0.0],
         [TRASHBOX_WIDTH, TRASHBOX_HEIGHT, 1.0],
