@@ -106,7 +106,7 @@ function fun_wheel(event) {
         if (event.wheelDelta > 0) {
             camera[2] = camera[2] * 1.1;
         } else if (event.wheelDelta < 0) {
-            camera[2] = camera[2] * 0.89;
+            camera[2] = camera[2] / 1.1;
         }
         camera[2] = Math.max(Math.min(camera[2], -1.5), -10.0);
         const next_pos = convert_2dscreen_to_3dworld([event.pageX, event.pageY]);
@@ -114,6 +114,9 @@ function fun_wheel(event) {
         camera[1] += next_pos[1] - prev_pos[1];
         event.preventDefault();
         render();
+    }
+    else {
+        event.preventDefault();
     }
 }
 
