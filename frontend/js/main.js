@@ -10,9 +10,9 @@ function render() {
     push_requests_blocks(requests);
     requests.push(entity_logo());
     requests.push(entity_menu());
+    push_requests_menublocks(requests);
     push_requests_console(requests);
     push_requests_holding_blocks(requests);
-    push_requests_menublocks(requests);
     update_webgl(requests, canvas.width, canvas.height, camera);
 }
 
