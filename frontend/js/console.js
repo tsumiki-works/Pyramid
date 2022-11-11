@@ -37,7 +37,7 @@ async function enter() {
                         break;
                     }else if(cmd_array.length == 4){
                         const pos_world = convert_2dscreen_to_3dworld([cmd_array[1], cmd_array[2]]);
-                        push_block_to_roots(create_block(pos_world[0], pos_world[1], cmd_array[3], ""));
+                        push_block_to_roots(create_block(pos_world[0], pos_world[1], parseInt(cmd_array[3]), ""));
                         log += "generated at (" + cmd_array[1] + ", " + cmd_array[2] + ") in screen";
                         break;
                     }

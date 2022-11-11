@@ -11,16 +11,25 @@ function connect_block(){
         push_block_to_roots(holding_block);
         return;
     }
+    console.log(nearest_block, holding_block);
     if(holding_block[BLOCK_IDX_Y] < nearest_block[BLOCK_IDX_Y]) {
         let index = get_connection_idx(nearest_block, holding_block);
-        nearest_block[BLOCK_IDX_CHILDREN][index] = holding_block;
-        holding_block[BLOCK_IDX_PARENT] = nearest_block;
+        if(nearest_block[BLOCK_IDX_CHILDREN][index] == null){
+            nearest_block[BLOCK_IDX_CHILDREN][index] = holding_block;
+            holding_block[BLOCK_IDX_PARENT] = nearest_block;
+        }else{
+            push_block_to_roots(holding_block);
+        }
     } else {
-        remove_block_from_roots(nearest_block);
-        push_block_to_roots(holding_block);
         let index = get_connection_idx(holding_block, nearest_block);
-        holding_block[BLOCK_IDX_CHILDREN][index] = nearest_block;
-        nearest_block[BLOCK_IDX_PARENT] = holding_block;
+        if(holding_block[BLOCK_IDX_CHILDREN][index] == null){
+            remove_block_from_roots(nearest_block);
+            push_block_to_roots(holding_block);
+            holding_block[BLOCK_IDX_CHILDREN][index] = nearest_block;
+            nearest_block[BLOCK_IDX_PARENT] = holding_block;
+        }else{
+            push_block_to_roots(holding_block);
+        }
     }
 }
 
