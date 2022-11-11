@@ -6,7 +6,7 @@
  * @param {any} content
  */
 function create_block(x, y, type, content) {
-    const children_num = 1;
+    const children_num = TYPE_TO_CHILDREN_NUM[type];
     let children = [];
     for (let i = 0; i < children_num; ++i) {
         children.push(null);
@@ -15,9 +15,10 @@ function create_block(x, y, type, content) {
         null,
         children,
         children_num,
+        [],
         x,
         y,
-        0.0,
+        children_num * BLOCK_UNIT_WIDTH,
         type,
         content,
     ];

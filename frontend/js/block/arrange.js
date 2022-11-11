@@ -9,16 +9,19 @@
  */
 function arrange_block_width(block) {
     if (block === null)
-        return 1.0;
+        return BLOCK_UNIT_WIDTH;
     if (block[BLOCK_IDX_CHILDREN_NUM] == 0) {
-        block[BLOCK_IDX_WIDTH] = 1.0;
-        return 1.0;
+        block[BLOCK_IDX_WIDTH] = BLOCK_UNIT_WIDTH;
+        block[BLOCK_IDX_CHILDREN_CONNECTION] = get_block_connection(block);
+        return block[BLOCK_IDX_WIDTH];
+        //return BLOCK_UNIT_WIDTH;
     }
     const children_width = block[BLOCK_IDX_CHILDREN].reduce(
         (res, child) => res + arrange_block_width(child),
         0
     );
     block[BLOCK_IDX_WIDTH] = children_width;
+    block[BLOCK_IDX_CHILDREN_CONNECTION] = get_block_connection(block);
     if (children_width < block[BLOCK_IDX_CHILDREN_NUM]) {
         alert(
             "pyramid frontend exception: number of children is "
@@ -44,7 +47,7 @@ function arrange_blocks(blocks, wr, hr) {
         let x = block[BLOCK_IDX_X] - block[BLOCK_IDX_WIDTH] * 0.5 * wr;
         for (const child of block[BLOCK_IDX_CHILDREN]) {
             if (child === null) {
-                x += wr;
+                x += BLOCK_UNIT_WIDTH;
             } else {
                 const c = child[BLOCK_IDX_WIDTH] * 0.5 * wr;
                 x += c;
@@ -62,22 +65,19 @@ function hoge() {
     const root = create_block(0, 0, 0, "");
     const child1 = create_block(0, 0, 0, "");
     const child2 = create_block(0, 0, 0, "");
-    const child1child1 = create_block(0, 0, 0, "");
-    const child1child2 = create_block(0, 0, 0, "");
+    const child2child1 = create_block(0, 0, 0, "");
+    const child2child2 = create_block(0, 0, 0, "");
     root[BLOCK_IDX_CHILDREN] = [child1, child2];
     root[BLOCK_IDX_CHILDREN_NUM] = 2;
     child1[BLOCK_IDX_PARENT] = root;
     child1[BLOCK_IDX_CHILDREN] = [];
     child1[BLOCK_IDX_CHILDREN_NUM] = 0;
     child2[BLOCK_IDX_PARENT] = root;
-    child2[BLOCK_IDX_CHILDREN] = [child1child1, child1child2];
+    child2[BLOCK_IDX_CHILDREN] = [child2child1, child2child2];
     child2[BLOCK_IDX_CHILDREN_NUM] = 2;
-    child1child1[BLOCK_IDX_PARENT] = child2;
-    child1child1[BLOCK_IDX_CHILDREN] = [];
-    child1child1[BLOCK_IDX_CHILDREN_NUM] = 0;
-    child1child2[BLOCK_IDX_PARENT] = child2;
-    child1child2[BLOCK_IDX_CHILDREN] = [];
-    child1child2[BLOCK_IDX_CHILDREN_NUM] = 0;
+    child2child1[BLOCK_IDX_PARENT] = child2;
+    child2child2[BLOCK_IDX_PARENT] = child2;
+
     roots.push(root);
     render();
 }
