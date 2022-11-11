@@ -40,3 +40,7 @@ function push_requests_holding_blocks(requests) {
         );
     });
 }
+
+function push_requests_open_trashbox(requests) {
+    
+}
