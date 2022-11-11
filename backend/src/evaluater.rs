@@ -1,5 +1,13 @@
 use super::parser::Ast;
 
+pub enum PyramidType{
+    Int(i64),
+    Double(f64),
+    PyramidString(String),
+    Bool(bool),
+    List(std::collections::LinkedList<PyramidType>),
+}
+
 pub fn eval(ast: Ast) -> Result<String, String> {
     match ast {
         Ast::Nil => Ok(String::from("nil")),
