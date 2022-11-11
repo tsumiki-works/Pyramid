@@ -99,14 +99,14 @@ function fun_right_mousemove(event) {
 }
 
 function fun_wheel(event) {
-    if (event.wheelDelta == 0)
-        return;
     if (event.pageX > MENU_WIDTH ) {
+        if (event.wheelDelta == 0)
+        return;
         const prev_pos = convert_2dscreen_to_3dworld([event.pageX, event.pageY]);
         if (event.wheelDelta > 0) {
-            camera[2] = camera[2] * 1.1;
+            camera[2] = camera[2] / 1.08;
         } else if (event.wheelDelta < 0) {
-            camera[2] = camera[2] / 1.1;
+            camera[2] = camera[2] * 1.08;
         }
         camera[2] = Math.max(Math.min(camera[2], -1.5), -10.0);
         const next_pos = convert_2dscreen_to_3dworld([event.pageX, event.pageY]);
