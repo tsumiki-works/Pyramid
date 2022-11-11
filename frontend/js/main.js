@@ -11,6 +11,7 @@ function render() {
     push_requests_blocks(requests);
     requests.push(entity_logo());
     requests.push(entity_menu());
+    push_requests_menublocks(requests);
     requests.push(entity_trashbox(open_trashbox));
     push_requests_console(requests);
     push_requests_holding_blocks(requests);
