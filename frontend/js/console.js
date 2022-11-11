@@ -25,29 +25,24 @@ async function enter() {
             // Console Commands for debug
             cmd = cur.slice(1, cur.length);
             cmd_array = cmd.split(" ");
-            if(cmd_array.length == 1){
-                switch (cmd_array[0]){
-                    case "enumerate":
-                        log += enumerate();
-                        break;
-                    case "generate":
+            switch(cmd_array[0]){
+                case "enumerate":
+                    log += enumerate();
+                    break;
+                case "generate":
+                    if(cmd_array.length == 1){
                         const pos_world = convert_2dscreen_to_3dworld([400, 200]);
                         push_block_to_roots(create_block(pos_world[0], pos_world[1], 0, content++));
                         log += "generated at (400, 200) in screen";
                         break;
-                    default:
-                        log += "Console Error: Invalud Command"
-                }
-            }else if(cmd_array.length == 3){
-                switch(cmd_array[0]){
-                    case "generate":
+                    }else if(cmd_array.length == 4){
                         const pos_world = convert_2dscreen_to_3dworld([cmd_array[1], cmd_array[2]]);
-                        push_block_to_roots(create_block(pos_world[0], pos_world[1], 0, ""));
+                        push_block_to_roots(create_block(pos_world[0], pos_world[1], parseInt(cmd_array[3]), ""));
                         log += "generated at (" + cmd_array[1] + ", " + cmd_array[2] + ") in screen";
                         break;
-                    default:
-                        log += "Console Error: Invalud Command"
-                }
+                    }
+                default:
+                    log += "Console Error: Invalid Command";
             }
         }else{
             const res = await fetch("http://127.0.0.1:7878", {
