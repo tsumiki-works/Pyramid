@@ -30,17 +30,6 @@ function entity_menu() {
     ];
 }
 
-function entity_block(x, y, width, height, is_ui) {
-    return [
-        [x, y, 0.0],
-        [width, height, 1.0],
-        [0.0, 0.0, 1.0, 1.0],
-        null,
-        [0.0, 0.0, 0.0, 0.0],
-        is_ui,
-    ];
-}
-
 function entity_character(x, y, width, height, color, tex_scale_offset, is_ui) {
     return [
         [x, y, 0.0],

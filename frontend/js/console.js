@@ -88,10 +88,9 @@ async function run_command(command) {
             }
             break;
         case "generate":
-            console.log(words);
             if (words.length == 1) {
                 const pos_world = convert_2dscreen_to_3dworld([400, 200]);
-                push_block_to_roots(create_block(pos_world[0], pos_world[1], 0, 0));
+                push_block_to_roots(create_block(pos_world[0], pos_world[1], 0, "0"));
                 res = "generated at (400, 200) on screen";
             } else if (words.length == 4) {
                 const x = parseInt(words[1]);
@@ -105,7 +104,7 @@ async function run_command(command) {
                     res = exception_message("type is not integer.");
                 } else {
                     const pos_world = convert_2dscreen_to_3dworld([x, y]);
-                    push_block_to_roots(create_block(pos_world[0], pos_world[1], type, ""));
+                    push_block_to_roots(create_block(pos_world[0], pos_world[1], type, "0"));
                     res = "generated at (" + x + ", " + y + ") in screen";
                 }
             } else {

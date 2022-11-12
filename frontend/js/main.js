@@ -11,21 +11,20 @@ function exception_message(message) {
 }
 function maybe_backend_error_message(message) {
     if (message.length > 22 && message.slice(0, 22) == "pyramid backend error:") {
-        return "<span class=\"exception\">pyramid backend error:</span> " + message.slice(-22);
+        return "<span class=\"exception\">pyramid backend error:</span> " + message.slice(22);
     } else {
-        alert(message.slice(22));
         return message;
     }
 }
 
 function render() {
     let requests = [];
-    push_requests_blocks(requests);
+    push_requests_roots(requests);
     requests.push(entity_logo());
     requests.push(entity_menu());
     push_requests_menublocks(requests);
     requests.push(entity_trashbox(open_trashbox));
-    push_requests_holding_blocks(requests);
+    push_requests_holding_block(requests);
     update_webgl(canvas, requests, camera);
 }
 

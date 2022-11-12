@@ -1,3 +1,29 @@
+let roots = [];
+let holding_block = null;
+let open_trashbox = false;
+
+const BLOCK_IDX_PARENT = 0;
+const BLOCK_IDX_CHILDREN = 1;
+const BLOCK_IDX_CHILDREN_NUM = 2;
+const BLOCK_IDX_CHILDREN_CONNECTION = 3;
+const BLOCK_IDX_X = 4;
+const BLOCK_IDX_Y = 5;
+const BLOCK_IDX_WIDTH = 6;
+const BLOCK_IDX_TYPE = 7;
+const BLOCK_IDX_CONTENT = 8;
+
+const BLOCK_UNIT_WIDTH = 1.0;
+const BLOCK_HEIGHT = 0.5;
+const BLOCK_HALF_HEIGHT = 0.25;
+
+const TYPE_TO_CHILDREN_NUM = [0, 1, 2, 3];
+const TYPE_TO_COL = [
+    [1.0, 0.0, 0.0, 1.0],
+    [0.0, 1.0, 0.0, 1.0],
+    [0.0, 0.0, 1.0, 1.0],
+    [1.0, 1.0, 0.0, 1.0],
+];
+
 /**
  * A constructor for block.
  * @param {float} x coordinate on world
@@ -6,6 +32,10 @@
  * @param {any} content
  */
 function create_block(x, y, type, content) {
+    if (type >= TYPE_TO_CHILDREN_NUM.length) {
+        alert("pyramid frontend error: tried to generate invalid type block.");
+        return;
+    }
     const children_num = TYPE_TO_CHILDREN_NUM[type];
     let children = [];
     for (let i = 0; i < children_num; ++i) {
@@ -24,45 +54,63 @@ function create_block(x, y, type, content) {
     ];
 }
 /**
- * A function to push a block to roots array.
- * @param {object} block which you want to push to roots array
+ * A function to enumerate and create stree of `node`.
+ * @param {object} node 
+ * @returns {string} stree of `node`
  */
-function push_block_to_roots(block) {
-    roots.push(block);
-}
-
-/**
- * A function to remove block from tree in roots.
- */
-function remove_block_from_roots(block_removing) {
-    function remove_block_(children) {
-        if (children.length == 0)
-            return;
-        for (let i = 0; i < children.length; ++i) {
-            if (children[i] == null)
-                continue;
-            if (children[i] === block_removing) {
-                children[i] = null;
-                return;
-            }
-            remove_block_(children[i][BLOCK_IDX_CHILDREN]);
-        }
+function enumerate_tree(tree) {
+    let res = "";
+    if (tree == null) { }
+    else if (tree[BLOCK_IDX_CHILDREN_NUM] == 0) {
+        res += tree[BLOCK_IDX_CONTENT];
     }
-    remove_block_(roots);
+    else {
+        res += "(";
+        res += tree[BLOCK_IDX_CONTENT];
+        tree[BLOCK_IDX_CHILDREN].forEach(child => {
+            res += " ";
+            res += enumerate_tree(child);
+        });
+        res += ")";
+    }
+    return res;
 }
 /**
- * A function to find a block which f(block) is true in roots.
- * @param f fn(block)->bool 
- * @returns If it's found, then it. Otherwise, null.
+ * A function to enumerate all blocks in roots.
  */
-function find_block_from_roots(f) {
-    return find_block(roots, f);
+function enumerate() {
+    return "(" + roots.map(block => enumerate_tree(block)).join(" ") + ")";
 }
 /**
- * A function to 
+ * A constructor for block entity request.
+ * @param {float} x if is_ui is true then it must be on screen
+ * @param {flaot} y if is_ui is true then it must be on screen
+ * @param {float} width if is_ui is true then it must be on screen
+ * @param {float} height if is_ui is true then it must be on screen
+ * @param {boolean} is_ui 
+ * @returns block entity request
  */
-/**
- function enumerate() {
-    console.log(roots);
+ function entity_block(x, y, width, height, col, is_ui) {
+    return [
+        [x, y, 0.0],
+        [width, height, 1.0],
+        col,
+        null,
+        [0.0, 0.0, 0.0, 0.0],
+        is_ui,
+    ];
 }
-*/
+/**
+ * A function to push roots requests.
+ * @param {[object]} requests 
+ */
+function push_requests_roots(requests) {
+    push_requests_blocks(roots, false, requests);
+}
+/**
+ * A function to push holding block requests.
+ * @param {[object]} requests 
+ */
+function push_requests_holding_block(requests) {
+    push_requests_blocks([holding_block], true, requests);
+}
