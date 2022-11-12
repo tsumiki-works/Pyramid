@@ -1,6 +1,5 @@
-let content = 1; // unneccessary variable
 const console_div = document.getElementById("console");
-
+const content = document.getElementById("console-content");
 /**
  * A function to initialize console.
  */
@@ -13,7 +12,9 @@ function init_console() {
         attributeFilter: ["style"]
     };
     observer.observe(console_div, options);
-    document.getElementById("console-line").addEventListener("keydown", fun_prevent_enter_console_line);
+    const line = document.getElementById("console-line");
+    line.addEventListener("keydown", fun_prevent_enter_console_line);
+    line.focus();
 }
 /**
  * A function to get console element's height.
@@ -35,27 +36,7 @@ function fun_click_console(_) {
  */
 async function fun_keydown_console(event) {
     if (event.key == "Enter") {
-        const content = document.getElementById("console-content");
-        const prev_line = document.getElementById("console-line");
-        const line_head = document.createElement("label");
-        const new_line = document.createElement("label");
-        prev_line.contentEditable = false;
-        prev_line.id = "";
-        line_head.innerText = "# ";
-        new_line.contentEditable = true;
-        new_line.id = "console-line";
-        content.appendChild(document.createElement("br"));
-        if (prev_line.innerText.length > 0) {
-            const res_label = document.createElement("label");
-            const res = await run_command(prev_line.innerText);
-            res_label.innerHTML = res[0];
-            content.appendChild(res_label);
-            content.appendChild(document.createElement("br"));
-        }
-        content.appendChild(line_head);
-        content.appendChild(new_line);
-        new_line.focus();
-        new_line.addEventListener("keydown", fun_prevent_enter_console_line);
+        await run_command(document.getElementById("console-line").innerText);
         render();
     }
 }
@@ -92,44 +73,86 @@ async function send_calc_request_to_server(stree, out_type) {
 /**
  * A function to run command.
  * @param {string} command
- * @return {[string, boolean]} [the log, is succeeded]. If you want to hide the log, you have to throw away this.
  */
 async function run_command(command) {
-    const words = command.split(" ");
+    const words = command.trim().split(/\s+/);
+    let res = "";
     switch (words[0]) {
+        case "":
+            break;
         case "enumerate":
             if (words.length == 1) {
-                return [enumerate(), true];
+                res = enumerate();
             } else {
-                return [exception_message("'enumerate' has to have 0 parameter."), false];
+                res = exception_message("'enumerate' has to have 0 parameter.");
             }
+            break;
         case "generate":
+            console.log(words);
             if (words.length == 1) {
                 const pos_world = convert_2dscreen_to_3dworld([400, 200]);
-                push_block_to_roots(create_block(pos_world[0], pos_world[1], 0, content++));
-                return ["generated at (400, 200) on screen", true];
+                push_block_to_roots(create_block(pos_world[0], pos_world[1], 0, 0));
+                res = "generated at (400, 200) on screen";
             } else if (words.length == 4) {
                 const x = parseInt(words[1]);
                 const y = parseInt(words[2]);
                 const type = parseInt(words[3]);
                 if (isNaN(x)) {
-                    return [exception_message("x is not integer."), false];
+                    res = exception_message("x is not integer.");
                 } else if (isNaN(y)) {
-                    return [exception_message("y is not integer."), false];
+                    res = exception_message("y is not integer.");
                 } else if (isNaN(type)) {
-                    return [exception_message("type is not integer."), false];
+                    res = exception_message("type is not integer.");
                 } else {
                     const pos_world = convert_2dscreen_to_3dworld([x, y]);
                     push_block_to_roots(create_block(pos_world[0], pos_world[1], type, ""));
-                    return ["generated at (" + x + ", " + y + ") in screen", true];
+                    res = "generated at (" + x + ", " + y + ") in screen";
                 }
             } else {
-                return [exception_message("'generate' has to have 0 or 3 parameters."), false];
+                res = exception_message("'generate' has to have 0 or 3 parameters.");
             }
-        case "send":
-            const res = await send_calc_request_to_server("(+ (+ 1 2) 3)", "console");
-            return [res["result"], true];
+            break;
+        case "eval":
+            let stree = "";
+            if (words.length == 1) {
+                stree = enumerate();
+            } else {
+                let tmp = words;
+                tmp.shift();
+                stree = tmp.join(" ");
+            }
+            const response = await send_calc_request_to_server(stree, "console");
+            res = maybe_backend_error_message(response["result"]);
+            break;
         default:
-            return [exception_message("invalid command"), false];
+            res = exception_message("invalid command '" + words[0] + "'.");
+            break;
     }
+    start_newline(res);
+}
+/**
+ * A function to start new line.
+ * @param {string} log if it's "" then nothing will be printed.
+ */
+function start_newline(log) {
+    const prev_line = document.getElementById("console-line");
+    const line_head = document.createElement("label");
+    const new_line = document.createElement("label");
+    prev_line.removeEventListener("keydown", fun_prevent_enter_console_line);
+    prev_line.contentEditable = false;
+    prev_line.id = "";
+    line_head.innerText = "# ";
+    new_line.contentEditable = true;
+    new_line.id = "console-line";
+    content.appendChild(document.createElement("br"));
+    if (log.length != 0) {
+        const log_line = document.createElement("label");
+        log_line.innerHTML = log;
+        content.appendChild(log_line);
+        content.appendChild(document.createElement("br"));
+    }
+    content.appendChild(line_head);
+    content.appendChild(new_line);
+    new_line.focus();
+    new_line.addEventListener("keydown", fun_prevent_enter_console_line);
 }

@@ -9,6 +9,14 @@ const IMGTEX_IDX_TEX_TRASHBOX = 2;
 function exception_message(message) {
     return "<span class=\"exception\">pyramid frontend exception:</span> " + message;
 }
+function maybe_backend_error_message(message) {
+    if (message.length > 22 && message.slice(0, 22) == "pyramid backend error:") {
+        return "<span class=\"exception\">pyramid backend error:</span> " + message.slice(-22);
+    } else {
+        alert(message.slice(22));
+        return message;
+    }
+}
 
 function render() {
     let requests = [];
@@ -22,6 +30,9 @@ function render() {
 }
 
 window.onload = () => {
+    if (canvas.clientWidth < 600 || canvas.clientHeight < 600) {
+        alert("pyramid frontend warning: too small window size to use Pyramid comfortably.");
+    }
     // canvas
     canvas.width = canvas.clientWidth;
     canvas.height = canvas.clientHeight;
