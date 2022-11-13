@@ -16,7 +16,7 @@ function connect_block() {
      */
     function get_connection_idx(parent, child) {
         let res_idx = -1, min_dist = -1;
-        for (let i = 0; i < parent.children_num; i++) {
+        for (let i = 0; i < parent.children.length; i++) {
             const dist = square_distance(parent.x + parent.children_connection[i], parent.y,
                 child.x, child.y);
             if (min_dist == -1 || min_dist > dist) {
@@ -67,10 +67,10 @@ function connect_block() {
  * @return {object[]} relative connections of target_block 
  * @memberOf block.connect
  */
-function get_block_connection(block) {
+function get_block_connection(width, children_num) {
     let res = [];
-    for (let i = 0; i < block.children_num; i++) {
-        res.push(block.width * (0.5 ** block.children_num) * (2 * i + 1) - block.width * 0.5);
+    for (let i = 0; i < children_num; i++) {
+        res.push(width* (0.5 ** children_num) * (2 * i + 1) - width * 0.5);
     }
     return res;
 }

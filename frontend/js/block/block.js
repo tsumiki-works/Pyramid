@@ -1,10 +1,8 @@
 /**
  * @namespace block
  */
-let holding_block = {};
-let open_trashbox = false;
-
 const BLOCK_UNIT_WIDTH = 1.0;
+const BLOCK_UNIT_HALF_WIDTH = 0.5;
 const BLOCK_HEIGHT = 0.5;
 const BLOCK_HALF_HEIGHT = 0.25;
 
@@ -17,12 +15,35 @@ const TYPE_TO_COL = [
     [0.2, 0.6, 0.6, 1.0],
 ];
 
+let holding_block = create_empty_block();
+let open_trashbox = false;
+
+/**
+ * A function to create empty block.
+ * <b>Be careful to that empty block's parent is `{}`.</b>
+ * @returns {object}
+ * @memberOf block
+ */
+function create_empty_block() {
+    return {
+        parent: {},
+        children: [],
+        x: 0.0,
+        y: 0.0,
+        width: BLOCK_UNIT_WIDTH,
+        type: -1,
+        content: "",
+        leftmost: -BLOCK_UNIT_HALF_WIDTH,
+        rightmost: BLOCK_UNIT_HALF_WIDTH,
+    };
+}
 /**
  * A constructor for block.
  * @param {float} x coordinate on world
  * @param {float} y coordinate on world
- * @param {any} type number of children and color is based on this
+ * @param {int} type number of children and color is based on this
  * @param {any} content atom in S-expression
+ * @returns {object}
  * @memberOf block
  */
 function create_block(x, y, type, content) {
@@ -30,21 +51,24 @@ function create_block(x, y, type, content) {
         alert("pyramid frontend error: tried to generate invalid type block.");
         return;
     }
-    const children_num = TYPE_TO_CHILDREN_NUM[type];
     let children = [];
-    for (let i = 0; i < children_num; ++i) {
-        children.push({});
+    for (let i = 0; i < TYPE_TO_CHILDREN_NUM[type]; ++i) {
+        children.push(create_empty_block());
     }
-    let tmp_block = {};
-    tmp_block.parent = {};
-    tmp_block.children = children;
-    tmp_block.children_num = children_num;
-    tmp_block.x = x;
-    tmp_block.y = y;
-    tmp_block.width = children_num * BLOCK_UNIT_WIDTH;
-    tmp_block.type = type;
-    tmp_block.content = content;
-    return tmp_block;
+    const width = children.length * BLOCK_UNIT_WIDTH;
+    const half_width = width * 0.5;
+    return {
+        parent: {},
+        children: children,
+        children_connection: get_block_connection(width, children.length),
+        x: x,
+        y: y,
+        width: width,
+        type: type,
+        content: content,
+        leftmost: -half_width,
+        rightmost: half_width,
+    };
 }
 /**
  * A function to check if `block` is block or not.
@@ -53,7 +77,7 @@ function create_block(x, y, type, content) {
  * @memberOf block
  */
 function is_empty_block(block) {
-    return Object.keys(block).length == 0;
+    return !("type" in block) || block.type == -1;
 }
 /**
  * A function to enumerate and create S-expression of `node`.
@@ -63,11 +87,9 @@ function is_empty_block(block) {
  */
 function enumerate(block) {
     let res = "";
-    if (is_empty_block(block)) { }
-    else if (block.children_num == 0) {
+    if (block.children.length == 0) {
         res += block.content;
-    }
-    else {
+    } else {
         res += "(";
         res += block.content;
         block.children.forEach(child => {
@@ -85,4 +107,12 @@ function enumerate(block) {
  */
 function get_holding_block() {
     return holding_block;
+}
+
+function set_block_connection(block){
+    if(!is_empty_block(block))
+        block.children_connection = get_block_connection(block.width, block.children.length);
+    for(const child of block.children){
+        set_block_connection(child);
+    }
 }
