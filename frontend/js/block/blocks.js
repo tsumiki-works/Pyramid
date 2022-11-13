@@ -20,9 +20,9 @@ function remove_block_from_roots(block) {
     function remove_block_(children) {
         if (children.length == 0)
             return;
-        for (let i = 0; i < children.length; ++i) {
-            if (is_empty_block(block))
-                continue;
+            for (let i = 0; i < children.length; ++i) {
+            if (is_empty_block(children[i]))
+            continue;
             if (children[i] === block) {
                 children[i] = {};
                 return;
