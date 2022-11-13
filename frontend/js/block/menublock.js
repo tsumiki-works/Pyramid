@@ -6,7 +6,7 @@ function push_requests_menublocks(req) {
         req.push([
             [pos[0], pos[1], 0.0],
             [100, 50, 1.0],
-            [0.6 - 0.08*i, 0.9 - 0.04*i, 0.35 + 0.12*i, 1.0], // ゆくゆくは色を格納した配列を呼び出したい
+            TYPE_TO_COL[i],
             null,
             [0.0, 0.0, 0.0, 0.0],
             true,
