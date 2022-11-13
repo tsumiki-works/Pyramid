@@ -26,10 +26,6 @@ function fun_mousedown(event) {
                     holding_block = (create_block(pos_world[0], pos_world[1], 4, "divide"));
                     is_generate = true;
                 }
-                if (event.pageY > 315 && event.pageY < 365) {
-                    holding_block = (create_block(pos_world[0], pos_world[1], 0, content++));
-                    is_generate = true;
-                }
             }
             if (is_generate) {
                 const pos = convert_2dscreen_to_2dunnormalizedviewport(canvas.width, canvas.height, [event.pageX, event.pageY]);
@@ -46,7 +42,7 @@ function fun_mousedown(event) {
                 return Math.abs(block.x - pos_world[0]) < block_half_width
                     && Math.abs(block.y - pos_world[1]) < BLOCK_HALF_HEIGHT;
             });
-            if (hit_result != null) {
+            if (!is_empty_block(hit_result)) {
                 holding_block = hit_result;
                 console.log("hit_result = " + hit_result);
                 remove_block_from_roots(hit_result);
@@ -96,7 +92,7 @@ function fun_left_mouseup(_) {
     else {
         console.log("Success!Deleted!");
     }
-    holding_block = null;
+    holding_block = {};
     open_trashbox = false;
     render();
 }

@@ -16,42 +16,42 @@ function get_roots() {
  * @memberOf block.blocks
  */
 function remove_block_from_roots(block) {
+    roots = roots.filter(block => !is_empty_block(block));
     function remove_block_(children) {
         if (children.length == 0)
             return;
         for (let i = 0; i < children.length; ++i) {
-            if (children[i] == null)
+            if (is_empty_block(block))
                 continue;
             if (children[i] === block) {
-                children[i] = null;
+                children[i] = {};
                 return;
             }
             remove_block_(children[i].children);
         }
     }
     remove_block_(roots);
-    roots = roots.filter(block => block != null);
 }
 /**
  * A function to find a block that f(block) is true.
  * @param {object[]} blocks which you want to find a block in
  * @param {function(object):boolean} f which is true then block is found
- * @returns {object} If it's found, then it. Otherwise, null.
+ * @returns {object} If it's found, then it. Otherwise, empty block.
  * @memberOf block.blocks
  */
 function find_block(blocks, f) {
     if (blocks.length == 0)
-        return null;
+        return {};
     for (const block of blocks) {
-        if (block == null)
+        if (is_empty_block(block))
             continue;
         if (f(block))
             return block;
         const res_finding_from_children = find_block(block.children, f);
-        if (res_finding_from_children != null)
+        if (Object.keys(res_finding_from_children).length != 0)
             return res_finding_from_children;
     }
-    return null;
+    return {};
 }
 /**
  * A function to do f for blocks.
@@ -61,9 +61,9 @@ function find_block(blocks, f) {
  */
 function for_each_blocks(blocks, f) {
     if (blocks.length == 0)
-        return null;
+        return;
     for (const block of blocks) {
-        if (block == null)
+        if (is_empty_block(block))
             continue;
         f(block);
         for_each_blocks(block.children, f);
@@ -112,15 +112,14 @@ function push_requests_blocks(blocks, is_ui, requests) {
          * A function to arrange block width based on its children.
          * For example, let `Block` be `Block(width, children array)`:
          *   * `Block(1, [Block(1, [])])`
-         *   * `Block(2, [null, Block(1, [])])`
-         *   * `Block(3, [Block(1, []), Block(1, [Block(1, []), null])])`
+         *   * `Block(2, [emptyblock, Block(1, [])])`
+         *   * `Block(3, [Block(1, []), Block(1, [Block(1, []), emptyblock])])`
          * @param {object} block which you want to arrange
          * @returns {float} sum of width of children
          * @access private
          */
         function arrange_block_width(block) {
-            console.log(block);
-            if (Object.keys(block).length == 0)
+            if (is_empty_block(block))
                 return BLOCK_UNIT_WIDTH;
             if (block.children_num == 0) {
                 block.width = BLOCK_UNIT_WIDTH;
@@ -144,13 +143,13 @@ function push_requests_blocks(blocks, is_ui, requests) {
             }
             return children_width;
         }
-        blocks.forEach(block => {if(block != null){arrange_block_width(block);}});
+        blocks.forEach(block => arrange_block_width(block));
         for_each_blocks(blocks, block => {
             if (block.children_num == 0)
                 return;
             let x = block.x - block.width * 0.5 * wr;
             for (const child of block.children) {
-                if (child === null) {
+                if (is_empty_block(child)) {
                     x += BLOCK_UNIT_WIDTH;
                 } else {
                     const c = child.width * 0.5 * wr;
@@ -171,8 +170,7 @@ function push_requests_blocks(blocks, is_ui, requests) {
         wr = canvas.width * 0.5 * (pos_clipping_2[0] / pos_clipping_2[3] - pos_clipping_1[0] / pos_clipping_1[3]);
         hr = canvas.height * 0.5 * (pos_clipping_2[1] / pos_clipping_2[3] - pos_clipping_1[1] / pos_clipping_2[3]);
     }
-    if(blocks.length > 0)
-        arrange_blocks(blocks, wr, hr);
+    arrange_blocks(blocks, wr, hr);
     for_each_blocks(blocks, block => {
         requests.push(
             entity_block(

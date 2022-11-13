@@ -38,14 +38,14 @@ function connect_block() {
             (block.width + holding_block.width) * 0.25
             && Math.abs(block.y - holding_block.y) < BLOCK_HEIGHT;
     });
-    if (nearest_block == null) {
+    if (is_empty_block(nearest_block)) {
         get_roots().push(holding_block);
         return;
     }
     console.log(nearest_block, holding_block);
     if (holding_block.y < nearest_block.y) {
         let index = get_connection_idx(nearest_block, holding_block);
-        if (nearest_block.children[index] == null) {
+        if (is_empty_block(nearest_block.children[index])) {
             nearest_block.children[index] = holding_block;
             holding_block.parent = nearest_block;
         } else {
@@ -53,7 +53,7 @@ function connect_block() {
         }
     } else {
         let index = get_connection_idx(holding_block, nearest_block);
-        if (holding_block.children[index] == null) {
+        if (is_empty_block(holding_block.children[index])) {
             remove_block_from_roots(nearest_block);
             get_roots().push(holding_block);
             holding_block.children[index] = nearest_block;
