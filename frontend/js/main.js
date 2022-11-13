@@ -28,6 +28,7 @@ function maybe_backend_error_message(message) {
 
 function render() {
     let requests = [];
+    clean_roots();
     push_requests_blocks(get_roots(), false, requests);
     requests.push(entity_header());
     requests.push(entity_logo());

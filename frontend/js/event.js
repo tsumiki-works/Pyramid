@@ -100,7 +100,7 @@ function fun_left_mouseup(_) {
     else {
         console.log("Success!Deleted!");
     }
-    holding_block = {};
+    holding_block = create_empty_block();
     open_trashbox = false;
     render();
 }
