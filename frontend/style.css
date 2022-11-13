@@ -6,6 +6,7 @@ body {
 
 canvas {
     position: absolute;
+    background-color: #f6f6f6;
     width: 100vw;
     height: 100vh;
     margin: 0;

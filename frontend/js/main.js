@@ -24,9 +24,11 @@ function maybe_backend_error_message(message) {
 function render() {
     let requests = [];
     push_requests_blocks(get_roots(), false, requests);
+    requests.push(entity_header());
     requests.push(entity_logo());
     requests.push(entity_menu());
     push_requests_menublocks(requests);
+    entity_lines(requests);
     requests.push(entity_trashbox(open_trashbox));
     push_requests_blocks([get_holding_block()], true, requests);
     update_webgl(canvas, requests, camera);
