@@ -71,7 +71,6 @@ function create_popup_menu_edit(block){
     elem_edit.addEventListener("keydown", (e => {
         if(e.key == "Enter"){
             if(!isNaN(parseInt(elem_edit.value))){
-                console.log("Changed block content.");
                 block.content = elem_edit.value;
                 render();
             }else{

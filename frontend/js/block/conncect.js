@@ -25,7 +25,6 @@ function connect_block() {
             }
         }
         if (res_idx != -1) {
-            console.log(res_idx);
             return res_idx;
         } else {
             alert("ERROR: failed to calculate block's connection index.");
@@ -42,7 +41,6 @@ function connect_block() {
         get_roots().push(holding_block);
         return;
     }
-    console.log(nearest_block, holding_block);
     if (holding_block.y < nearest_block.y) {
         let index = get_connection_idx(nearest_block, holding_block);
         if (is_empty_block(nearest_block.children[index])) {
