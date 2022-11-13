@@ -6,6 +6,10 @@ const IMGTEX_IDX_TEX01 = 0;
 const IMGTEX_IDX_TEX_FONT = 1;
 const IMGTEX_IDX_TEX_TRASHBOX = 2;
 
+function square_distance(x1, y1, x2, y2) {
+    return (x1 - x2) ** 2 + (y1 - y2) ** 2
+}
+
 function exception_message(message) {
     return "<span class=\"exception\">pyramid frontend exception:</span> " + message;
 }
@@ -19,12 +23,12 @@ function maybe_backend_error_message(message) {
 
 function render() {
     let requests = [];
-    push_requests_roots(requests);
+    push_requests_blocks(get_roots(), false, requests);
     requests.push(entity_logo());
     requests.push(entity_menu());
     push_requests_menublocks(requests);
     requests.push(entity_trashbox(open_trashbox));
-    push_requests_holding_block(requests);
+    push_requests_blocks([get_holding_block()], true, requests);
     update_webgl(canvas, requests, camera);
 }
 

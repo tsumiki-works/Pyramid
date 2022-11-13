@@ -1,4 +1,6 @@
-let roots = [];
+/**
+ * @namespace block
+ */
 let holding_block = null;
 let open_trashbox = false;
 
@@ -28,8 +30,9 @@ const TYPE_TO_COL = [
  * A constructor for block.
  * @param {float} x coordinate on world
  * @param {float} y coordinate on world
- * @param {any} type
- * @param {any} content
+ * @param {any} type number of children and color is based on this
+ * @param {any} content atom in S-expression
+ * @memberOf block
  */
 function create_block(x, y, type, content) {
     if (type >= TYPE_TO_CHILDREN_NUM.length) {
@@ -54,20 +57,21 @@ function create_block(x, y, type, content) {
     ];
 }
 /**
- * A function to enumerate and create stree of `node`.
- * @param {object} node 
- * @returns {string} stree of `node`
+ * A function to enumerate and create S-expression of `node`.
+ * @param {object} block which you want to convert to S-expression
+ * @returns {string} S-expression of `node`
+ * @memberOf block
  */
-function enumerate(tree) {
+function enumerate(block) {
     let res = "";
-    if (tree == null) { }
-    else if (tree[BLOCK_IDX_CHILDREN_NUM] == 0) {
-        res += tree[BLOCK_IDX_CONTENT];
+    if (block == null) { }
+    else if (block[BLOCK_IDX_CHILDREN_NUM] == 0) {
+        res += block[BLOCK_IDX_CONTENT];
     }
     else {
         res += "(";
-        res += tree[BLOCK_IDX_CONTENT];
-        tree[BLOCK_IDX_CHILDREN].forEach(child => {
+        res += block[BLOCK_IDX_CONTENT];
+        block[BLOCK_IDX_CHILDREN].forEach(child => {
             res += " ";
             res += enumerate(child);
         });
@@ -76,35 +80,10 @@ function enumerate(tree) {
     return res;
 }
 /**
- * A constructor for block entity request.
- * @param {float} x if is_ui is true then it must be on screen
- * @param {flaot} y if is_ui is true then it must be on screen
- * @param {float} width if is_ui is true then it must be on screen
- * @param {float} height if is_ui is true then it must be on screen
- * @param {boolean} is_ui 
- * @returns block entity request
+ * A function to get holding block.
+ * @returns {object} holding block
+ * @memberOf block
  */
- function entity_block(x, y, width, height, col, is_ui) {
-    return [
-        [x, y, 0.0],
-        [width, height, 1.0],
-        col,
-        null,
-        [0.0, 0.0, 0.0, 0.0],
-        is_ui,
-    ];
-}
-/**
- * A function to push roots requests.
- * @param {[object]} requests 
- */
-function push_requests_roots(requests) {
-    push_requests_blocks(roots, false, requests);
-}
-/**
- * A function to push holding block requests.
- * @param {[object]} requests 
- */
-function push_requests_holding_block(requests) {
-    push_requests_blocks([holding_block], true, requests);
+function get_holding_block() {
+    return holding_block;
 }

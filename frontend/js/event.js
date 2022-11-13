@@ -41,7 +41,7 @@ function fun_mousedown(event) {
             }
         } else {
             const pos_world = convert_2dscreen_to_3dworld([event.pageX, event.pageY]);
-            const hit_result = find_block_from_roots((block) => {
+            const hit_result = find_block(get_roots(), (block) => {
                 const block_half_width = block[BLOCK_IDX_WIDTH] * 0.5;
                 return Math.abs(block[BLOCK_IDX_X] - pos_world[0]) < block_half_width
                     && Math.abs(block[BLOCK_IDX_Y] - pos_world[1]) < BLOCK_HALF_HEIGHT;
