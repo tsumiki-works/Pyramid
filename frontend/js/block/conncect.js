@@ -67,10 +67,10 @@ function connect_block() {
  * @return {object[]} relative connections of target_block 
  * @memberOf block.connect
  */
-function get_block_connection(block) {
+function get_block_connection(width, children_num) {
     let res = [];
-    for (let i = 0; i < block.children.length; i++) {
-        res.push(block.width * (0.5 ** block.children.length) * (2 * i + 1) - block.width * 0.5);
+    for (let i = 0; i < children_num; i++) {
+        res.push(width* (0.5 ** children_num) * (2 * i + 1) - width * 0.5);
     }
     return res;
 }

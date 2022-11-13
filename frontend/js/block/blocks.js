@@ -96,6 +96,7 @@ function arrange_block(target_block, wr, hr) {
     const y = target_block.y;
     determine_block_width(target_block);
     determine_block_pos(target_block, x, y);
+    set_block_connection(target_block);
 }
 /**
  * A function to remove block from tree in `blocks`.
@@ -150,7 +151,7 @@ function find_block(blocks, f) {
             return block;
         }
         const res_finding_from_children = find_block(block.children, f);
-        if (!is_empty_block(remove_block_from_roots)) {
+        if (!is_empty_block(res_finding_from_children)) {
             return res_finding_from_children;
         }
     }

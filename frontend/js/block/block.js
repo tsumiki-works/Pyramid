@@ -60,6 +60,7 @@ function create_block(x, y, type, content) {
     return {
         parent: {},
         children: children,
+        children_connection: get_block_connection(width, children.length),
         x: x,
         y: y,
         width: width,
@@ -106,4 +107,12 @@ function enumerate(block) {
  */
 function get_holding_block() {
     return holding_block;
+}
+
+function set_block_connection(block){
+    if(!is_empty_block(block))
+        block.children_connection = get_block_connection(block.width, block.children.length);
+    for(const child of block.children){
+        set_block_connection(child);
+    }
 }
