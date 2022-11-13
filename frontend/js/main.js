@@ -54,5 +54,6 @@ window.onload = () => {
     img_texs.push(create_image_texture(document.getElementById("tex01")));
     img_texs.push(create_image_texture(document.getElementById("tex_font")));
     img_texs.push(create_image_texture(document.getElementById("tex_trashbox")));
+    init_holding_block();
     render();
 }

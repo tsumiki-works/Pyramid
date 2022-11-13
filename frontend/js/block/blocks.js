@@ -26,7 +26,7 @@ function remove_block_from_roots(block) {
                 children[i] = null;
                 return;
             }
-            remove_block_(children[i][BLOCK_IDX_CHILDREN]);
+            remove_block_(children[i].children);
         }
     }
     remove_block_(roots);
@@ -47,7 +47,7 @@ function find_block(blocks, f) {
             continue;
         if (f(block))
             return block;
-        const res_finding_from_children = find_block(block[BLOCK_IDX_CHILDREN], f);
+        const res_finding_from_children = find_block(block.children, f);
         if (res_finding_from_children != null)
             return res_finding_from_children;
     }
@@ -66,7 +66,7 @@ function for_each_blocks(blocks, f) {
         if (block == null)
             continue;
         f(block);
-        for_each_blocks(block[BLOCK_IDX_CHILDREN], f);
+        for_each_blocks(block.children, f);
     }
 }
 /**
@@ -119,43 +119,44 @@ function push_requests_blocks(blocks, is_ui, requests) {
          * @access private
          */
         function arrange_block_width(block) {
-            if (block === null)
+            console.log(block);
+            if (Object.keys(block).length == 0)
                 return BLOCK_UNIT_WIDTH;
-            if (block[BLOCK_IDX_CHILDREN_NUM] == 0) {
-                block[BLOCK_IDX_WIDTH] = BLOCK_UNIT_WIDTH;
-                block[BLOCK_IDX_CHILDREN_CONNECTION] = get_block_connection(block);
-                return block[BLOCK_IDX_WIDTH];
+            if (block.children_num == 0) {
+                block.width = BLOCK_UNIT_WIDTH;
+                block.children_connection = get_block_connection(block);
+                return block.width;
                 //return BLOCK_UNIT_WIDTH;
             }
-            const children_width = block[BLOCK_IDX_CHILDREN].reduce(
+            const children_width = block.children.reduce(
                 (res, child) => res + arrange_block_width(child),
                 0
             );
-            block[BLOCK_IDX_WIDTH] = children_width;
-            block[BLOCK_IDX_CHILDREN_CONNECTION] = get_block_connection(block);
-            if (children_width < block[BLOCK_IDX_CHILDREN_NUM]) {
+            block.width = children_width;
+            block.children_connection = get_block_connection(block);
+            if (children_width < block.children_num) {
                 alert(
                     "pyramid frontend exception: number of children is "
-                    + block[BLOCK_IDX_CHILDREN_NUM]
+                    + block.children_num
                     + " but sum of their width is "
                     + children_width
                     + " so something is wrong with system.");
             }
             return children_width;
         }
-        blocks.forEach(block => arrange_block_width(block));
+        blocks.forEach(block => {if(block != null){arrange_block_width(block);}});
         for_each_blocks(blocks, block => {
-            if (block[BLOCK_IDX_CHILDREN_NUM] == 0)
+            if (block.children_num == 0)
                 return;
-            let x = block[BLOCK_IDX_X] - block[BLOCK_IDX_WIDTH] * 0.5 * wr;
-            for (const child of block[BLOCK_IDX_CHILDREN]) {
+            let x = block.x - block.width * 0.5 * wr;
+            for (const child of block.children) {
                 if (child === null) {
                     x += BLOCK_UNIT_WIDTH;
                 } else {
-                    const c = child[BLOCK_IDX_WIDTH] * 0.5 * wr;
+                    const c = child.width * 0.5 * wr;
                     x += c;
-                    child[BLOCK_IDX_X] = x;
-                    child[BLOCK_IDX_Y] = block[BLOCK_IDX_Y] - BLOCK_HEIGHT * hr;
+                    child.x = x;
+                    child.y = block.y - BLOCK_HEIGHT * hr;
                     x += c;
                 }
             }
@@ -170,22 +171,23 @@ function push_requests_blocks(blocks, is_ui, requests) {
         wr = canvas.width * 0.5 * (pos_clipping_2[0] / pos_clipping_2[3] - pos_clipping_1[0] / pos_clipping_1[3]);
         hr = canvas.height * 0.5 * (pos_clipping_2[1] / pos_clipping_2[3] - pos_clipping_1[1] / pos_clipping_2[3]);
     }
-    arrange_blocks(blocks, wr, hr);
+    if(blocks.length > 0)
+        arrange_blocks(blocks, wr, hr);
     for_each_blocks(blocks, block => {
         requests.push(
             entity_block(
-                block[BLOCK_IDX_X],
-                block[BLOCK_IDX_Y],
-                Math.max(block[BLOCK_IDX_WIDTH] - 0.6, 1.0) * wr,
+                block.x,
+                block.y,
+                Math.max(block.width - 0.6, 1.0) * wr,
                 BLOCK_HEIGHT * hr,
-                TYPE_TO_COL[block[BLOCK_IDX_TYPE]],
+                TYPE_TO_COL[block.type],
                 is_ui
             )
         );
         push_requests_text(
-            block[BLOCK_IDX_CONTENT],
-            block[BLOCK_IDX_X],
-            block[BLOCK_IDX_Y],
+            block.content,
+            block.x,
+            block.y,
             0.15 * wr,
             0.3 * hr,
             [1.0, 1.0, 1.0, 1.0],

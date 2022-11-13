@@ -1,7 +1,7 @@
 /**
  * @namespace block
  */
-let holding_block = null;
+let holding_block = {};
 let open_trashbox = false;
 
 const BLOCK_IDX_PARENT = 0;
@@ -42,19 +42,19 @@ function create_block(x, y, type, content) {
     const children_num = TYPE_TO_CHILDREN_NUM[type];
     let children = [];
     for (let i = 0; i < children_num; ++i) {
-        children.push(null);
+        children.push({});
     }
-    return [
-        null,
-        children,
-        children_num,
-        [],
-        x,
-        y,
-        children_num * BLOCK_UNIT_WIDTH,
-        type,
-        content,
-    ];
+    let tmp_block = {};
+    tmp_block.parent = {};
+    tmp_block.children = children;
+    tmp_block.children_num = children_num;
+    tmp_block.x = x;
+    tmp_block.y = y;
+    tmp_block.width = children_num * BLOCK_UNIT_WIDTH;
+    tmp_block.type = type;
+    tmp_block.content = content;
+    
+    return tmp_block;
 }
 /**
  * A function to enumerate and create S-expression of `node`.
@@ -65,13 +65,13 @@ function create_block(x, y, type, content) {
 function enumerate(block) {
     let res = "";
     if (block == null) { }
-    else if (block[BLOCK_IDX_CHILDREN_NUM] == 0) {
-        res += block[BLOCK_IDX_CONTENT];
+    else if (block.children_num == 0) {
+        res += block.content;
     }
     else {
         res += "(";
-        res += block[BLOCK_IDX_CONTENT];
-        block[BLOCK_IDX_CHILDREN].forEach(child => {
+        res += block.content;
+        block.children.forEach(child => {
             res += " ";
             res += enumerate(child);
         });

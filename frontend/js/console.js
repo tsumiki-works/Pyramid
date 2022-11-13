@@ -76,6 +76,7 @@ async function send_calc_request_to_server(defines, stree, out_type) {
  */
 async function run_command(command) {
     const words = command.trim().split(/\s+/);
+    console.log(words[0]);
     let res = "";
     switch (words[0]) {
         case "":
