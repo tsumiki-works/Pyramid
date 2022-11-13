@@ -1,5 +1,6 @@
 const console_div = document.getElementById("console");
 const content = document.getElementById("console-content");
+const console_log = document.getElementById("console-log");
 /**
  * A function to initialize console.
  */
@@ -129,27 +130,21 @@ async function run_command(command) {
 function start_newline(log) {
     const prev_line = document.getElementById("console-line");
     const prev_line_head = document.getElementById("console-line-head");
-    const prev_line_united = document.createElement("label");
     const line_head = document.createElement("label");
     const new_line = document.createElement("label");
     prev_line.removeEventListener("keydown", fun_prevent_enter_console_line);
     prev_line.contentEditable = false;
     prev_line.id = "";
     prev_line_head.id = "";
-    prev_line_united.innerText = "# " + prev_line.innerText;
     line_head.innerText = "# ";
     line_head.id = "console-line-head";
     new_line.contentEditable = true;
     new_line.id = "console-line";
+    console_log.innerHTML += "# " + prev_line.innerText + "<br>";
     content.removeChild(prev_line);
     content.removeChild(prev_line_head);
-    content.appendChild(prev_line_united);
-    content.appendChild(document.createElement("br"));
     if (log.length != 0) {
-        const log_line = document.createElement("label");
-        log_line.innerHTML = log;
-        content.appendChild(log_line);
-        content.appendChild(document.createElement("br"));
+        console_log.innerHTML += log + "<br>";
     }
     content.appendChild(line_head);
     content.appendChild(new_line);
