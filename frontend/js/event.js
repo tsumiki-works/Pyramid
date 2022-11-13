@@ -6,8 +6,8 @@ let camera_pos_before_drag_y = 0.0;
 function fun_mousedown(event) {
     const pos_world = convert_2dscreen_to_3dworld([event.pageX, event.pageY]);
     const pos_2dunnormalizedviewport = convert_2dscreen_to_2dunnormalizedviewport(canvas.width, canvas.height, [event.pageX, event.pageY]);
-    // delete popup-menu
-    document.getElementById("popup-menu").style.display = "none";
+    // hiddle popup-menu
+    delete_popup_menu();
     // mouseleft down
     if (event.which == 1) {
         if (event.pageX < LOGO_WIDTH + 12 && event.pageY < LOGO_HEIGHT + 18){
@@ -22,19 +22,19 @@ function fun_mousedown(event) {
                     is_generate = true;
                 }
                 if (event.pageY > 135 && event.pageY < 185) {
-                    holding_block = (create_block(pos_world[0], pos_world[1], 1, "plus"));
+                    holding_block = (create_block(pos_world[0], pos_world[1], 1, "+"));
                     is_generate = true;
                 }
                 if (event.pageY > 195 && event.pageY < 245) {
-                    holding_block = (create_block(pos_world[0], pos_world[1], 2, "minus"));
+                    holding_block = (create_block(pos_world[0], pos_world[1], 2, "-"));
                     is_generate = true;
                 }
                 if (event.pageY > 255 && event.pageY < 305) {
-                    holding_block = (create_block(pos_world[0], pos_world[1], 3, "times"));
+                    holding_block = (create_block(pos_world[0], pos_world[1], 3, "*"));
                     is_generate = true;
                 }
                 if (event.pageY > 315 && event.pageY < 365) {
-                    holding_block = (create_block(pos_world[0], pos_world[1], 4, "divide"));
+                    holding_block = (create_block(pos_world[0], pos_world[1], 4, "/"));
                     is_generate = true;
                 }
             }
@@ -75,11 +75,8 @@ function fun_mousedown(event) {
         });
         if(!is_empty_block(hit_result)){
             // create popup menu
-            const menu_content = document.getElementById("popup-menu");
-            menu_content.style.display = "block";
-            menu_content.style.left = event.pageX + "px";
-            menu_content.style.top = event.pageY + "px";
-            
+            create_popup_menu(event, hit_result);
+
         }else{
             mouse_pos_before_drag_x = event.pageX;
             mouse_pos_before_drag_y = event.pageY;

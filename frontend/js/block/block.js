@@ -8,7 +8,7 @@ const BLOCK_UNIT_WIDTH = 1.0;
 const BLOCK_HEIGHT = 0.5;
 const BLOCK_HALF_HEIGHT = 0.25;
 
-const TYPE_TO_CHILDREN_NUM = [0, 2, 2, 2, 2];
+const TYPE_TO_CHILDREN_NUM = [0, 2, 2, 2, 2, 2];
 const TYPE_TO_COL = [
     [0.15, 0.75, 0.75, 1.0],
     [0.15, 0.8, 0.2, 1.0],
