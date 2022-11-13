@@ -16,42 +16,42 @@ function get_roots() {
  * @memberOf block.blocks
  */
 function remove_block_from_roots(block) {
+    roots = roots.filter(block => !is_empty_block(block));
     function remove_block_(children) {
         if (children.length == 0)
             return;
-        for (let i = 0; i < children.length; ++i) {
-            if (children[i] == null)
-                continue;
+            for (let i = 0; i < children.length; ++i) {
+            if (is_empty_block(children[i]))
+            continue;
             if (children[i] === block) {
-                children[i] = null;
+                children[i] = {};
                 return;
             }
-            remove_block_(children[i][BLOCK_IDX_CHILDREN]);
+            remove_block_(children[i].children);
         }
     }
     remove_block_(roots);
-    roots = roots.filter(block => block != null);
 }
 /**
  * A function to find a block that f(block) is true.
  * @param {object[]} blocks which you want to find a block in
  * @param {function(object):boolean} f which is true then block is found
- * @returns {object} If it's found, then it. Otherwise, null.
+ * @returns {object} If it's found, then it. Otherwise, empty block.
  * @memberOf block.blocks
  */
 function find_block(blocks, f) {
     if (blocks.length == 0)
-        return null;
+        return {};
     for (const block of blocks) {
-        if (block == null)
+        if (is_empty_block(block))
             continue;
         if (f(block))
             return block;
-        const res_finding_from_children = find_block(block[BLOCK_IDX_CHILDREN], f);
-        if (res_finding_from_children != null)
+        const res_finding_from_children = find_block(block.children, f);
+        if (Object.keys(res_finding_from_children).length != 0)
             return res_finding_from_children;
     }
-    return null;
+    return {};
 }
 /**
  * A function to do f for blocks.
@@ -61,12 +61,12 @@ function find_block(blocks, f) {
  */
 function for_each_blocks(blocks, f) {
     if (blocks.length == 0)
-        return null;
+        return;
     for (const block of blocks) {
-        if (block == null)
+        if (is_empty_block(block))
             continue;
         f(block);
-        for_each_blocks(block[BLOCK_IDX_CHILDREN], f);
+        for_each_blocks(block.children, f);
     }
 }
 /**
@@ -112,31 +112,31 @@ function push_requests_blocks(blocks, is_ui, requests) {
          * A function to arrange block width based on its children.
          * For example, let `Block` be `Block(width, children array)`:
          *   * `Block(1, [Block(1, [])])`
-         *   * `Block(2, [null, Block(1, [])])`
-         *   * `Block(3, [Block(1, []), Block(1, [Block(1, []), null])])`
+         *   * `Block(2, [emptyblock, Block(1, [])])`
+         *   * `Block(3, [Block(1, []), Block(1, [Block(1, []), emptyblock])])`
          * @param {object} block which you want to arrange
          * @returns {float} sum of width of children
          * @access private
          */
         function arrange_block_width(block) {
-            if (block === null)
+            if (is_empty_block(block))
                 return BLOCK_UNIT_WIDTH;
-            if (block[BLOCK_IDX_CHILDREN_NUM] == 0) {
-                block[BLOCK_IDX_WIDTH] = BLOCK_UNIT_WIDTH;
-                block[BLOCK_IDX_CHILDREN_CONNECTION] = get_block_connection(block);
-                return block[BLOCK_IDX_WIDTH];
+            if (block.children_num == 0) {
+                block.width = BLOCK_UNIT_WIDTH;
+                block.children_connection = get_block_connection(block);
+                return block.width;
                 //return BLOCK_UNIT_WIDTH;
             }
-            const children_width = block[BLOCK_IDX_CHILDREN].reduce(
+            const children_width = block.children.reduce(
                 (res, child) => res + arrange_block_width(child),
                 0
             );
-            block[BLOCK_IDX_WIDTH] = children_width;
-            block[BLOCK_IDX_CHILDREN_CONNECTION] = get_block_connection(block);
-            if (children_width < block[BLOCK_IDX_CHILDREN_NUM]) {
+            block.width = children_width;
+            block.children_connection = get_block_connection(block);
+            if (children_width < block.children_num) {
                 alert(
                     "pyramid frontend exception: number of children is "
-                    + block[BLOCK_IDX_CHILDREN_NUM]
+                    + block.children_num
                     + " but sum of their width is "
                     + children_width
                     + " so something is wrong with system.");
@@ -145,17 +145,17 @@ function push_requests_blocks(blocks, is_ui, requests) {
         }
         blocks.forEach(block => arrange_block_width(block));
         for_each_blocks(blocks, block => {
-            if (block[BLOCK_IDX_CHILDREN_NUM] == 0)
+            if (block.children_num == 0)
                 return;
-            let x = block[BLOCK_IDX_X] - block[BLOCK_IDX_WIDTH] * 0.5 * wr;
-            for (const child of block[BLOCK_IDX_CHILDREN]) {
-                if (child === null) {
+            let x = block.x - block.width * 0.5 * wr;
+            for (const child of block.children) {
+                if (is_empty_block(child)) {
                     x += BLOCK_UNIT_WIDTH;
                 } else {
-                    const c = child[BLOCK_IDX_WIDTH] * 0.5 * wr;
+                    const c = child.width * 0.5 * wr;
                     x += c;
-                    child[BLOCK_IDX_X] = x;
-                    child[BLOCK_IDX_Y] = block[BLOCK_IDX_Y] - BLOCK_HEIGHT * hr;
+                    child.x = x;
+                    child.y = block.y - BLOCK_HEIGHT * hr;
                     x += c;
                 }
             }
@@ -174,18 +174,18 @@ function push_requests_blocks(blocks, is_ui, requests) {
     for_each_blocks(blocks, block => {
         requests.push(
             entity_block(
-                block[BLOCK_IDX_X],
-                block[BLOCK_IDX_Y],
-                Math.max(block[BLOCK_IDX_WIDTH] - 0.6, 1.0) * wr,
+                block.x,
+                block.y,
+                Math.max(block.width - 0.6, 1.0) * wr,
                 BLOCK_HEIGHT * hr,
-                TYPE_TO_COL[block[BLOCK_IDX_TYPE]],
+                TYPE_TO_COL[block.type],
                 is_ui
             )
         );
         push_requests_text(
-            block[BLOCK_IDX_CONTENT],
-            block[BLOCK_IDX_X],
-            block[BLOCK_IDX_Y],
+            block.content,
+            block.x,
+            block.y,
             0.15 * wr,
             0.3 * hr,
             [1.0, 1.0, 1.0, 1.0],

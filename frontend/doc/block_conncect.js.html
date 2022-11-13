@@ -44,9 +44,9 @@ function connect_block() {
      */
     function get_connection_idx(parent, child) {
         let res_idx = -1, min_dist = -1;
-        for (let i = 0; i &lt; parent[BLOCK_IDX_CHILDREN_NUM]; i++) {
-            const dist = square_distance(parent[BLOCK_IDX_X] + parent[BLOCK_IDX_CHILDREN_CONNECTION][i], parent[BLOCK_IDX_Y],
-                child[BLOCK_IDX_X], child[BLOCK_IDX_Y]);
+        for (let i = 0; i &lt; parent.children_num; i++) {
+            const dist = square_distance(parent.x + parent.children_connection[i], parent.y,
+                child.x, child.y);
             if (min_dist == -1 || min_dist > dist) {
                 min_dist = dist;
                 res_idx = i;
@@ -62,30 +62,30 @@ function connect_block() {
     }
     // from now on
     const nearest_block = find_block(roots, (block) => {
-        return Math.abs(block[BLOCK_IDX_X] - holding_block[BLOCK_IDX_X]) &lt;
-            (block[BLOCK_IDX_WIDTH] + holding_block[BLOCK_IDX_WIDTH]) * 0.25
-            &amp;&amp; Math.abs(block[BLOCK_IDX_Y] - holding_block[BLOCK_IDX_Y]) &lt; BLOCK_HEIGHT;
+        return Math.abs(block.x - holding_block.x) &lt;
+            (block.width + holding_block.width) * 0.25
+            &amp;&amp; Math.abs(block.y - holding_block.y) &lt; BLOCK_HEIGHT;
     });
     if (nearest_block == null) {
         get_roots().push(holding_block);
         return;
     }
     console.log(nearest_block, holding_block);
-    if (holding_block[BLOCK_IDX_Y] &lt; nearest_block[BLOCK_IDX_Y]) {
+    if (holding_block.y &lt; nearest_block.y) {
         let index = get_connection_idx(nearest_block, holding_block);
-        if (nearest_block[BLOCK_IDX_CHILDREN][index] == null) {
-            nearest_block[BLOCK_IDX_CHILDREN][index] = holding_block;
-            holding_block[BLOCK_IDX_PARENT] = nearest_block;
+        if (nearest_block.children[index] == null) {
+            nearest_block.children[index] = holding_block;
+            holding_block.parent = nearest_block;
         } else {
             get_roots().push(holding_block);
         }
     } else {
         let index = get_connection_idx(holding_block, nearest_block);
-        if (holding_block[BLOCK_IDX_CHILDREN][index] == null) {
+        if (holding_block.children[index] == null) {
             remove_block_from_roots(nearest_block);
             get_roots().push(holding_block);
-            holding_block[BLOCK_IDX_CHILDREN][index] = nearest_block;
-            nearest_block[BLOCK_IDX_PARENT] = holding_block;
+            holding_block.children[index] = nearest_block;
+            nearest_block.parent = holding_block;
         } else {
             get_roots().push(holding_block);
         }
@@ -99,8 +99,8 @@ function connect_block() {
  */
 function get_block_connection(block) {
     let res = [];
-    for (let i = 0; i &lt; block[BLOCK_IDX_CHILDREN_NUM]; i++) {
-        res.push(block[BLOCK_IDX_WIDTH] * (0.5 ** block[BLOCK_IDX_CHILDREN_NUM]) * (2 * i + 1) - block[BLOCK_IDX_WIDTH] * 0.5);
+    for (let i = 0; i &lt; block.children_num; i++) {
+        res.push(block.width * (0.5 ** block.children_num) * (2 * i + 1) - block.width * 0.5);
     }
     return res;
 }

@@ -93,13 +93,13 @@ function create_block(x, y, type, content) {
 function enumerate(block) {
     let res = "";
     if (block == null) { }
-    else if (block[BLOCK_IDX_CHILDREN_NUM] == 0) {
-        res += block[BLOCK_IDX_CONTENT];
+    else if (block.children_num == 0) {
+        res += block.content;
     }
     else {
         res += "(";
-        res += block[BLOCK_IDX_CONTENT];
-        block[BLOCK_IDX_CHILDREN].forEach(child => {
+        res += block.content;
+        block.children.forEach(child => {
             res += " ";
             res += enumerate(child);
         });
