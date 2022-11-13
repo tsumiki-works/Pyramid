@@ -10,12 +10,17 @@ function square_distance(x1, y1, x2, y2) {
     return (x1 - x2) ** 2 + (y1 - y2) ** 2
 }
 
+function replace_escape(message) {
+    let message1 = message.replaceAll("<", "&lt;");
+    let message2 = message1.replaceAll(">", "&gt;");
+    return message2;
+}
 function exception_message(message) {
-    return "<span class=\"exception\">pyramid frontend exception:</span> " + message;
+    return "<span class=\"exception\">pyramid frontend exception:</span> " + replace_escape(message);
 }
 function maybe_backend_error_message(message) {
     if (message.length > 22 && message.slice(0, 22) == "pyramid backend error:") {
-        return "<span class=\"exception\">pyramid backend error:</span> " + message.slice(22);
+        return "<span class=\"exception\">pyramid backend error:</span> " + replace_escape(message.slice(22));
     } else {
         return message;
     }
