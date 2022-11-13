@@ -16,16 +16,20 @@ function get_roots() {
  * @memberOf block.blocks
  */
 function remove_block_from_roots(block) {
-    roots = roots.filter(block => !is_empty_block(block));
     function remove_block_(children) {
         if (children.length == 0)
             return;
-            for (let i = 0; i < children.length; ++i) {
+        for (let i = 0; i < children.length; ++i) {
             if (is_empty_block(children[i]))
-            continue;
+                continue;
             if (children[i] === block) {
-                children[i] = {};
-                return;
+                if(is_empty_block(children[i].parent)){
+                    roots = roots.filter(_block => block !== _block);
+                    return;
+                }else{
+                    children[i] = {};
+                    return;
+                }
             }
             remove_block_(children[i].children);
         }

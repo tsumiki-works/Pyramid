@@ -44,6 +44,32 @@ div#console-content label {
         monospace;
 }
 
+div#popup-menu {
+    display: none;
+    position: fixed;
+    width: auto;
+    height: auto;
+    background-color: lightblue;
+    text-align: center;
+}
+
+div#popup-menu ul {
+    margin: 5px;
+    padding: 0;
+}
+
+li.popup-menu-item {
+    background-color: lightblue;
+    margin: 1px;
+    padding: 1px 5px;
+    list-style-type: none;
+    cursor: pointer;
+}
+
+li.popup-menu-item:hover {
+    background-color: lightcyan;
+}
+
 label:focus {
     outline: none;
 }

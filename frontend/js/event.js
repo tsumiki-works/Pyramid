@@ -4,6 +4,10 @@ let camera_pos_before_drag_x = 0.0;
 let camera_pos_before_drag_y = 0.0;
 
 function fun_mousedown(event) {
+    const pos_world = convert_2dscreen_to_3dworld([event.pageX, event.pageY]);
+    const pos_2dunnormalizedviewport = convert_2dscreen_to_2dunnormalizedviewport(canvas.width, canvas.height, [event.pageX, event.pageY]);
+    // hiddle popup-menu
+    delete_popup_menu();
     // mouseleft down
     if (event.which == 1) {
         if (event.pageX < LOGO_WIDTH + 12 && event.pageY < LOGO_HEIGHT + 18){
@@ -12,39 +16,36 @@ function fun_mousedown(event) {
         }
         else if (event.pageX < MENU_WIDTH) {
             let is_generate = false;
-            const pos_world = convert_2dscreen_to_3dworld([event.pageX, event.pageY]);
             if (event.pageX > 40 && event.pageX < 140) {
                 if (event.pageY > 75 && event.pageY < 125) {
                     holding_block = (create_block(pos_world[0], pos_world[1], 0, "0"));
                     is_generate = true;
                 }
                 if (event.pageY > 135 && event.pageY < 185) {
-                    holding_block = (create_block(pos_world[0], pos_world[1], 1, "plus"));
+                    holding_block = (create_block(pos_world[0], pos_world[1], 1, "+"));
                     is_generate = true;
                 }
                 if (event.pageY > 195 && event.pageY < 245) {
-                    holding_block = (create_block(pos_world[0], pos_world[1], 2, "minus"));
+                    holding_block = (create_block(pos_world[0], pos_world[1], 2, "-"));
                     is_generate = true;
                 }
                 if (event.pageY > 255 && event.pageY < 305) {
-                    holding_block = (create_block(pos_world[0], pos_world[1], 3, "times"));
+                    holding_block = (create_block(pos_world[0], pos_world[1], 3, "*"));
                     is_generate = true;
                 }
                 if (event.pageY > 315 && event.pageY < 365) {
-                    holding_block = (create_block(pos_world[0], pos_world[1], 4, "divide"));
+                    holding_block = (create_block(pos_world[0], pos_world[1], 4, "/"));
                     is_generate = true;
                 }
             }
             if (is_generate) {
-                const pos = convert_2dscreen_to_2dunnormalizedviewport(canvas.width, canvas.height, [event.pageX, event.pageY]);
-                holding_block.x = pos[0];
-                holding_block.y = pos[1];
+                holding_block.x = pos_2dunnormalizedviewport[0];
+                holding_block.y = pos_2dunnormalizedviewport[1];
                 canvas.addEventListener("mousemove", fun_left_mousemove);
                 canvas.addEventListener("mouseup", fun_left_mouseup);
                 canvas.removeEventListener("mousedown", fun_mousedown);
             }
         } else {
-            const pos_world = convert_2dscreen_to_3dworld([event.pageX, event.pageY]);
             const hit_result = find_block(get_roots(), (block) => {
                 const block_half_width = block.width * 0.5;
                 return Math.abs(block.x - pos_world[0]) < block_half_width
@@ -54,9 +55,8 @@ function fun_mousedown(event) {
                 holding_block = hit_result;
                 console.log("hit_result = " + hit_result);
                 remove_block_from_roots(hit_result);
-                const pos = convert_2dscreen_to_2dunnormalizedviewport(canvas.width, canvas.height, [event.pageX, event.pageY]);
-                holding_block.x = pos[0];
-                holding_block.y = pos[1];
+                holding_block.x = pos_2dunnormalizedviewport[0];
+                holding_block.y = pos_2dunnormalizedviewport[1];
                 canvas.addEventListener("mousemove", fun_left_mousemove);
                 canvas.addEventListener("mouseup", fun_left_mouseup);
                 canvas.removeEventListener("mousedown", fun_mousedown);
@@ -68,13 +68,24 @@ function fun_mousedown(event) {
     }
     // mouseright down : move around workspace
     else if (event.which == 3) {
-        mouse_pos_before_drag_x = event.pageX;
-        mouse_pos_before_drag_y = event.pageY;
-        camera_pos_before_drag_x = camera[0];
-        camera_pos_before_drag_y = camera[1];
-        canvas.addEventListener("mousemove", fun_right_mousemove);
-        canvas.addEventListener("mouseup", fun_right_mouseup);
-        canvas.removeEventListener("mousedown", fun_mousedown);
+        const hit_result = find_block(get_roots(), (block) => {
+            const block_half_width = block.width * 0.5;
+            return Math.abs(block.x - pos_world[0]) < block_half_width
+                && Math.abs(block.y - pos_world[1]) < BLOCK_HALF_HEIGHT;
+        });
+        if(!is_empty_block(hit_result)){
+            // create popup menu
+            create_popup_menu(event, hit_result);
+
+        }else{
+            mouse_pos_before_drag_x = event.pageX;
+            mouse_pos_before_drag_y = event.pageY;
+            camera_pos_before_drag_x = camera[0];
+            camera_pos_before_drag_y = camera[1];
+            canvas.addEventListener("mousemove", fun_right_mousemove);
+            canvas.addEventListener("mouseup", fun_right_mouseup);
+            canvas.removeEventListener("mousedown", fun_mousedown);
+        }
     }
     render();
 }
