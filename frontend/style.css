@@ -43,6 +43,21 @@ div#console-content label {
         monospace;
 }
 
+div#popup-menu {
+    display: none;
+    position: fixed;
+    width: auto;
+    height: auto;
+    border: 1px solid;
+    background-color: white;
+    text-align: center;
+}
+
+ul#popup-menu-items li {
+    text-align: center;
+    list-style-type: none;
+}
+
 label:focus {
     outline: none;
 }

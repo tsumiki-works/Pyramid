@@ -65,13 +65,10 @@ function fun_mousedown(event) {
         });
         if(!is_empty_block(hit_result)){
             // create popup menu
-            let elem = document.createElement("div");
-            elem.style.x = event.pageX;
-            elem.style.y = event.pageY;
-            elem.style.width = "100px";
-            elem.style.height = "100px";
-            elem.style.background = "blue";
-            document.appendChild(elem);
+            const menu_content = document.getElementById("popup-menu");
+            menu_content.style.display = "block";
+            menu_content.style.left = event.pageX + "px";
+            menu_content.style.top = event.pageY + "px";
         }else{
             mouse_pos_before_drag_x = event.pageX;
             mouse_pos_before_drag_y = event.pageY;
