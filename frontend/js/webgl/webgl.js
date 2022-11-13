@@ -93,7 +93,7 @@ function init_webgl(target_canvas) {
 
 function update_webgl(target_canvas, requests, camera) {
     gl.viewport(0, 0, target_canvas.width, target_canvas.height);
-    gl.clearColor(1.0, 1.0, 1.0, 1.0);
+    gl.clearColor(0.96, 0.96, 0.96, 1.0);
     gl.clear(gl.COLOR_BUFFER_BIT);
     for (let i = 0; i < requests.length; ++i) {
         draw_model(

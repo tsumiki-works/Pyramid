@@ -6,23 +6,31 @@ let camera_pos_before_drag_y = 0.0;
 function fun_mousedown(event) {
     // mouseleft down
     if (event.which == 1) {
-        if (event.pageX < MENU_WIDTH) {
+        if (event.pageX < LOGO_WIDTH + 12 && event.pageY < LOGO_HEIGHT + 18){
+           window.confirm("トップページに戻ると作業内容が失われます。よろしいですか。");
+            goto_toppage();
+        }
+        else if (event.pageX < MENU_WIDTH) {
             let is_generate = false;
             const pos_world = convert_2dscreen_to_3dworld([event.pageX, event.pageY]);
             if (event.pageX > 40 && event.pageX < 140) {
                 if (event.pageY > 75 && event.pageY < 125) {
-                    holding_block = (create_block(pos_world[0], pos_world[1], 1, "plus"));
+                    holding_block = (create_block(pos_world[0], pos_world[1], 0, "0"));
                     is_generate = true;
                 }
                 if (event.pageY > 135 && event.pageY < 185) {
-                    holding_block = (create_block(pos_world[0], pos_world[1], 2, "minus"));
+                    holding_block = (create_block(pos_world[0], pos_world[1], 1, "plus"));
                     is_generate = true;
                 }
                 if (event.pageY > 195 && event.pageY < 245) {
-                    holding_block = (create_block(pos_world[0], pos_world[1], 3, "times"));
+                    holding_block = (create_block(pos_world[0], pos_world[1], 2, "minus"));
                     is_generate = true;
                 }
                 if (event.pageY > 255 && event.pageY < 305) {
+                    holding_block = (create_block(pos_world[0], pos_world[1], 3, "times"));
+                    is_generate = true;
+                }
+                if (event.pageY > 315 && event.pageY < 365) {
                     holding_block = (create_block(pos_world[0], pos_world[1], 4, "divide"));
                     is_generate = true;
                 }
