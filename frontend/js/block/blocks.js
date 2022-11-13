@@ -24,7 +24,6 @@ function remove_block_from_roots(block) {
                 continue;
             if (children[i] === block) {
                 if(is_empty_block(children[i].parent)){
-                    console.log("remove from directly roots");
                     roots = roots.filter(_block => block !== _block);
                     return;
                 }else{
