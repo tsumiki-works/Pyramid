@@ -81,13 +81,6 @@ async function run_command(command) {
     switch (words[0]) {
         case "":
             break;
-        case "enumerate":
-            if (words.length == 1) {
-                res = enumerate();
-            } else {
-                res = exception_message("'enumerate' has to have 0 parameter.");
-            }
-            break;
         case "generate":
             if (words.length == 1) {
                 const pos_world = convert_2dscreen_to_3dworld([400, 200]);
@@ -136,14 +129,22 @@ async function run_command(command) {
  */
 function start_newline(log) {
     const prev_line = document.getElementById("console-line");
+    const prev_line_head = document.getElementById("console-line-head");
+    const prev_line_united = document.createElement("label");
     const line_head = document.createElement("label");
     const new_line = document.createElement("label");
     prev_line.removeEventListener("keydown", fun_prevent_enter_console_line);
     prev_line.contentEditable = false;
     prev_line.id = "";
+    prev_line_head.id = "";
+    prev_line_united.innerText = "# " + prev_line.innerText;
     line_head.innerText = "# ";
+    line_head.id = "console-line-head";
     new_line.contentEditable = true;
     new_line.id = "console-line";
+    content.removeChild(prev_line);
+    content.removeChild(prev_line_head);
+    content.appendChild(prev_line_united);
     content.appendChild(document.createElement("br"));
     if (log.length != 0) {
         const log_line = document.createElement("label");
