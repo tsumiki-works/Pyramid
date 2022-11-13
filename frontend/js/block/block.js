@@ -58,7 +58,7 @@ function create_block(x, y, type, content) {
  * @param {object} node 
  * @returns {string} stree of `node`
  */
-function enumerate_tree(tree) {
+function enumerate(tree) {
     let res = "";
     if (tree == null) { }
     else if (tree[BLOCK_IDX_CHILDREN_NUM] == 0) {
@@ -69,17 +69,11 @@ function enumerate_tree(tree) {
         res += tree[BLOCK_IDX_CONTENT];
         tree[BLOCK_IDX_CHILDREN].forEach(child => {
             res += " ";
-            res += enumerate_tree(child);
+            res += enumerate(child);
         });
         res += ")";
     }
     return res;
-}
-/**
- * A function to enumerate all blocks in roots.
- */
-function enumerate() {
-    return "(" + roots.map(block => enumerate_tree(block)).join(" ") + ")";
 }
 /**
  * A constructor for block entity request.

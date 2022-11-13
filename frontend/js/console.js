@@ -54,20 +54,20 @@ function fun_prevent_enter_console_line(event) {
  * @param {string} stree like (+ (+ 1 2) 3)
  * @param {string} out_type console, 
  */
-async function send_calc_request_to_server(stree, out_type) {
-    const body = {
-        stree: stree,
-        out_type: out_type,
-    };
+async function send_calc_request_to_server(defines, stree, out_type) {
     const res = await fetch("http://127.0.0.1:7878", {
-        method: "POST",
-        header: {
+        "method": "POST",
+        "header": {
             "Content-Type": "application/json"
         },
-        body: JSON.stringify(body),
+        "body": JSON.stringify({
+            "defines": defines,
+            "stree": stree,
+            "out_type": out_type,
+        }),
     })
-        .catch(err => console.log(err))
-        .then(data => { return data.json() });
+        .catch(err => alert(err))
+        .then(data => { return data.json(); });
     return res;
 }
 /**
@@ -113,15 +113,15 @@ async function run_command(command) {
             break;
         case "eval":
             let stree = "";
-            if (words.length == 1) {
-                stree = enumerate();
-            } else {
+            if (words.length > 1) {
                 let tmp = words;
                 tmp.shift();
                 stree = tmp.join(" ");
+                const response = await send_calc_request_to_server(["(define int add (x y) (+ x y))", "(define int hoge () 1)"], stree, "console");
+                res = maybe_backend_error_message(response["result"]);
+            } else {
+                res = exception_message("'eval' has to have 1 parameter.")
             }
-            const response = await send_calc_request_to_server(stree, "console");
-            res = maybe_backend_error_message(response["result"]);
             break;
         default:
             res = exception_message("invalid command '" + words[0] + "'.");
