@@ -2,7 +2,7 @@
  * @namespace block
  */
 const BLOCK_UNIT_WIDTH = 1.0;
-const BLOCK_UNIT_HALF_WIDTH = 1.0;
+const BLOCK_UNIT_HALF_WIDTH = 0.5;
 const BLOCK_HEIGHT = 0.5;
 const BLOCK_HALF_HEIGHT = 0.25;
 
