@@ -8,6 +8,10 @@ pub fn eval(ast: Ast) -> Result<String, String> {
             Ast::Atom(s) => {
                 if s == "+" {
                     Ok(eval_operation(*cdr, "+", add)?)
+                } else if s == "nil" {
+                    Err(String::from(
+                        "pyramid backend error: function symbol must be atom but nil found.",
+                    ))
                 } else {
                     Err(format!(
                         "pyramid backend error: invalid function symbol '{}' found.",
@@ -16,8 +20,8 @@ pub fn eval(ast: Ast) -> Result<String, String> {
                 }
             }
             _ => Err(format!(
-                "pyramid backend error: function symbol must be atom but '{:?}' found.",
-                car
+                "pyramid backend error: function symbol must be atom but '({})' found.",
+                car.to_sexpression()
             )),
         },
     }
@@ -59,7 +63,7 @@ fn eval_operation(
             }
             Ast::Atom(s) => {
                 return Err(format!(
-                    "pyramid backend error: invalid argument '{:?}' found for '{}' operation.",
+                    "pyramid backend error: invalid argument '{}' found for '{}' operation.",
                     s, opname
                 ))
             }

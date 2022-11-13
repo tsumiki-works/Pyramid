@@ -1,10 +1,13 @@
 mod evaluater;
-mod parser;
 mod intrinsic_func;
+mod json;
+mod parser;
 #[cfg(test)]
 mod test;
 
 use std::io::prelude::*;
+
+use json::format_output_json;
 
 fn main() {
     let listener = std::net::TcpListener::bind("127.0.0.1:7878").unwrap();
@@ -28,14 +31,14 @@ fn handle_connection(mut stream: std::net::TcpStream) {
         .expect("pyramid backend exception: could not read stream.");
     let message = String::from_utf8_lossy(&buffer[..]);
     let lines = message.lines().collect::<Vec<&str>>();
-    let body = lines[lines.len() - 1].trim();
-    let eval_res = match eval_text(body) {
+    let text = lines[lines.len() - 1].trim();
+    let eval_res = match eval_text(text) {
         Ok(n) => n,
         Err(e) => e,
     };
     let response = format!(
         "HTTP/1.1 200 OK\r\nAccess-Control-Allow-Origin: http://localhost:8000\r\n\r\n{}",
-        eval_res,
+        format_output_json(eval_res),
     );
     stream
         .write(response.as_bytes())
@@ -47,7 +50,8 @@ fn handle_connection(mut stream: std::net::TcpStream) {
 
 /// A function to evaluate code. It calls parser::parse and evaluater::eval internally.
 fn eval_text(text: &str) -> Result<String, String> {
-    let ast = parser::parse(text)?;
+    let body = json::Body::from(text)?;
+    let ast = parser::parse(&body.stree)?;
     let res = evaluater::eval(ast)?;
     Ok(res)
 }

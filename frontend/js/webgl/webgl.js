@@ -91,14 +91,15 @@ function init_webgl(target_canvas) {
     squeare_model = create_square_model();
 }
 
-function update_webgl(requests, width, height, camera) {
+function update_webgl(target_canvas, requests, camera) {
+    gl.viewport(0, 0, target_canvas.width, target_canvas.height);
     gl.clearColor(1.0, 1.0, 1.0, 1.0);
     gl.clear(gl.COLOR_BUFFER_BIT);
     for (let i = 0; i < requests.length; ++i) {
         draw_model(
             squeare_model,
-            width,
-            height,
+            target_canvas.width,
+            target_canvas.height,
             camera,
             requests[i][REQUEST_IDX_TRANS],
             requests[i][REQUEST_IDX_SCALE],

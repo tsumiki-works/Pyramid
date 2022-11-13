@@ -13,6 +13,32 @@ impl Ast {
         }
         res
     }
+    pub fn to_sexpression(&self) -> String {
+        match self {
+            Ast::Nil => String::from(""),
+            Ast::Atom(n) => n.clone(),
+            Ast::Node(car, cdr) => {
+                let mut res = String::new();
+                match *car.clone() {
+                    Ast::Nil => (),
+                    Ast::Atom(n) => res.push_str(&n),
+                    Ast::Node(_, _) => {
+                        res.push('(');
+                        res.push_str(&car.to_sexpression());
+                        res.push(')');
+                    }
+                }
+                res.push(' ');
+                let res_cdr = cdr.to_sexpression();
+                if res_cdr.is_empty() {
+                    res.pop();
+                } else {
+                    res.push_str(&res_cdr);
+                }
+                res
+            }
+        }
+    }
 }
 
 pub fn parse(code: &str) -> Result<Ast, String> {
