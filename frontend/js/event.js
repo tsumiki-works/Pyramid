@@ -6,6 +6,8 @@ let camera_pos_before_drag_y = 0.0;
 function fun_mousedown(event) {
     const pos_world = convert_2dscreen_to_3dworld([event.pageX, event.pageY]);
     const pos_2dunnormalizedviewport = convert_2dscreen_to_2dunnormalizedviewport(canvas.width, canvas.height, [event.pageX, event.pageY]);
+    // delete popup-menu
+    document.getElementById("popup-menu").style.display = "none";
     // mouseleft down
     if (event.which == 1) {
         if (event.pageX < LOGO_WIDTH + 12 && event.pageY < LOGO_HEIGHT + 18){
@@ -73,13 +75,11 @@ function fun_mousedown(event) {
         });
         if(!is_empty_block(hit_result)){
             // create popup menu
-            let elem = document.createElement("div");
-            elem.style.x = event.pageX;
-            elem.style.y = event.pageY;
-            elem.style.width = "100px";
-            elem.style.height = "100px";
-            elem.style.background = "blue";
-            document.appendChild(elem);
+            const menu_content = document.getElementById("popup-menu");
+            menu_content.style.display = "block";
+            menu_content.style.left = event.pageX + "px";
+            menu_content.style.top = event.pageY + "px";
+            
         }else{
             mouse_pos_before_drag_x = event.pageX;
             mouse_pos_before_drag_y = event.pageY;
