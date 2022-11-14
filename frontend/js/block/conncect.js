@@ -27,8 +27,8 @@ function connect_block() {
         if (res_idx != -1) {
             return res_idx;
         } else {
-            alert("ERROR: failed to calculate block's connection index.");
-            return 0;
+            //Nearest block dones't have any connections.
+            return -1;
         }
     }
     // from now on
@@ -43,20 +43,28 @@ function connect_block() {
     }
     if (holding_block.y < nearest_block.y) {
         let index = get_connection_idx(nearest_block, holding_block);
-        if (is_empty_block(nearest_block.children[index])) {
-            nearest_block.children[index] = holding_block;
-            holding_block.parent = nearest_block;
-        } else {
+        if (index != -1){
+            if (is_empty_block(nearest_block.children[index])) {
+                nearest_block.children[index] = holding_block;
+                holding_block.parent = nearest_block;
+            } else {
+                get_roots().push(holding_block);
+            }
+        }else{
             get_roots().push(holding_block);
         }
     } else {
         let index = get_connection_idx(holding_block, nearest_block);
-        if (is_empty_block(holding_block.children[index])) {
-            remove_block_from_roots(nearest_block);
-            get_roots().push(holding_block);
-            holding_block.children[index] = nearest_block;
-            nearest_block.parent = holding_block;
-        } else {
+        if (index != -1){
+            if (is_empty_block(holding_block.children[index])) {
+                remove_block_from_roots(nearest_block);
+                get_roots().push(holding_block);
+                holding_block.children[index] = nearest_block;
+                nearest_block.parent = holding_block;
+            } else {
+                get_roots().push(holding_block);
+            }
+        }else{
             get_roots().push(holding_block);
         }
     }
