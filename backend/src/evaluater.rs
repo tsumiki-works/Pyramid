@@ -11,23 +11,31 @@ pub enum PyramidType {
 
 pub struct PyramidObject {
     type_id: PyramidType,
-    pub value: Option<String>,
+    pub value: String,
 }
 
 pub fn eval(ast: Ast) -> Result<PyramidObject, String> {
     match ast {
         Ast::Nil => Ok(PyramidObject {
             type_id: PyramidType::Nil,
-            value: None,
+            value: String::from("nil"),
         }),
         //eval term's type
         Ast::Atom(s) => {
             if s == "nil"{
-                Ok(PyramidObject { type_id: PyramidType::Nil, value: None })
-            }else {
+                Ok(PyramidObject {
+                    type_id: PyramidType::Nil,
+                    value: String::from("nill"),
+                })
+            }else if s == "true" || s == "false"{
+                Ok(PyramidObject { 
+                    type_id: PyramidType::Bool, 
+                    value: s })
+            }
+            else {
                 Ok(PyramidObject {
                 type_id: PyramidType::Int,
-                value: Some(s),
+                value: s,
                 })
             }
         }
@@ -66,51 +74,51 @@ fn add(args: Vec<PyramidObject>) -> Result<PyramidObject, String> {
         let arg1 = args.pop().unwrap();
         match (arg1.type_id, arg2.type_id) {
             (PyramidType::PyramidString, PyramidType::PyramidString) => {
-                let arg2_val = arg2.value.clone().unwrap().parse::<String>().map_err(|_| {
+                let arg2_val = arg2.value.clone().parse::<String>().map_err(|_| {
                     format!(
                         "pyramid backend error: '{}' is not string.",
-                        arg2.value.unwrap()
+                        arg2.value
                     )
                 })?;
-                let arg1_val = arg1.value.clone().unwrap().parse::<String>().map_err(|_| {
-                    format!("pyramid backend error: '{}' is not integer.", arg1.value.unwrap())
+                let arg1_val = arg1.value.clone().parse::<String>().map_err(|_| {
+                    format!("pyramid backend error: '{}' is not integer.", arg1.value)
                 })?;
                 let res = arg1_val + arg2_val.as_str();
-                Ok(PyramidObject { type_id: PyramidType::PyramidString, value: Some(res) })
+                Ok(PyramidObject { type_id: PyramidType::PyramidString, value: res})
             }
             (PyramidType::Int, PyramidType::Int) => {
-                let arg2_val = arg2.value.clone().unwrap().parse::<i64>().map_err(|_| {
-                    format!("pyramid backend error: '{}' is not integer.", arg2.value.unwrap())
+                let arg2_val = arg2.value.clone().parse::<i64>().map_err(|_| {
+                    format!("pyramid backend error: '{}' is not integer.", arg2.value)
                 })?;
-                let arg1_val = arg1.value.clone().unwrap().parse::<i64>().map_err(|_| {
-                    format!("pyramid backend error: '{}' is not integer.", arg1.value.unwrap())
+                let arg1_val = arg1.value.clone().parse::<i64>().map_err(|_| {
+                    format!("pyramid backend error: '{}' is not integer.", arg1.value)
                 })?;
                 let res = arg1_val + arg2_val;
-                Ok(PyramidObject { type_id: PyramidType::Int, value: Some(res.to_string()) })
+                Ok(PyramidObject { type_id: PyramidType::Int, value: res.to_string() })
             }
             (PyramidType::Int, PyramidType::Double) | (PyramidType::Double, PyramidType::Int) | (PyramidType::Double, PyramidType::Double) => {
-                let arg2_val = arg2.value.clone().unwrap().parse::<f64>().map_err(|_| {
+                let arg2_val = arg2.value.clone().parse::<f64>().map_err(|_| {
                     format!(
                         "pyramid backend error: '{}' is not float point number.",
-                        arg2.value.unwrap()
+                        arg2.value
                     )
                 })?;
-                let arg1_val = arg1.value.clone().unwrap().parse::<f64>().map_err(|_| {
+                let arg1_val = arg1.value.clone().parse::<f64>().map_err(|_| {
                     format!(
                         "pyramid backend error: '{}' is not float point number.",
-                        arg1.value.unwrap()
+                        arg1.value
                     )
                 })?;
                 let res = arg1_val + arg2_val;
-                Ok(PyramidObject { type_id: PyramidType::Double, value: Some(res.to_string()) })
+                Ok(PyramidObject { type_id: PyramidType::Double, value: res.to_string() })
             }
             (PyramidType::Nil, _) | (_, PyramidType::Nil) => {
                 Err(String::from("pyramid backend error: nil is not operand."))
             }
             _ => Err(String::from(format!(
                 "pyramid backend error: These operands ('{}', '{}') are invaild arguments for 'add'.",
-                arg1.value.unwrap(),
-                arg2.value.unwrap()
+                arg1.value,
+                arg2.value
             ))),
         }
     }
