@@ -208,7 +208,7 @@ function push_requests_blocks(blocks, is_ui, requests) {
         );
         push_requests_text(
             block.content,
-            block.x,
+            block.x - (0.15 * wr) * (block.content.length - 1) * 0.5,
             block.y,
             0.15 * wr,
             0.3 * hr,
