@@ -26,13 +26,38 @@ fn eval_test_add() {
     let code = "(+ 1 2)";
     let expected = "3";
     assert_eq!(
-        evaluater::eval(parser::parse(code).unwrap()).unwrap().value.unwrap(),
+        evaluater::eval(parser::parse(code).unwrap()).unwrap().value,
         expected
     );
     let code = "(+ (+ 1 2) (+ 3 4))";
     let expected = "10";
     assert_eq!(
-        evaluater::eval(parser::parse(code).unwrap()).unwrap().value.unwrap(),
+        evaluater::eval(parser::parse(code).unwrap()).unwrap().value,
+        expected
+    );
+    let code = "(+ \\\"1\\\" \\\"2\\\" )";
+    let expected = "12";
+    assert_eq!(
+        evaluater::eval(parser::parse(code).unwrap()).unwrap().value,
+        expected
+    );
+    let code = "(+ 1.32 2.08)";
+    let expected = "3.4000000000000004";
+    assert_eq!(
+        evaluater::eval(parser::parse(code).unwrap()).unwrap().value,
+        expected
+    );
+
+    let code = "(+ 1.0 2.0)";
+    let expected = "3.0";
+    assert_eq!(
+        evaluater::eval(parser::parse(code).unwrap()).unwrap().value,
+        expected
+    );
+    let code = "(+ 1.0 2)";
+    let expected = "3.0";
+    assert_eq!(
+        evaluater::eval(parser::parse(code).unwrap()).unwrap().value,
         expected
     );
 }

@@ -53,5 +53,5 @@ fn eval_text(text: &str) -> Result<String, String> {
     let body = json::Body::from(text)?;
     let ast = parser::parse(&body.stree)?;
     let res = evaluater::eval(ast)?;
-    Ok(res.value.unwrap())
+    Ok(res.value)
 }
