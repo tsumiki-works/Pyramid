@@ -48,7 +48,7 @@ export class Model {
         if (cbuf.uv_offset != null) {
             gl.uniform4fv(program.unilocation_uv_offset, cbuf.uv_offset);
         }
-        if (cbuf.new_texture) {
+        if (cbuf.sampler != null) {
             gl.bindTexture(gl.TEXTURE_2D, cbuf.sampler);
             gl.uniform1i(program.unilocation_sampler, 0);
         }

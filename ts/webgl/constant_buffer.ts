@@ -9,5 +9,4 @@ export type ConstantBuffer = {
     frag_opt: Vec4;
     uv_offset: Vec4;
     sampler: WebGLTexture;
-    new_texture: boolean;
 }

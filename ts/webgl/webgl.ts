@@ -1,3 +1,4 @@
+import { ImageTexture } from "./image_texture.js";
 import { Matrix, Vec4 } from "./math.js";
 import { Model } from "./model.js";
 import { Program } from "./program.js";
@@ -38,6 +39,10 @@ export class WebGL {
         this.square = new Model(this.gl, 6, vtxs, idxs, uvs);
     }
 
+    create_image_texture(image: HTMLImageElement) {
+        return new ImageTexture(this.gl, image);
+    }
+
     draw_requests(requests: Request[], width: number, height: number): void {
         this.gl.viewport(0, 0, width, height);
         this.gl.clearColor(0.6, 0.6, 0.6, 1.0);
@@ -47,6 +52,7 @@ export class WebGL {
         let base_color_tmp = null;
         let frag_opt_tmp = null;
         let uv_offset_tmp = null;
+        let texture_tmp = null;
         for (const request of requests) {
             let mat_view = null;
             if (view_tmp != request.view) {
@@ -71,7 +77,7 @@ export class WebGL {
                 base_color = request.base_color;
                 base_color_tmp = request.base_color;
             }
-            let frag_opt: Vec4 = [request.use_tex ? 1 : 0, 0, 0, 0];
+            let frag_opt: Vec4 = [request.texture === null ? 0 : 1, 0, 0, 0];
             if (frag_opt_tmp != frag_opt) {
                 frag_opt_tmp = frag_opt;
             } else {
@@ -82,6 +88,11 @@ export class WebGL {
                 uv_offset = request.uv_offset;
                 uv_offset_tmp = request.uv_offset;
             }
+            let sampler = null;
+            if (request.texture !== null && texture_tmp !== request.texture) {
+                sampler = request.texture.get_texture();
+                texture_tmp = request.texture;
+            }
             let cbuf = {
                 mat_trs: Matrix.trans(request.trans),
                 mat_scl: Matrix.scale(request.scale),
@@ -90,8 +101,7 @@ export class WebGL {
                 base_color: base_color,
                 frag_opt: frag_opt,
                 uv_offset: uv_offset,
-                sampler: null,
-                new_texture: false,
+                sampler: sampler,
             };
             this.square.draw(this.gl, this.program, cbuf);
         }
