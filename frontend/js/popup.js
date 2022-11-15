@@ -26,14 +26,14 @@ function create_popup_menu(event, block){
     if(block.type == 0){
         let elem_li_edit = document.createElement("li");
         elem_li_edit.classList.add("popup-menu-item");
-        elem_li_edit.innerText = "Edit";
+        elem_li_edit.innerText = "編集";
         elem_li_edit.onclick = (e => popup_menu_content_edit(block));
         elem_li_array.push(elem_li_edit);
         
     }else if(block.type in [1, 2, 3, 4]){
         let elem_li_run = document.createElement("li");
         elem_li_run.classList.add("popup-menu-item");
-        elem_li_run.innerText = "Run";
+        elem_li_run.innerText = "実行";
         elem_li_run.onclick = (e => {run_command("eval " + enumerate(block)); delete_popup_menu()});
         elem_li_array.push(elem_li_run);
     }else{
@@ -41,7 +41,7 @@ function create_popup_menu(event, block){
     }
     let elem_li_del = document.createElement("li");
     elem_li_del.classList.add("popup-menu-item");
-    elem_li_del.innerText = "Delete";
+    elem_li_del.innerText = "削除";
     elem_li_del.onclick = (e => {popup_menu_content_delete(block); delete_popup_menu()});
     elem_li_array.push(elem_li_del);
 
