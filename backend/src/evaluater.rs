@@ -22,37 +22,35 @@ pub fn eval(ast: Ast) -> Result<PyramidObject, String> {
         }),
         //eval term's type
         Ast::Atom(s) => {
-            if s == "nil"{
+            if s == "nil" {
                 Ok(PyramidObject {
                     type_id: PyramidType::Nil,
                     value: String::from("nill"),
                 })
-            }else if s == "true" || s == "false"{
-                Ok(PyramidObject { 
-                    type_id: PyramidType::Bool, 
-                    value: s })
-            }
-            else if is_pyramid_string(s.clone()){
-                Ok(PyramidObject { 
-                    type_id: PyramidType::PyramidString, 
-                    value: get_pyramid_string(s) 
-                })
-            }
-            else if is_pyramid_int(s.clone()){
-                Ok(PyramidObject { 
-                    type_id: PyramidType::Int, 
-                    value: s 
-                })
-            }
-            else if is_pyramid_double(s.clone()){
-                Ok(PyramidObject { 
-                    type_id: PyramidType::Double, 
-                    value: s 
-                })
-            }else {
+            } else if s == "true" || s == "false" {
                 Ok(PyramidObject {
-                type_id: PyramidType::Int,
-                value: s,
+                    type_id: PyramidType::Bool,
+                    value: s,
+                })
+            } else if is_pyramid_string(s.clone()) {
+                Ok(PyramidObject {
+                    type_id: PyramidType::PyramidString,
+                    value: get_pyramid_string(s),
+                })
+            } else if is_pyramid_int(s.clone()) {
+                Ok(PyramidObject {
+                    type_id: PyramidType::Int,
+                    value: s,
+                })
+            } else if is_pyramid_double(s.clone()) {
+                Ok(PyramidObject {
+                    type_id: PyramidType::Double,
+                    value: s,
+                })
+            } else {
+                Ok(PyramidObject {
+                    type_id: PyramidType::Int,
+                    value: s,
                 })
             }
         }
@@ -170,69 +168,77 @@ fn eval_operation(
     Ok(op(args)?)
 }
 
-
-fn is_pyramid_string(st:String) -> bool{
+fn is_pyramid_string(st: String) -> bool {
     st.starts_with("\"") && st.ends_with("\"")
 }
 
 //Only ASCII is allowed
-fn is_pyramid_int(st:String) -> bool{
-    for i in st.to_string().chars().enumerate(){
-        match i.0{
-            0 => match i.1{
+fn is_pyramid_int(st: String) -> bool {
+    for i in st.to_string().chars().enumerate() {
+        match i.0 {
+            0 => match i.1 {
                 '-' => continue,
                 '0'..='9' => continue,
-                _ => return false
-            }
+                _ => return false,
+            },
             _ => match i.1 {
                 '0'..='9' => continue,
-                _ => return false
-            }
+                _ => return false,
+            },
         }
     }
     true
 }
 
-fn is_pyramid_double(st:String) -> bool{
+fn is_pyramid_double(st: String) -> bool {
     let mut dot_times = 0;
-    if st.starts_with("+.") || st.starts_with("-."){return false}
-    for i in st.to_string().chars().enumerate(){
-        match i.0{
-            0 => match i.1{
+    if st.starts_with("+.") || st.starts_with("-.") {
+        return false;
+    }
+    for i in st.to_string().chars().enumerate() {
+        match i.0 {
+            0 => match i.1 {
                 '+' => continue,
                 '-' => continue,
                 '0'..='9' => continue,
-                _ => return false
-            }
+                _ => return false,
+            },
             _ => match i.1 {
                 '0'..='9' => continue,
-                '.' => match dot_times{
-                    0 => {dot_times = 1; continue},
-                    _ => return false
-                }
-                _ => return false
-            }
+                '.' => match dot_times {
+                    0 => {
+                        dot_times = 1;
+                        continue;
+                    }
+                    _ => return false,
+                },
+                _ => return false,
+            },
         }
     }
-    match dot_times{
+    match dot_times {
         1 => true,
-        _ => false
+        _ => false,
     }
 }
 
-fn get_pyramid_string(st:String) -> String{
+fn get_pyramid_string(st: String) -> String {
     let max_index = st.len() - 1;
     let mut new_st = String::new();
-    for i in st.to_string().chars().enumerate(){
-        if i.0 < 1 {continue}
-        else if i.0 > max_index - 1{break}
-        else{new_st.push(i.1)}
+    for i in st.to_string().chars().enumerate() {
+        if i.0 < 1 {
+            continue;
+        } else if i.0 > max_index - 1 {
+            break;
+        } else {
+            new_st.push(i.1)
+        }
     }
     new_st
 }
 
 #[test]
-fn pyramid_string_test(){
+fn pyramid_string_test() {
     assert_eq!(is_pyramid_string(String::from("\"abc\"")), true);
     assert_eq!(is_pyramid_string(String::from("\"abc")), false);
     assert_eq!(is_pyramid_string(String::from("abc\"")), false);
@@ -240,7 +246,7 @@ fn pyramid_string_test(){
 }
 
 #[test]
-fn pyramid_int_test(){
+fn pyramid_int_test() {
     assert_eq!(is_pyramid_int(String::from("123")), true);
     assert_eq!(is_pyramid_int(String::from("038892045")), true);
     assert_eq!(is_pyramid_int(String::from("-123")), true);
@@ -248,9 +254,8 @@ fn pyramid_int_test(){
     assert_eq!(is_pyramid_int(String::from("abc")), false);
 }
 
-
 #[test]
-fn pyramid_double_test(){
+fn pyramid_double_test() {
     assert_eq!(is_pyramid_double(String::from("1.0")), true);
     assert_eq!(is_pyramid_double(String::from("1.23")), true);
     assert_eq!(is_pyramid_double(String::from("0.38892045")), true);
@@ -264,7 +269,7 @@ fn pyramid_double_test(){
 }
 
 #[test]
-fn get_pyramid_string_test(){
+fn get_pyramid_string_test() {
     assert_eq!(get_pyramid_string(String::from("\"abc\"")), "abc");
     assert_eq!(get_pyramid_string(String::from("\"\"")), "");
-}    
+}
