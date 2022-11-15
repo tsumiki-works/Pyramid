@@ -27,7 +27,7 @@ function create_popup_menu(event, block){
         let elem_li_edit = document.createElement("li");
         elem_li_edit.classList.add("popup-menu-item");
         elem_li_edit.innerText = "Edit";
-        elem_li_edit.onclick = (e => create_popup_menu_edit(block));
+        elem_li_edit.onclick = (e => popup_menu_content_edit(block));
         elem_li_array.push(elem_li_edit);
         
     }else if(block.type in [1, 2, 3, 4]){
@@ -41,8 +41,8 @@ function create_popup_menu(event, block){
     }
     let elem_li_del = document.createElement("li");
     elem_li_del.classList.add("popup-menu-item");
-    elem_li_del.innerText = "Delete(not working)";
-    elem_li_del.onclick = (e => console.log("NOT WORKING"));
+    elem_li_del.innerText = "Delete";
+    elem_li_del.onclick = (e => {popup_menu_content_delete(block); delete_popup_menu()});
     elem_li_array.push(elem_li_del);
 
     for(let i = 0; i < elem_li_array.length; i++){
@@ -59,7 +59,12 @@ function delete_popup_menu(){
     }
 }
 
-function create_popup_menu_edit(block){
+function popup_menu_content_delete(block){
+    remove_block_from_roots(block);
+    render();
+}
+
+function popup_menu_content_edit(block){
     const elem_menu = document.getElementById("popup-menu");
     elem_menu.removeChild(elem_menu.firstChild);
 
