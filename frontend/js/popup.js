@@ -70,11 +70,11 @@ function create_popup_menu_edit(block){
     elem_edit.contentEditable = true;
     elem_edit.addEventListener("keydown", (e => {
         if(e.key == "Enter"){
-            if(!isNaN(parseInt(elem_edit.value))){
+            if(!isNaN(elem_edit.value)){
                 block.content = elem_edit.value;
                 render();
             }else{
-                exception_message("This block's value must be integer.");
+                start_newline(exception_message("This block's value must be integer."));
             }
             delete_popup_menu();
         }
