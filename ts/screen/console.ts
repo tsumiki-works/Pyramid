@@ -1,19 +1,24 @@
 import { Pyramid } from "../main.js";
+import { Translation } from "../lib/translatioin.js";
 
 export class ConsoleManager {
     private console_div: HTMLDivElement = document.getElementById("console") as HTMLDivElement;
     private content: HTMLDivElement = document.getElementById("console-content") as HTMLDivElement;
     private console_log: HTMLLabelElement = document.getElementById("console-log") as HTMLLabelElement;
-    private pyramid: Pyramid;
+    private canvas: HTMLCanvasElement;
+    private camera: number[];
+    private pyramid_render: Function;
 
     /**
     * A function to initialize console.
     */
-    constructor(_pyramid: Pyramid) {
-        this.pyramid = _pyramid;
+    constructor(_canvas: HTMLCanvasElement, _camera: number[], _render: Function) {
+        this.canvas = _canvas;
+        this.camera = _camera;
+        this.pyramid_render = _render;
         this.console_div.addEventListener("click", this.fun_click_console);
         this.console_div.addEventListener("keydown", this.fun_keydown_console);
-        const observer = new MutationObserver(() => this.pyramid.render());
+        const observer = new MutationObserver(() => this.pyramid_render());
         const options = {
             attriblutes: true,
             attributeFilter: ["style"]
@@ -27,31 +32,31 @@ export class ConsoleManager {
      * A function to get console element's height.
      * @return {float} the offfset height of console element.
      */
-    get_console_height() {
+    get_console_height(): number {
         return this.console_div.offsetHeight;
     }
     /**
      * An event handler for console.onclick.
      * Wherever you click on console, you're focused on console line.
      */
-    private fun_click_console(_) {
+    private fun_click_console(_: Event): void {
         document.getElementById("console-line").focus();
     }
     /**
      * An event handler for console.onkeydown.
      * Detecting enter hit and run command inputed.
      */
-    async private fun_keydown_console(event) {
+    private async fun_keydown_console(event: KeyboardEvent): Promise<void> {
         if (event.key == "Enter") {
             await this.run_command(document.getElementById("console-line").innerText);
-            this.pyramid.render();
+            this.pyramid_render();
         }
     }
     /**
      * An event handler for console-line.onkeydown.
      * It prevents enter and make a newline in console-line.
      */
-    private fun_prevent_enter_console_line(event) {
+    private fun_prevent_enter_console_line(event: KeyboardEvent): void {
         if (event.key === 'Enter') {
             return event.preventDefault();
         }
@@ -61,7 +66,7 @@ export class ConsoleManager {
      * @param {string} stree like (+ (+ 1 2) 3)
      * @param {string} out_type console, 
      */
-    async private send_calc_request_to_server(defines, stree, out_type): Promise<Response> {
+    private async send_calc_request_to_server(defines: string[], stree: string, out_type: string): Promise<Response>{
         const res: Response = await fetch("http://127.0.0.1:7878", {
             method: "POST",
             headers: {
@@ -73,21 +78,16 @@ export class ConsoleManager {
                 "out_type": out_type,
             }),
         })
-        /*
-        if(!res.ok){
-            const err: Promise<Error> = res.json();
-            alert(err);
-        }else{
-            res.json();
-        }
-        */
+        .catch(err => {alert(err); return err})
+        .then(data => { return data.json(); });
+        
         return res;
     }
     /**
      * A function to run command.
      * @param {string} command
      */
-    async run_command(command) {
+    async run_command(command): Promise<void> {
         const words = command.trim().split(/\s+/);
         console.log(words[0]);
         let res = "";
@@ -96,7 +96,7 @@ export class ConsoleManager {
                 break;
             case "generate":
                 if (words.length == 1) {
-                    const pos_world = convert_2dscreen_to_3dworld([400, 200]);
+                    const pos_world = Translation.convert_2dscreen_to_3dworld(this.canvas.width, this.canvas.height, this.camera, [400, 200]);
                     get_roots().push(create_block(pos_world[0], pos_world[1], 0, "0"));
                     res = "generated at (400, 200) on screen";
                 } else if (words.length == 4) {
@@ -104,18 +104,18 @@ export class ConsoleManager {
                     const y = parseInt(words[2]);
                     const type = parseInt(words[3]);
                     if (isNaN(x)) {
-                        res = exception_message("x is not integer.");
+                        res = this.exception_message("x is not integer.");
                     } else if (isNaN(y)) {
-                        res = exception_message("y is not integer.");
+                        res = this.exception_message("y is not integer.");
                     } else if (isNaN(type)) {
-                        res = exception_message("type is not integer.");
+                        res = this.exception_message("type is not integer.");
                     } else {
-                        const pos_world = convert_2dscreen_to_3dworld([x, y]);
+                        const pos_world = Translation.convert_2dscreen_to_3dworld(this.canvas.width, this.canvas.height, this.camera, [x, y]);
                         get_roots().push(create_block(pos_world[0], pos_world[1], type, "0"));
                         res = "generated at (" + x + ", " + y + ") in screen";
                     }
                 } else {
-                    res = exception_message("'generate' has to have 0 or 3 parameters.");
+                    res = this.exception_message("'generate' has to have 0 or 3 parameters.");
                 }
                 break;
             case "eval":
@@ -124,44 +124,59 @@ export class ConsoleManager {
                     let tmp = words;
                     tmp.shift();
                     stree = tmp.join(" ");
-                    const response = await send_calc_request_to_server(["(define int add (x y) (+ x y))", "(define int hoge () 1)"], stree, "console");
-                    res = maybe_backend_error_message(response["result"]);
+                    const response = await this.send_calc_request_to_server(["(define int add (x y) (+ x y))", "(define int hoge () 1)"], stree, "console");
+                    res = this.maybe_backend_error_message(response["result"]);
                 } else {
-                    res = exception_message("'eval' has to have 1 parameter.")
+                    res = this.exception_message("'eval' has to have 1 parameter.")
                 }
                 break;
             default:
-                res = exception_message("invalid command '" + words[0] + "'.");
+                res = this.exception_message("invalid command '" + words[0] + "'.");
                 break;
         }
-        start_newline(res);
+        this.start_newline(res);
+    }
+    private replace_escape(message: string): string {
+        let message1: string = message.replaceAll("<", "&lt;");
+        let message2: string = message1.replaceAll(">", "&gt;");
+        return message2;
+    }
+    exception_message(message: string): string {
+        return "<span class=\"exception\">pyramid frontend exception:</span> " + this.replace_escape(message);
+    }
+    private maybe_backend_error_message(message): string {
+        if (message.length > 22 && message.slice(0, 22) == "pyramid backend error:") {
+            return "<span class=\"exception\">pyramid backend error:</span> " + this.replace_escape(message.slice(22));
+        } else {
+            return message;
+        }
     }
     /**
      * A function to start new line.
      * @param {string} log if it's "" then nothing will be printed.
      */
-    function start_newline(log) {
-        const prev_line = document.getElementById("console-line");
-        const prev_line_head = document.getElementById("console-line-head");
-        const line_head = document.createElement("label");
-        const new_line = document.createElement("label");
-        prev_line.removeEventListener("keydown", fun_prevent_enter_console_line);
-        prev_line.contentEditable = false;
+    start_newline(log): void {
+        const prev_line: HTMLLabelElement = document.getElementById("console-line") as HTMLLabelElement;
+        const prev_line_head: HTMLLabelElement = document.getElementById("console-line-head") as HTMLLabelElement;
+        const line_head: HTMLLabelElement = document.createElement("label") as HTMLLabelElement;
+        const new_line: HTMLLabelElement = document.createElement("label") as HTMLLabelElement;
+        prev_line.removeEventListener("keydown", this.fun_prevent_enter_console_line);
+        prev_line.contentEditable = "false";
         prev_line.id = "";
         prev_line_head.id = "";
         line_head.innerText = "# ";
         line_head.id = "console-line-head";
-        new_line.contentEditable = true;
+        new_line.contentEditable = "true";
         new_line.id = "console-line";
-        console_log.innerHTML += "# " + prev_line.innerText + "<br>";
-        content.removeChild(prev_line);
-        content.removeChild(prev_line_head);
+        this.console_log.innerHTML += "# " + prev_line.innerText + "<br>";
+        this.content.removeChild(prev_line);
+        this.content.removeChild(prev_line_head);
         if (log.length != 0) {
-            console_log.innerHTML += log + "<br>";
+            this.console_log.innerHTML += log + "<br>";
         }
-        content.appendChild(line_head);
-        content.appendChild(new_line);
+        this.content.appendChild(line_head);
+        this.content.appendChild(new_line);
         new_line.focus();
-        new_line.addEventListener("keydown", fun_prevent_enter_console_line);
+        new_line.addEventListener("keydown", this.fun_prevent_enter_console_line);
     }
 }
