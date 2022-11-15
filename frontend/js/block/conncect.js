@@ -7,6 +7,20 @@
  */
 function connect_block() {
     /**
+    * A function to get block's children connection.
+    * @param {object} block
+    * @return {object[]} relative connections of target_block 
+    * @memberOf block.connect
+    * @access private
+    */
+     function get_block_connection(width, children_num) {
+        let res = [];
+        for (let i = 0; i < children_num; i++) {
+            res.push(width* (0.5 ** children_num) * (2 * i + 1) - width * 0.5);
+        }
+        return res;
+    }
+    /**
      * A function to find nearest block's connection.
      * @param {object} parent
      * @param {object} child
@@ -14,23 +28,25 @@ function connect_block() {
      * @memberOf block.connect
      * @access private
      */
-    function get_connection_idx(parent, child) {
+    function get_connectable_idx(parent, child) {
         let res_idx = -1, min_dist = -1;
+        let parent_connection = get_block_connection(parent.width, parent.children.length);
         for (let i = 0; i < parent.children.length; i++) {
-            const dist = square_distance(parent.x + parent.children_connection[i], parent.y,
+            const dist = square_distance(parent.x + parent_connection[i], parent.y,
                 child.x, child.y);
-            if (min_dist == -1 || min_dist > dist) {
+            if ((min_dist == -1 || min_dist > dist)){
                 min_dist = dist;
                 res_idx = i;
             }
         }
-        if (res_idx != -1) {
+        if (res_idx != -1 && is_empty_block(parent.children[res_idx])) {
             return res_idx;
         } else {
-            alert("ERROR: failed to calculate block's connection index.");
-            return 0;
+            //Nearest block dones't have any connections.
+            return -1;
         }
     }
+
     // from now on
     const nearest_block = find_block(roots, (block) => {
         return Math.abs(block.x - holding_block.x) <
@@ -42,35 +58,22 @@ function connect_block() {
         return;
     }
     if (holding_block.y < nearest_block.y) {
-        let index = get_connection_idx(nearest_block, holding_block);
-        if (is_empty_block(nearest_block.children[index])) {
+        let index = get_connectable_idx(nearest_block, holding_block);
+        if (index != -1){
             nearest_block.children[index] = holding_block;
             holding_block.parent = nearest_block;
-        } else {
+        }else{
             get_roots().push(holding_block);
         }
     } else {
-        let index = get_connection_idx(holding_block, nearest_block);
-        if (is_empty_block(holding_block.children[index])) {
+        let index = get_connectable_idx(holding_block, nearest_block);
+        if (index != -1){
             remove_block_from_roots(nearest_block);
             get_roots().push(holding_block);
             holding_block.children[index] = nearest_block;
             nearest_block.parent = holding_block;
-        } else {
+        }else{
             get_roots().push(holding_block);
         }
     }
-}
-/**
- * A function to get block's children connection.
- * @param {object} block
- * @return {object[]} relative connections of target_block 
- * @memberOf block.connect
- */
-function get_block_connection(width, children_num) {
-    let res = [];
-    for (let i = 0; i < children_num; i++) {
-        res.push(width* (0.5 ** children_num) * (2 * i + 1) - width * 0.5);
-    }
-    return res;
 }
