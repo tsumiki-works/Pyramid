@@ -35,7 +35,7 @@ fn eval_test_add() {
         evaluater::eval(parser::parse(code).unwrap()).unwrap().value,
         expected
     );
-    let code = "(+ \"1\" \"2\" )";
+    let code = "(+ \\\"1\\\" \\\"2\\\" )";
     let expected = "12";
     assert_eq!(
         evaluater::eval(parser::parse(code).unwrap()).unwrap().value,

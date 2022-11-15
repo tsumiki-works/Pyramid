@@ -169,7 +169,7 @@ fn eval_operation(
 }
 
 fn is_pyramid_string(st: String) -> bool {
-    st.starts_with("\"") && st.ends_with("\"")
+    st.starts_with("\\\"") && st.ends_with("\\\"")
 }
 
 //Only ASCII is allowed
@@ -226,9 +226,9 @@ fn get_pyramid_string(st: String) -> String {
     let max_index = st.len() - 1;
     let mut new_st = String::new();
     for i in st.to_string().chars().enumerate() {
-        if i.0 < 1 {
+        if i.0 < 2 {
             continue;
-        } else if i.0 > max_index - 1 {
+        } else if i.0 > max_index - 2{
             break;
         } else {
             new_st.push(i.1)
@@ -239,9 +239,9 @@ fn get_pyramid_string(st: String) -> String {
 
 #[test]
 fn pyramid_string_test() {
-    assert_eq!(is_pyramid_string(String::from("\"abc\"")), true);
-    assert_eq!(is_pyramid_string(String::from("\"abc")), false);
-    assert_eq!(is_pyramid_string(String::from("abc\"")), false);
+    assert_eq!(is_pyramid_string(String::from("\\\"abc\\\"")), true);
+    assert_eq!(is_pyramid_string(String::from("\\\"abc")), false);
+    assert_eq!(is_pyramid_string(String::from("abc\\\"")), false);
     assert_eq!(is_pyramid_string(String::from("abc")), false);
 }
 
@@ -270,6 +270,6 @@ fn pyramid_double_test() {
 
 #[test]
 fn get_pyramid_string_test() {
-    assert_eq!(get_pyramid_string(String::from("\"abc\"")), "abc");
-    assert_eq!(get_pyramid_string(String::from("\"\"")), "");
+    assert_eq!(get_pyramid_string(String::from("\\\"abc\\\"")), "abc");
+    assert_eq!(get_pyramid_string(String::from("\\\"\\\"")), "");
 }
