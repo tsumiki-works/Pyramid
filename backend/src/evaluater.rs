@@ -127,7 +127,11 @@ fn add(args: Vec<PyramidObject>) -> Result<PyramidObject, String> {
                     )
                 })?;
                 let res = arg1_val + arg2_val;
-                Ok(PyramidObject { type_id: PyramidType::Double, value: res.to_string() })
+                if is_pyramid_int(res.clone().to_string()){
+                    Ok(PyramidObject { type_id: PyramidType::Double, value: res.to_string() + ".0"})
+                }else{
+                    Ok(PyramidObject { type_id: PyramidType::Double, value: res.to_string()})
+                }
             }
             (PyramidType::Nil, _) | (_, PyramidType::Nil) => {
                 Err(String::from("pyramid backend error: nil is not operand."))
