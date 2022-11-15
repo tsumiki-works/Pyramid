@@ -23,11 +23,17 @@
     <img crossOrigin="anonymous" id="tex01" src="images/tex01.png">
     <img crossOrigin="anonymous" id="tex_font" src="images/tex_font.png">
     <img crossOrigin="anonymous" id="tex_trashbox" src="images/tex_ui_trash.png">
-    <script type="module" src="js/main.js"></script>
+    <script type="module" src="js/webgl/constant_buffer.js"></script>
+    <script type="module" src="js/webgl/math.js"></script>
+    <script type="module" src="js/webgl/model.js"></script>
+    <script type="module" src="js/webgl/program.js"></script>
+    <script type="module" src="js/webgl/request.js"></script>
+    <script type="module" src="js/webgl/webgl.js"></script>
     <script type="module" src="js/block/block.js"></script>
     <script type="module" src="js/block/blockManager.js"></script>
+    <script type="module" src="js/main.js"></script>
     <script type="module">
-        import {Pyramid} from "./js/main.js";
+        import { Pyramid } from "./js/main.js"
         new Pyramid().run();
     </script>
 </body>
