@@ -60,7 +60,6 @@ function create_block(x, y, type, content) {
     return {
         parent: {},
         children: children,
-        children_connection: get_block_connection(width, children.length),
         x: x,
         y: y,
         width: width,
@@ -109,6 +108,7 @@ function get_holding_block() {
     return holding_block;
 }
 
+/*
 function set_block_connection(block){
     if(!is_empty_block(block))
         block.children_connection = get_block_connection(block.width, block.children.length);
@@ -116,3 +116,4 @@ function set_block_connection(block){
         set_block_connection(child);
     }
 }
+*/

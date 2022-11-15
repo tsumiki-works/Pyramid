@@ -96,7 +96,6 @@ function arrange_block(target_block, wr, hr) {
     const y = target_block.y;
     determine_block_width(target_block);
     determine_block_pos(target_block, x, y);
-    set_block_connection(target_block);
 }
 /**
  * A function to remove block from tree in `blocks`.
