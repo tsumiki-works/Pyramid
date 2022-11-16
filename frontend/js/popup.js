@@ -30,7 +30,7 @@ function create_popup_menu(event, block){
         elem_li_edit.onclick = (e => popup_menu_content_edit(block));
         elem_li_array.push(elem_li_edit);
         
-    }else if(block.type in [1, 2, 3, 4]){
+    }else if([1, 2, 3, 4].includes(block.type)){
         let elem_li_run = document.createElement("li");
         elem_li_run.classList.add("popup-menu-item");
         elem_li_run.innerText = "実行";
