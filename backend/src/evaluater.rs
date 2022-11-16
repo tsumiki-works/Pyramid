@@ -365,6 +365,9 @@ fn div(args: Vec<PyramidObject>) -> Result<PyramidObject, String> {
     }
 }
 
+// Modulus for integer quotient operation
+// r = a - bq
+// In case b is negative and operand is double, not yet tested.
 fn modulo(args: Vec<PyramidObject>) -> Result<PyramidObject, String> {
     if args.len() != 2 {
         Err(String::from(
@@ -382,7 +385,7 @@ fn modulo(args: Vec<PyramidObject>) -> Result<PyramidObject, String> {
                 let arg1_val = arg1.value.clone().parse::<i64>().map_err(|_| {
                     format!("pyramid backend error: '{}' is not integer.", arg1.value)
                 })?;
-                let res = arg1_val + arg2_val;
+                let res = arg1_val % arg2_val;
                 Ok(PyramidObject { type_id: PyramidType::Int, value: res.to_string() })
             }
             (PyramidType::Int, PyramidType::Double) | (PyramidType::Double, PyramidType::Int) | (PyramidType::Double, PyramidType::Double) => {
@@ -398,7 +401,7 @@ fn modulo(args: Vec<PyramidObject>) -> Result<PyramidObject, String> {
                         arg1.value
                     )
                 })?;
-                let res = arg1_val + arg2_val;
+                let res = arg1_val % arg2_val;
                 if is_pyramid_int(res.clone().to_string()){
                     Ok(PyramidObject { type_id: PyramidType::Double, value: res.to_string() + ".0"})
                 }else{

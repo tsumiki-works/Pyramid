@@ -135,6 +135,22 @@ fn eval_test_div(){
 }
 
 #[test]
+fn eval_test_modulo(){
+    let code = "(% 3 2)";
+    let expected = "1";
+    assert_eq!(evaluater::eval(parser::parse(code).unwrap()).unwrap().value, expected);
+    let code = "(% -3 2)";
+    let expected = "-1";
+    assert_eq!(evaluater::eval(parser::parse(code).unwrap()).unwrap().value, expected);
+    let code = "(% -3 -2)";
+    let expected = "-1";
+    assert_eq!(evaluater::eval(parser::parse(code).unwrap()).unwrap().value, expected);
+    let code = "(% 7.1 3.2)";
+    let expected = evaluater::eval(parser::parse("(- 7.1 (* 3.2 (// 7.1 3.2)))").unwrap()).unwrap().value;
+    assert_eq!(evaluater::eval(parser::parse(code).unwrap()).unwrap().value, expected);
+}
+
+#[test]
 fn diff_test() {
     let threshold = f64::EPSILON * 1000.;
     assert!((intrinsic_func::diff(|x| x * x / 2., 1.).unwrap() - 1.).abs() < threshold);
