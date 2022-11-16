@@ -140,6 +140,10 @@ fn eval_test_int_div() {
         evaluater::eval(parser::parse(code).unwrap()).unwrap().value,
         expected
     );
+    let code = "(// 3 0)";
+    assert!(evaluater::eval(parser::parse(code).unwrap()).is_err());
+    let code = "(// 3.0 0)";
+    assert!(evaluater::eval(parser::parse(code).unwrap()).is_err());
 }
 
 #[test]
@@ -174,6 +178,10 @@ fn eval_test_div() {
         evaluater::eval(parser::parse(code).unwrap()).unwrap().value,
         expected
     );
+    let code = "(/ 3 0)";
+    assert!(evaluater::eval(parser::parse(code).unwrap()).is_err());
+    let code = "(/ 3.0 0)";
+    assert!(evaluater::eval(parser::parse(code).unwrap()).is_err());
 }
 
 #[test]
@@ -204,6 +212,10 @@ fn eval_test_modulo() {
         evaluater::eval(parser::parse(code).unwrap()).unwrap().value,
         expected
     );
+    let code = "(% 3 0)";
+    assert!(evaluater::eval(parser::parse(code).unwrap()).is_err());
+    let code = "(% 3.0 0)";
+    assert!(evaluater::eval(parser::parse(code).unwrap()).is_err());
 }
 
 #[test]

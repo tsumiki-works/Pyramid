@@ -276,6 +276,7 @@ fn int_div(args: Vec<PyramidObject>) -> Result<PyramidObject, String> {
                 let arg1_val = arg1.value.clone().parse::<i64>().map_err(|_| {
                     format!("pyramid backend error: '{}' is not integer.", arg1.value)
                 })?;
+                if arg2_val == 0 {return Err(String::from("pyramid backend error: zero division is not allowed"))}
                 let res = arg1_val / arg2_val;
                 Ok(PyramidObject { type_id: PyramidType::Int, value: res.to_string() })
             }
@@ -292,6 +293,7 @@ fn int_div(args: Vec<PyramidObject>) -> Result<PyramidObject, String> {
                         arg1.value
                     )
                 })?;
+                if arg2_val == 0. {return Err(String::from("pyramid backend error: zero division is not allowed"))}
                 let res = ((arg1_val / arg2_val) as f64).floor();
                 Ok(PyramidObject { type_id: PyramidType::Double, value: res.to_string()})
             }
@@ -326,6 +328,7 @@ fn div(args: Vec<PyramidObject>) -> Result<PyramidObject, String> {
                 let arg1_val = arg1.value.clone().parse::<i64>().map_err(|_| {
                     format!("pyramid backend error: '{}' is not integer.", arg1.value)
                 })?;
+                if arg2_val == 0 {return Err(String::from("pyramid backend error: zero division is not allowed"))}
                 let res = (arg1_val as f64) / (arg2_val as f64);
                 if is_pyramid_int(res.clone().to_string()){
                     Ok(PyramidObject { type_id: PyramidType::Double, value: res.to_string() + ".0"})
@@ -346,6 +349,7 @@ fn div(args: Vec<PyramidObject>) -> Result<PyramidObject, String> {
                         arg1.value
                     )
                 })?;
+                if arg2_val == 0. {return Err(String::from("pyramid backend error: zero division is not allowed"))}
                 let res = arg1_val / arg2_val;
                 if is_pyramid_int(res.clone().to_string()){
                     Ok(PyramidObject { type_id: PyramidType::Double, value: res.to_string() + ".0"})
@@ -385,6 +389,7 @@ fn modulo(args: Vec<PyramidObject>) -> Result<PyramidObject, String> {
                 let arg1_val = arg1.value.clone().parse::<i64>().map_err(|_| {
                     format!("pyramid backend error: '{}' is not integer.", arg1.value)
                 })?;
+                if arg2_val == 0 {return Err(String::from("pyramid backend error: zero division is not allowed"))}
                 let res = arg1_val % arg2_val;
                 Ok(PyramidObject { type_id: PyramidType::Int, value: res.to_string() })
             }
@@ -401,6 +406,7 @@ fn modulo(args: Vec<PyramidObject>) -> Result<PyramidObject, String> {
                         arg1.value
                     )
                 })?;
+                if arg2_val == 0. {return Err(String::from("pyramid backend error: zero division is not allowed"))}
                 let res = arg1_val % arg2_val;
                 if is_pyramid_int(res.clone().to_string()){
                     Ok(PyramidObject { type_id: PyramidType::Double, value: res.to_string() + ".0"})
