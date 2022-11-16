@@ -77,6 +77,148 @@ fn eval_test_add_wrong() {
 }
 
 #[test]
+fn eval_test_sub() {
+    let code = "(- 3 2)";
+    let expected = "1";
+    assert_eq!(
+        evaluater::eval(parser::parse(code).unwrap()).unwrap().value,
+        expected
+    );
+    let code = "(- 2.0 3.0)";
+    let expected = "-1.0";
+    assert_eq!(
+        evaluater::eval(parser::parse(code).unwrap()).unwrap().value,
+        expected
+    );
+    let code = "(- 3.14 7.342)";
+    let expected = "-4.202";
+    assert_eq!(
+        evaluater::eval(parser::parse(code).unwrap()).unwrap().value,
+        expected
+    );
+}
+
+#[test]
+fn eval_test_mul() {
+    let code = "(* 3 2)";
+    let expected = "6";
+    assert_eq!(
+        evaluater::eval(parser::parse(code).unwrap()).unwrap().value,
+        expected
+    );
+    let code = "(* -2.0 3)";
+    let expected = "-6.0";
+    assert_eq!(
+        evaluater::eval(parser::parse(code).unwrap()).unwrap().value,
+        expected
+    );
+    let code = "(* 3.14 7.342)";
+    let expected = "23.05388";
+    assert_eq!(
+        evaluater::eval(parser::parse(code).unwrap()).unwrap().value,
+        expected
+    );
+}
+
+#[test]
+fn eval_test_int_div() {
+    let code = "(// 3 2)";
+    let expected = "1";
+    assert_eq!(
+        evaluater::eval(parser::parse(code).unwrap()).unwrap().value,
+        expected
+    );
+    let code = "(// 7.1 3)";
+    let expected = "2";
+    assert_eq!(
+        evaluater::eval(parser::parse(code).unwrap()).unwrap().value,
+        expected
+    );
+    let code = "(// -7.1 3)";
+    let expected = "-3";
+    assert_eq!(
+        evaluater::eval(parser::parse(code).unwrap()).unwrap().value,
+        expected
+    );
+    let code = "(// 3 0)";
+    assert!(evaluater::eval(parser::parse(code).unwrap()).is_err());
+    let code = "(// 3.0 0)";
+    assert!(evaluater::eval(parser::parse(code).unwrap()).is_err());
+}
+
+#[test]
+fn eval_test_div() {
+    let code = "(/ 3 2)";
+    let expected = "1.5";
+    assert_eq!(
+        evaluater::eval(parser::parse(code).unwrap()).unwrap().value,
+        expected
+    );
+    let code = "(/ 6 2)";
+    let expected = "3.0";
+    assert_eq!(
+        evaluater::eval(parser::parse(code).unwrap()).unwrap().value,
+        expected
+    );
+    let code = "(/ -6.0 2.0)";
+    let expected = "-3.0";
+    assert_eq!(
+        evaluater::eval(parser::parse(code).unwrap()).unwrap().value,
+        expected
+    );
+    let code = "(/ 7.1 3)";
+    let expected = "2.3666666666666667";
+    assert_eq!(
+        evaluater::eval(parser::parse(code).unwrap()).unwrap().value,
+        expected
+    );
+    let code = "(/ 7.1 -3)";
+    let expected = "-2.3666666666666667";
+    assert_eq!(
+        evaluater::eval(parser::parse(code).unwrap()).unwrap().value,
+        expected
+    );
+    let code = "(/ 3 0)";
+    assert!(evaluater::eval(parser::parse(code).unwrap()).is_err());
+    let code = "(/ 3.0 0)";
+    assert!(evaluater::eval(parser::parse(code).unwrap()).is_err());
+}
+
+#[test]
+fn eval_test_modulo() {
+    let code = "(% 3 2)";
+    let expected = "1";
+    assert_eq!(
+        evaluater::eval(parser::parse(code).unwrap()).unwrap().value,
+        expected
+    );
+    let code = "(% -3 2)";
+    let expected = "-1";
+    assert_eq!(
+        evaluater::eval(parser::parse(code).unwrap()).unwrap().value,
+        expected
+    );
+    let code = "(% -3 -2)";
+    let expected = "-1";
+    assert_eq!(
+        evaluater::eval(parser::parse(code).unwrap()).unwrap().value,
+        expected
+    );
+    let code = "(% 7.1 3.2)";
+    let expected = evaluater::eval(parser::parse("(- 7.1 (* 3.2 (// 7.1 3.2)))").unwrap())
+        .unwrap()
+        .value;
+    assert_eq!(
+        evaluater::eval(parser::parse(code).unwrap()).unwrap().value,
+        expected
+    );
+    let code = "(% 3 0)";
+    assert!(evaluater::eval(parser::parse(code).unwrap()).is_err());
+    let code = "(% 3.0 0)";
+    assert!(evaluater::eval(parser::parse(code).unwrap()).is_err());
+}
+
+#[test]
 fn diff_test() {
     let threshold = f64::EPSILON * 1000.;
     assert!((intrinsic_func::diff(|x| x * x / 2., 1.).unwrap() - 1.).abs() < threshold);

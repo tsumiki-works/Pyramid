@@ -56,9 +56,19 @@ pub fn eval(ast: Ast) -> Result<PyramidObject, String> {
         }
         Ast::Node(car, cdr) => match *car {
             Ast::Atom(s) => {
+                // add calculation
                 if s == "+" {
                     Ok(eval_operation(*cdr, "+", add)?)
-                // add other calculation
+                } else if s == "-" {
+                    Ok(eval_operation(*cdr, "-", sub)?)
+                } else if s == "*" {
+                    Ok(eval_operation(*cdr, "*", mul)?)
+                } else if s == "/" {
+                    Ok(eval_operation(*cdr, "/", div)?)
+                } else if s == "//" {
+                    Ok(eval_operation(*cdr, "//", int_div)?)
+                } else if s == "%" {
+                    Ok(eval_operation(*cdr, "%", modulo)?)
                 } else if s == "nil" {
                     Err(String::from(
                         "pyramid backend error: function symbol must be atom but nil found.",
@@ -136,6 +146,279 @@ fn add(args: Vec<PyramidObject>) -> Result<PyramidObject, String> {
             }
             _ => Err(String::from(format!(
                 "pyramid backend error: These operands ('{}', '{}') are invaild arguments for 'add'.",
+                arg1.value,
+                arg2.value
+            ))),
+        }
+    }
+}
+
+fn sub(args: Vec<PyramidObject>) -> Result<PyramidObject, String> {
+    if args.len() != 2 {
+        Err(String::from(
+            "pyramid backend error: too many arguments for '-' operation.",
+        ))
+    } else {
+        let mut args = args;
+        let arg2 = args.pop().unwrap();
+        let arg1 = args.pop().unwrap();
+        match (arg1.type_id, arg2.type_id) {
+            (PyramidType::Int, PyramidType::Int) => {
+                let arg2_val = arg2.value.clone().parse::<i64>().map_err(|_| {
+                    format!("pyramid backend error: '{}' is not integer.", arg2.value)
+                })?;
+                let arg1_val = arg1.value.clone().parse::<i64>().map_err(|_| {
+                    format!("pyramid backend error: '{}' is not integer.", arg1.value)
+                })?;
+                let res = arg1_val - arg2_val;
+                Ok(PyramidObject { type_id: PyramidType::Int, value: res.to_string() })
+            }
+            (PyramidType::Int, PyramidType::Double) | (PyramidType::Double, PyramidType::Int) | (PyramidType::Double, PyramidType::Double) => {
+                let arg2_val = arg2.value.clone().parse::<f64>().map_err(|_| {
+                    format!(
+                        "pyramid backend error: '{}' is not float point number.",
+                        arg2.value
+                    )
+                })?;
+                let arg1_val = arg1.value.clone().parse::<f64>().map_err(|_| {
+                    format!(
+                        "pyramid backend error: '{}' is not float point number.",
+                        arg1.value
+                    )
+                })?;
+                let res = arg1_val - arg2_val;
+                if is_pyramid_int(res.clone().to_string()){
+                    Ok(PyramidObject { type_id: PyramidType::Double, value: res.to_string() + ".0"})
+                }else{
+                    Ok(PyramidObject { type_id: PyramidType::Double, value: res.to_string()})
+                }
+            }
+            (PyramidType::Nil, _) | (_, PyramidType::Nil) => {
+                Err(String::from("pyramid backend error: nil is not operand."))
+            }
+            _ => Err(String::from(format!(
+                "pyramid backend error: These operands ('{}', '{}') are invaild arguments for 'sub'.",
+                arg1.value,
+                arg2.value
+            ))),
+        }
+    }
+}
+
+fn mul(args: Vec<PyramidObject>) -> Result<PyramidObject, String> {
+    if args.len() != 2 {
+        Err(String::from(
+            "pyramid backend error: too many arguments for '*' operation.",
+        ))
+    } else {
+        let mut args = args;
+        let arg2 = args.pop().unwrap();
+        let arg1 = args.pop().unwrap();
+        match (arg1.type_id, arg2.type_id) {
+            (PyramidType::Int, PyramidType::Int) => {
+                let arg2_val = arg2.value.clone().parse::<i64>().map_err(|_| {
+                    format!("pyramid backend error: '{}' is not integer.", arg2.value)
+                })?;
+                let arg1_val = arg1.value.clone().parse::<i64>().map_err(|_| {
+                    format!("pyramid backend error: '{}' is not integer.", arg1.value)
+                })?;
+                let res = arg1_val * arg2_val;
+                Ok(PyramidObject { type_id: PyramidType::Int, value: res.to_string() })
+            }
+            (PyramidType::Int, PyramidType::Double) | (PyramidType::Double, PyramidType::Int) | (PyramidType::Double, PyramidType::Double) => {
+                let arg2_val = arg2.value.clone().parse::<f64>().map_err(|_| {
+                    format!(
+                        "pyramid backend error: '{}' is not float point number.",
+                        arg2.value
+                    )
+                })?;
+                let arg1_val = arg1.value.clone().parse::<f64>().map_err(|_| {
+                    format!(
+                        "pyramid backend error: '{}' is not float point number.",
+                        arg1.value
+                    )
+                })?;
+                let res = arg1_val * arg2_val;
+                if is_pyramid_int(res.clone().to_string()){
+                    Ok(PyramidObject { type_id: PyramidType::Double, value: res.to_string() + ".0"})
+                }else{
+                    Ok(PyramidObject { type_id: PyramidType::Double, value: res.to_string()})
+                }
+            }
+            (PyramidType::Nil, _) | (_, PyramidType::Nil) => {
+                Err(String::from("pyramid backend error: nil is not operand."))
+            }
+            _ => Err(String::from(format!(
+                "pyramid backend error: These operands ('{}', '{}') are invaild arguments for 'mul'.",
+                arg1.value,
+                arg2.value
+            ))),
+        }
+    }
+}
+
+// Always returns an integer quotient (returns the floor function value of the quotient)
+// Return PyramidObject:PyramidType::Int
+fn int_div(args: Vec<PyramidObject>) -> Result<PyramidObject, String> {
+    if args.len() != 2 {
+        Err(String::from(
+            "pyramid backend error: too many arguments for '//' operation.",
+        ))
+    } else {
+        let mut args = args;
+        let arg2 = args.pop().unwrap();
+        let arg1 = args.pop().unwrap();
+        match (arg1.type_id, arg2.type_id) {
+            (PyramidType::Int, PyramidType::Int) => {
+                let arg2_val = arg2.value.clone().parse::<i64>().map_err(|_| {
+                    format!("pyramid backend error: '{}' is not integer.", arg2.value)
+                })?;
+                let arg1_val = arg1.value.clone().parse::<i64>().map_err(|_| {
+                    format!("pyramid backend error: '{}' is not integer.", arg1.value)
+                })?;
+                if arg2_val == 0 {return Err(String::from("pyramid backend error: zero division is not allowed"))}
+                let res = arg1_val / arg2_val;
+                Ok(PyramidObject { type_id: PyramidType::Int, value: res.to_string() })
+            }
+            (PyramidType::Int, PyramidType::Double) | (PyramidType::Double, PyramidType::Int) | (PyramidType::Double, PyramidType::Double) => {
+                let arg2_val = arg2.value.clone().parse::<f64>().map_err(|_| {
+                    format!(
+                        "pyramid backend error: '{}' is not float point number.",
+                        arg2.value
+                    )
+                })?;
+                let arg1_val = arg1.value.clone().parse::<f64>().map_err(|_| {
+                    format!(
+                        "pyramid backend error: '{}' is not float point number.",
+                        arg1.value
+                    )
+                })?;
+                if arg2_val == 0. {return Err(String::from("pyramid backend error: zero division is not allowed"))}
+                let res = ((arg1_val / arg2_val) as f64).floor();
+                Ok(PyramidObject { type_id: PyramidType::Double, value: res.to_string()})
+            }
+            (PyramidType::Nil, _) | (_, PyramidType::Nil) => {
+                Err(String::from("pyramid backend error: nil is not operand."))
+            }
+            _ => Err(String::from(format!(
+                "pyramid backend error: These operands ('{}', '{}') are invaild arguments for 'int_div'.",
+                arg1.value,
+                arg2.value
+            ))),
+        }
+    }
+}
+
+// Return quotient
+// Return PyramidObject:PyramidType::Double
+fn div(args: Vec<PyramidObject>) -> Result<PyramidObject, String> {
+    if args.len() != 2 {
+        Err(String::from(
+            "pyramid backend error: too many arguments for '/' operation.",
+        ))
+    } else {
+        let mut args = args;
+        let arg2 = args.pop().unwrap();
+        let arg1 = args.pop().unwrap();
+        match (arg1.type_id, arg2.type_id) {
+            (PyramidType::Int, PyramidType::Int) => {
+                let arg2_val = arg2.value.clone().parse::<i64>().map_err(|_| {
+                    format!("pyramid backend error: '{}' is not integer.", arg2.value)
+                })?;
+                let arg1_val = arg1.value.clone().parse::<i64>().map_err(|_| {
+                    format!("pyramid backend error: '{}' is not integer.", arg1.value)
+                })?;
+                if arg2_val == 0 {return Err(String::from("pyramid backend error: zero division is not allowed"))}
+                let res = (arg1_val as f64) / (arg2_val as f64);
+                if is_pyramid_int(res.clone().to_string()){
+                    Ok(PyramidObject { type_id: PyramidType::Double, value: res.to_string() + ".0"})
+                }else{
+                    Ok(PyramidObject { type_id: PyramidType::Double, value: res.to_string()})
+                }
+            }
+            (PyramidType::Int, PyramidType::Double) | (PyramidType::Double, PyramidType::Int) | (PyramidType::Double, PyramidType::Double) => {
+                let arg2_val = arg2.value.clone().parse::<f64>().map_err(|_| {
+                    format!(
+                        "pyramid backend error: '{}' is not float point number.",
+                        arg2.value
+                    )
+                })?;
+                let arg1_val = arg1.value.clone().parse::<f64>().map_err(|_| {
+                    format!(
+                        "pyramid backend error: '{}' is not float point number.",
+                        arg1.value
+                    )
+                })?;
+                if arg2_val == 0. {return Err(String::from("pyramid backend error: zero division is not allowed"))}
+                let res = arg1_val / arg2_val;
+                if is_pyramid_int(res.clone().to_string()){
+                    Ok(PyramidObject { type_id: PyramidType::Double, value: res.to_string() + ".0"})
+                }else{
+                    Ok(PyramidObject { type_id: PyramidType::Double, value: res.to_string()})
+                }
+            }
+            (PyramidType::Nil, _) | (_, PyramidType::Nil) => {
+                Err(String::from("pyramid backend error: nil is not operand."))
+            }
+            _ => Err(String::from(format!(
+                "pyramid backend error: These operands ('{}', '{}') are invaild arguments for 'div'.",
+                arg1.value,
+                arg2.value
+            ))),
+        }
+    }
+}
+
+// Modulus for integer quotient operation
+// r = a - bq
+// In case b is negative and operand is double, not yet tested.
+fn modulo(args: Vec<PyramidObject>) -> Result<PyramidObject, String> {
+    if args.len() != 2 {
+        Err(String::from(
+            "pyramid backend error: too many arguments for '%' operation.",
+        ))
+    } else {
+        let mut args = args;
+        let arg2 = args.pop().unwrap();
+        let arg1 = args.pop().unwrap();
+        match (arg1.type_id, arg2.type_id) {
+            (PyramidType::Int, PyramidType::Int) => {
+                let arg2_val = arg2.value.clone().parse::<i64>().map_err(|_| {
+                    format!("pyramid backend error: '{}' is not integer.", arg2.value)
+                })?;
+                let arg1_val = arg1.value.clone().parse::<i64>().map_err(|_| {
+                    format!("pyramid backend error: '{}' is not integer.", arg1.value)
+                })?;
+                if arg2_val == 0 {return Err(String::from("pyramid backend error: zero division is not allowed"))}
+                let res = arg1_val % arg2_val;
+                Ok(PyramidObject { type_id: PyramidType::Int, value: res.to_string() })
+            }
+            (PyramidType::Int, PyramidType::Double) | (PyramidType::Double, PyramidType::Int) | (PyramidType::Double, PyramidType::Double) => {
+                let arg2_val = arg2.value.clone().parse::<f64>().map_err(|_| {
+                    format!(
+                        "pyramid backend error: '{}' is not float point number.",
+                        arg2.value
+                    )
+                })?;
+                let arg1_val = arg1.value.clone().parse::<f64>().map_err(|_| {
+                    format!(
+                        "pyramid backend error: '{}' is not float point number.",
+                        arg1.value
+                    )
+                })?;
+                if arg2_val == 0. {return Err(String::from("pyramid backend error: zero division is not allowed"))}
+                let res = arg1_val % arg2_val;
+                if is_pyramid_int(res.clone().to_string()){
+                    Ok(PyramidObject { type_id: PyramidType::Double, value: res.to_string() + ".0"})
+                }else{
+                    Ok(PyramidObject { type_id: PyramidType::Double, value: res.to_string()})
+                }
+            }
+            (PyramidType::Nil, _) | (_, PyramidType::Nil) => {
+                Err(String::from("pyramid backend error: nil is not operand."))
+            }
+            _ => Err(String::from(format!(
+                "pyramid backend error: These operands ('{}', '{}') are invaild arguments for 'modulo'.",
                 arg1.value,
                 arg2.value
             ))),
@@ -228,7 +511,7 @@ fn get_pyramid_string(st: String) -> String {
     for i in st.to_string().chars().enumerate() {
         if i.0 < 2 {
             continue;
-        } else if i.0 > max_index - 2{
+        } else if i.0 > max_index - 2 {
             break;
         } else {
             new_st.push(i.1)
