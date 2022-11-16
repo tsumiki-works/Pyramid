@@ -59,15 +59,15 @@ pub fn eval(ast: Ast) -> Result<PyramidObject, String> {
                 // add calculation
                 if s == "+" {
                     Ok(eval_operation(*cdr, "+", add)?)
-                } else if s =="-" {
+                } else if s == "-" {
                     Ok(eval_operation(*cdr, "-", sub)?)
-                } else if s =="*" {
+                } else if s == "*" {
                     Ok(eval_operation(*cdr, "*", mul)?)
-                } else if s =="/" {
+                } else if s == "/" {
                     Ok(eval_operation(*cdr, "/", div)?)
-                } else if s =="//" {
+                } else if s == "//" {
                     Ok(eval_operation(*cdr, "//", int_div)?)
-                } else if s =="%" {
+                } else if s == "%" {
                     Ok(eval_operation(*cdr, "%", modulo)?)
                 } else if s == "nil" {
                     Err(String::from(
@@ -505,7 +505,7 @@ fn get_pyramid_string(st: String) -> String {
     for i in st.to_string().chars().enumerate() {
         if i.0 < 2 {
             continue;
-        } else if i.0 > max_index - 2{
+        } else if i.0 > max_index - 2 {
             break;
         } else {
             new_st.push(i.1)
