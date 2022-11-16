@@ -103,6 +103,38 @@ fn eval_test_mul(){
 }
 
 #[test]
+fn eval_test_int_div(){
+    let code = "(// 3 2)";
+    let expected = "1";
+    assert_eq!(evaluater::eval(parser::parse(code).unwrap()).unwrap().value, expected);
+    let code = "(// 7.1 3)";
+    let expected = "2";
+    assert_eq!(evaluater::eval(parser::parse(code).unwrap()).unwrap().value, expected);
+    let code = "(// -7.1 3)";
+    let expected = "-3";
+    assert_eq!(evaluater::eval(parser::parse(code).unwrap()).unwrap().value, expected);
+}
+
+#[test]
+fn eval_test_div(){
+    let code = "(/ 3 2)";
+    let expected = "1.5";
+    assert_eq!(evaluater::eval(parser::parse(code).unwrap()).unwrap().value, expected);
+    let code = "(/ 6 2)";
+    let expected = "3.0";
+    assert_eq!(evaluater::eval(parser::parse(code).unwrap()).unwrap().value, expected);
+    let code = "(/ -6.0 2.0)";
+    let expected = "-3.0";
+    assert_eq!(evaluater::eval(parser::parse(code).unwrap()).unwrap().value, expected);
+    let code = "(/ 7.1 3)";
+    let expected = "2.3666666666666667";
+    assert_eq!(evaluater::eval(parser::parse(code).unwrap()).unwrap().value, expected);
+    let code = "(/ 7.1 -3)";
+    let expected = "-2.3666666666666667";
+    assert_eq!(evaluater::eval(parser::parse(code).unwrap()).unwrap().value, expected);
+}
+
+#[test]
 fn diff_test() {
     let threshold = f64::EPSILON * 1000.;
     assert!((intrinsic_func::diff(|x| x * x / 2., 1.).unwrap() - 1.).abs() < threshold);
