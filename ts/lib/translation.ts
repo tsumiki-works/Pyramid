@@ -1,6 +1,6 @@
 // A module for coordinates translation
 
-import { Matrix, Vec4, Mat4x4 } from "../webgl/math.js";
+import { Matrix, Vec3, Vec4, Mat4x4 } from "../webgl/math.js";
 
 export class Translation {
     /**
@@ -39,15 +39,15 @@ export class Translation {
     }
     /**
      * A function to convert coordinate from viewport to clipping.
-     * @param {float} camera_z 
+     * @param {float} view_z 
      * @param {float[]} xy normalized viewport coordinate 
      * @returns {float[]} clipping coordinate
      */
-    static convert_2dviewport_to_3dclipping(camera_z: number, xy: number[]): number[]{
+    static convert_2dviewport_to_3dclipping(view_z: number, xy: number[]): Vec3{
         return [
             xy[0],
             xy[1],
-            camera_z,
+            view_z,
         ];
     }
     /**
@@ -57,23 +57,32 @@ export class Translation {
      * @param {float[]} xyz 
      * @returns {float[]} view coordinate
      */
-    static convert_3dclipping_to_3dview(canvas_width: number, canvas_height: number, xyz: number[]): number[] {
+    static convert_3dclipping_to_3dview(canvas_width: number, canvas_height: number, xyz: Vec3): Vec4 {
         const pos: Vec4 = [xyz[0], xyz[1], xyz[2], 1.0];
-        const mat_proj: Mat4x4 = Matrix.perse(45.0, canvas_width / canvas_height, 0.1, 1000.0);
-        const inv_proj: Mat4x4 = Matrix.inverse_matrix(mat_proj);
+        return this.convert_clipping_to_view(pos, canvas_width, canvas_height);
+    }
+
+    static convert_clipping_to_view(pos: Vec4, width: number, height: number): Vec4 {
+        const mat_proj = Matrix.perse(45.0, width / height, 0.1, 1000.0);
+        const inv_proj = Matrix.inverse_matrix(mat_proj);
         return Matrix.multiple_matrix_vector(inv_proj, pos);
+    }
+
+    static convert_view_to_clipping(pos: Vec4, width: number, height: number) {
+        const mat_proj = Matrix.perse(45.0, width / height, 0.1, 1000.0);
+        return Matrix.multiple_matrix_vector(mat_proj, pos);
     }
     /**
      * A function to convert coordinate from view to world.
-     * @param {float[]} camera 
+     * @param {float[]} view 
      * @param {float[]} xyz 
      * @returns {float[]} world coordinate
      */
-    static convert_3dview_to_3dworld(camera: number[], xyz: number[]): number[] {
-        let pos: number[] = [xyz[0], xyz[1], xyz[2]];
-        pos[0] = pos[0] * camera[2] * -1.0 - camera[0];
-        pos[1] = pos[1] * camera[2] * -1.0 - camera[1];
-        pos[2] = pos[2] * camera[2] * -1.0 - camera[2];
+    static convert_3dview_to_3dworld(view: Vec3, xyz: Vec3): Vec3 {
+        let pos: Vec3 = [xyz[0], xyz[1], xyz[2]];
+        pos[0] = pos[0] * view[2] * -1.0 - view[0];
+        pos[1] = pos[1] * view[2] * -1.0 - view[1];
+        pos[2] = pos[2] * view[2] * -1.0 - view[2];
         return pos;
     }
     /**
@@ -81,11 +90,12 @@ export class Translation {
      * @param {float[]} xy screen coordinate
      * @returns {float[]} world coordinate
      */
-    static convert_2dscreen_to_3dworld(canvas_width: number, canvas_height: number, camera: number[], xy: number[]): number[]{
-        const pos_viewport = this.convert_2dscreen_to_2dviewport(canvas_width, canvas_height, [xy[0], xy[1]]);
-        const pos_clipping = this.convert_2dviewport_to_3dclipping(camera[2], pos_viewport);
-        const pos_view = this.convert_3dclipping_to_3dview(canvas_width, canvas_height, pos_clipping);
-        const pos_world = this.convert_3dview_to_3dworld(camera, pos_view);
+    static convert_2dscreen_to_3dworld(canvas_width: number, canvas_height: number, view: Vec3, xy: number[]): Vec3{
+        const pos_viewport: number[] = this.convert_2dscreen_to_2dviewport(canvas_width, canvas_height, [xy[0], xy[1]]);
+        const pos_clipping: Vec3 = this.convert_2dviewport_to_3dclipping(view[2], pos_viewport);
+        const pos_view: Vec4 = this.convert_3dclipping_to_3dview(canvas_width, canvas_height, pos_clipping);
+        const pos_view_vec3: Vec3 = [pos_view[0], pos_view[1], pos_view[2]];
+        const pos_world = this.convert_3dview_to_3dworld(view, pos_view_vec3);
         return pos_world;
     }
 }
