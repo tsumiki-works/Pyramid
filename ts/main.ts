@@ -1,3 +1,4 @@
+import { Evaluator } from "./evaluator/evaluator.js";
 import { ImageTexture } from "./webgl/image_texture.js";
 import { WebGL } from "./webgl/webgl.js";
 import { Vec3 } from "./webgl/math.js";
@@ -28,6 +29,8 @@ export class Pyramid {
     }
 
     run(): void {
+        const evluator = new Evaluator();
+        console.log(evluator.eval([], "+ 1 (defvar x (+ 2 3) (+ x 3))"));
         if (this.canvas.clientWidth < 600 || this.canvas.clientHeight < 600) {
             alert("pyramid frontend warning: too small window size to use Pyramid comfortably.");
         }
