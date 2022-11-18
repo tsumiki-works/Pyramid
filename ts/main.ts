@@ -30,7 +30,7 @@ export class Pyramid {
 
     run(): void {
         const evluator = new Evaluator();
-        console.log(evluator.eval([], "+ 1 (defvar x (+ 2 3) (+ x 3))"));
+        console.log(evluator.eval([], "+ 1 (defun f (x y) (+ x (+ y 3)) (+ 4 (f 5 6)))"));
         if (this.canvas.clientWidth < 600 || this.canvas.clientHeight < 600) {
             alert("pyramid frontend warning: too small window size to use Pyramid comfortably.");
         }
