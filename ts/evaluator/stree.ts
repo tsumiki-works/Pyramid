@@ -16,8 +16,12 @@ export class STree {
         }
     }
 
+    get_list(): STree[] {
+        return this.list;
+    }
+
     push(target: STree): void {
-        if (this.list === null) {
+        if (!this.is_list()) {
             throw new Error("pyramid stree error: tried to push a tree to symbol.");
         } else {
             this.list.push(target);
@@ -25,18 +29,22 @@ export class STree {
     }
 
     get_as_undefined_symbol(): string {
-        if (this.list !== null) {
+        if (this.is_list()) {
             throw new Error("pyramid stree error: variable or function name symbol must not be list.");
         }
         return this.value;
     }
 
+    is_list(): boolean {
+        return this.list !== null;
+    }
+
     eval(sym_map: Map<string, PyramidObject>): PyramidObject {
-        if (this.value === null && this.list === null) {
+        if (this.value === null && !this.is_list()) {
             throw new Error("pyramid evaluation error: invalid tree.");
         }
         // eval symbol
-        if (this.list === null) {
+        if (!this.is_list()) {
             if (this.value.length == 0) {
                 throw new Error("pyramid evaluation error: empty symbol.");
             }
