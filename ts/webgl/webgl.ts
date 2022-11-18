@@ -53,17 +53,18 @@ export class WebGL {
         let frag_opt_tmp = null;
         let uv_offset_tmp = null;
         let texture_tmp = null;
+
+        let mat_view = null;
+        let mat_proj = null;
         for (const request of requests) {
-            let mat_view = null;
-            if (view_tmp != request.view) {
+            if (view_tmp != request.view || is_ui != request.is_ui) {
                 if (request.is_ui) {
                     mat_view = Matrix.identity();
                 } else {
-                    mat_view = Matrix.trans(requests[0].view);
+                    mat_view = Matrix.trans(request.view);
                 }
                 view_tmp = request.view;
             }
-            let mat_proj = null;
             if (is_ui != request.is_ui) {
                 if (request.is_ui) {
                     mat_proj = Matrix.ortho(width, height, 1000.0);
