@@ -13,8 +13,11 @@ export class Block {
 
     constructor(_x: number = 0.0, _y: number = 0.0, _type: number = -1, _content: string = ""){
         this.children = new Array<Block>(ConstantBlock.TYPE_TO_CHILDREN_NUM[Math.max(0, _type)]);
+        for(let i = 0; i < this.children.length; i++)
+            this.children[i] = new Block();
         this.x = _x;
         this.y = _y;
+        this.width = Math.max(this.children.length * ConstantBlock.BLOCK_UNIT_WIDTH, ConstantBlock.BLOCK_UNIT_WIDTH),
         this.type = _type;
         this.content = _content;
         return;

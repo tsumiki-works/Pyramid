@@ -105,7 +105,7 @@ export class ConsoleManager {
      * A function to run command.
      * @param {string} command
      */
-    async run_command(command): Promise<void> {
+    async run_command(command: string): Promise<void> {
         const words = command.trim().split(/\s+/);
         console.log(words[0]);
         let res = "";

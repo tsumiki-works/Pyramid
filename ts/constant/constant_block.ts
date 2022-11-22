@@ -1,5 +1,5 @@
 export class ConstantBlock {
-    static BLOCK_UNIT_WIDTH = 1.0;
+    static BLOCK_UNIT_WIDTH = 1.0 ;
     static BLOCK_UNIT_HALF_WIDTH = 0.5;
     static BLOCK_HEIGHT = 0.5;
     static BLOCK_HALF_HEIGHT = 0.25;
