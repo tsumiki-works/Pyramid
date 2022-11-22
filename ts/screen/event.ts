@@ -144,7 +144,6 @@ export class EventManager {
     }
 
     private fun_left_mouseup(_) {
-        console.log("mouseup");
         const pos_viewport: number[] = [this.blockManager.get_holding_block().x / this.canvas.width * 2.0, this.blockManager.get_holding_block().y / this.canvas.height * 2.0];
         const pos_clipping: Vec3 = Translation.convert_2dviewport_to_3dclipping(this.view[2], pos_viewport);
         const pos_view: Vec4 = Translation.convert_3dclipping_to_3dview(this.canvas.width, this.canvas.height, pos_clipping);
@@ -174,7 +173,6 @@ export class EventManager {
     }
 
     private fun_left_mousemove(event) {
-        console.log("mousemove");
         const pos = Translation.convert_2dscreen_to_2dunnormalizedviewport(this.canvas.width, this.canvas.height, [event.pageX, event.pageY]);
         this.blockManager.set_holding_block_pos([pos[0], pos[1]]);
         this.render();

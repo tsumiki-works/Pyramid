@@ -3,6 +3,7 @@ import { Translation } from "../lib/translation.js";
 import { BlockManager } from "../block/block_manager.js";
 
 import { Vec3 } from "../webgl/math.js";
+import { Evaluator } from "../evaluator/evaluator.js";
 
 export class ConsoleManager {
     private console_div: HTMLDivElement = document.getElementById("console") as HTMLDivElement;
@@ -12,6 +13,7 @@ export class ConsoleManager {
     private view: Vec3;
     private render: Function;
     private blockManager: BlockManager;
+    private evaluator: Evaluator;
 
     /**
     * A function to initialize console.
@@ -21,6 +23,8 @@ export class ConsoleManager {
         this.view = _view;
         this.render = _render;
         this.blockManager = _blockManager;
+        this.evaluator = new Evaluator();
+
         this.console_div.addEventListener("click", this.fun_click_console);
         this.console_div.addEventListener("keydown", this.fun_keydown_console);
         const observer = new MutationObserver(() => this.render());
@@ -64,9 +68,9 @@ export class ConsoleManager {
      * An event handler for console.onkeydown.
      * Detecting enter hit and run command inputed.
      */
-    private async fun_keydown_console(event: KeyboardEvent): Promise<void> {
+    private fun_keydown_console(event: KeyboardEvent): void{
         if (event.key == "Enter") {
-            await this.run_command(document.getElementById("console-line").innerText);
+            this.run_command(document.getElementById("console-line").innerText);
             this.render();
         }
     }
@@ -84,20 +88,8 @@ export class ConsoleManager {
      * @param {string} stree like (+ (+ 1 2) 3)
      * @param {string} out_type console, 
      */
-    private async send_calc_request_to_server(defines: string[], stree: string, out_type: string): Promise<Response>{
-        const res: Response = await fetch("http://127.0.0.1:7878", {
-            method: "POST",
-            headers: {
-                "Content-Type": "application/json"
-            },
-            body: JSON.stringify({
-                "defines": defines,
-                "stree": stree,
-                "out_type": out_type,
-            }),
-        })
-        .catch(err => {alert(err); return err})
-        .then(data => { return data.json(); });
+    private send_calc_request_to_server(defines: string[], stree: string, out_type: string): void{
+        const res = this.evaluator.eval(defines, stree);
         
         return res;
     }
@@ -105,8 +97,8 @@ export class ConsoleManager {
      * A function to run command.
      * @param {string} command
      */
-    async run_command(command: string): Promise<void> {
-        const words = command.trim().split(/\s+/);
+    run_command(command: string): void {
+        const words: string[] = command.trim().split(/\s+/);
         console.log(words[0]);
         let res = "";
         switch (words[0]) {
@@ -139,11 +131,12 @@ export class ConsoleManager {
             case "eval":
                 let stree = "";
                 if (words.length > 1) {
-                    let tmp = words;
+                    let tmp: string[] = words;
                     tmp.shift();
                     stree = tmp.join(" ");
-                    const response = await this.send_calc_request_to_server(["(define int add (x y) (+ x y))", "(define int hoge () 1)"], stree, "console");
-                    res = ConsoleManager.maybe_backend_error_message(response["result"]);
+                    let cut_stree: string = stree.substring(1, stree.length - 1);
+                    const response = this.send_calc_request_to_server([], cut_stree, "console");
+                    res = ConsoleManager.maybe_backend_error_message(response);
                 } else {
                     res = ConsoleManager.exception_message("'eval' has to have 1 parameter.")
                 }
