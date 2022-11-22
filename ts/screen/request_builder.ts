@@ -20,6 +20,7 @@ export class PyramidRequest {
         this.canvas = _canvas;
         this.view = _view;
         this.webGL = _webGL;
+        return;
     }
 
     push_requests_menublocks(req: Request[]): void {
@@ -57,19 +58,19 @@ export class PyramidRequest {
             req.push(tmp_req);
         }
     }
-    push_requests_blocks(blockManager: BlockManager, blocks: Block[], is_ui: boolean, requests: Request[]): void {
+    push_requests_blocks(blockManager: BlockManager, blocks: Block[], _is_ui: boolean, requests: Request[]): void {
         /**
          * A constructor for block entity request.
          * @param {float} x if is_ui is true then it must be on screen
          * @param {flaot} y if is_ui is true then it must be on screen
          * @param {float} width if is_ui is true then it must be on screen
          * @param {float} height if is_ui is true then it must be on screen
-         * @param {boolean} is_ui 
+         * @param {boolean} _is_ui 
          * @returns block entity request
          * @memberOf block.blocks
          * @access private
          */
-        function entity_block(x: number, y: number, width: number, height: number, col: Vec4) {
+        let entity_block = (x: number, y: number, width: number, height: number, col: Vec4) => {
             let tmp_req: Request = {
                 trans: [x, y, 0.0],
                 scale: [width, height, 1.0],
@@ -77,8 +78,12 @@ export class PyramidRequest {
                 base_color: col,
                 uv_offset: [0.0, 0.0, 0.0, 0.0],
                 texture: null,
-                is_ui: true,
+                is_ui: _is_ui,
             }
+            if(!_is_ui){
+
+            }
+  
             return tmp_req;
         }
         /**
@@ -88,24 +93,27 @@ export class PyramidRequest {
          * @memberOf block.blocks
          * @access private
          */
-        function push_requests(block) {
+        let push_requests = (block: Block) => {
             if (block.is_empty() && blockManager.get_holding_block().is_empty())
                 return;
-            if (block.is_empty() && is_ui)
+            if (block.is_empty() && _is_ui)
                 return;
-            const tmp_col: Vec4 = [
-                ConstantBlock.TYPE_TO_COL[block.type][0],
-                ConstantBlock.TYPE_TO_COL[block.type][1],
-                ConstantBlock.TYPE_TO_COL[block.type][2],
-                ConstantBlock.TYPE_TO_COL[block.type][3],
-            ];
+            let tmp_col: Vec4 = [1.0, 0.0, 0.0, 0.5];
+            if (!block.is_empty()){
+                tmp_col = [
+                    ConstantBlock.TYPE_TO_COL[block.type][0],
+                    ConstantBlock.TYPE_TO_COL[block.type][1],
+                    ConstantBlock.TYPE_TO_COL[block.type][2],
+                    ConstantBlock.TYPE_TO_COL[block.type][3],
+                ];
+            }
             requests.push(
                 entity_block(
                     block.x,
                     block.y,
                     block.width * wr,
                     ConstantBlock.BLOCK_HEIGHT * hr,
-                    block.is_empty() ? [1.0, 0.0, 0.0, 0.5] : tmp_col,
+                    tmp_col,
                 )
             );
             this.push_requests_text(
@@ -115,7 +123,7 @@ export class PyramidRequest {
                 0.15 * wr,
                 0.3 * hr,
                 [1.0, 1.0, 1.0, 1.0],
-                is_ui,
+                _is_ui,
                 requests
             );
             for (const child of block.children) {
@@ -125,7 +133,7 @@ export class PyramidRequest {
         // from now on
         let wr = 1.0;
         let hr = 1.0;
-        if (is_ui) {
+        if (_is_ui) {
             const pos_clipping_1: Vec4 = Translation.convert_view_to_clipping([-0.5, -0.5, this.view[2], 1.0], this.canvas.width, this.canvas.height);
             const pos_clipping_2: Vec4 = Translation.convert_view_to_clipping([0.5, 0.5, this.view[2], 1.0], this.canvas.width, this.canvas.height);
             wr = this.canvas.width * 0.5 * (pos_clipping_2[0] / pos_clipping_2[3] - pos_clipping_1[0] / pos_clipping_1[3]);
@@ -147,21 +155,21 @@ export class PyramidRequest {
     //   * requests: []       ... target requests array
     push_requests_text(text: string, x: number, y: number, width: number, height: number, color: Vec4, is_ui: boolean, requests: Request[]): void {
 
-        function get_font_offset_u(ascii: number): number {
+        let get_font_offset_u = (ascii: number): number => {
             return ((ascii - 32) % 15) * FONT_WIDTH_SCALE;
         }
-        function get_font_offset_v(ascii: number): number {
+        let get_font_offset_v = (ascii: number): number => {
             return (Math.floor((ascii - 32) / 15)) * FONT_HEIGHT_SCALE;
         }
-        function entity_character(x: number, y: number, width: number, height: number, color: Vec4, tex_scale_offset: Vec4, is_ui: boolean): Request {
+        let entity_character = (x: number, y: number, width: number, height: number, color: Vec4, tex_scale_offset: Vec4, _is_ui: boolean): Request => {
             let tmp_req: Request = {
                 trans: [x, y, 0.0],
                 scale: [width, height, 1.0],
                 view: this.view,
                 base_color: color,
-                uv_offset: [0.0, 0.0, 0.0, 0.0],
-                texture: this.texture[1],
-                is_ui: true,
+                uv_offset: tex_scale_offset,
+                texture: this.textures[1],
+                is_ui: _is_ui,
             }
             return tmp_req;
         }
@@ -189,6 +197,7 @@ export class PyramidRequest {
                 ],
                 is_ui
             );
+            requests.push(tmp_req);
             cnt_chars += 1;
         }
     }
@@ -208,7 +217,7 @@ export class PyramidRequest {
     push_request_header(req: Request[]): void {
         const pos: number[] = Translation.convert_2dscreen_to_2dunnormalizedviewport(this.canvas.width, this.canvas.height, [this.canvas.width * 0.5, ConstantEntity.LOGO_HEIGHT * 0.5]);
         let tmp_req: Request = {
-            trans: [0., 0., 0.],
+            trans: [pos[0], pos[1] - 9.0, 0.],
             scale: [this.canvas.width, ConstantEntity.HEADER_HEIGHT, 1.0],
             view: this.view,
             base_color: [1., 1., 1., 1.],

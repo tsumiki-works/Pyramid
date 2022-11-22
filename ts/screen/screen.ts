@@ -1,5 +1,6 @@
 import { Block } from "../block/block.js";
 import { BlockManager } from "../block/block_manager.js";
+import { Translation } from "../lib/translation.js";
 import { ImageTexture } from "../webgl/image_texture.js";
 import { Vec3 } from "../webgl/math.js";
 import { WebGL } from "../webgl/webgl.js";
@@ -32,8 +33,8 @@ export class PyramidController {
         this.webgl = _webgl;
         this.blockManager = new BlockManager();
         this.requestBuilder = new PyramidRequest(textures, _canvas, _view, _webgl);
-        this.consoleManager = new ConsoleManager(this.canvas, this.view, (_ => PyramidController.prototype.render.call(this)), this.blockManager);
-        this.eventManager = new EventManager(this.canvas, this.view, (_ => PyramidController.prototype.render.call(this)), this.blockManager, this.consoleManager);
+        this.consoleManager = new ConsoleManager(this.canvas, this.view, ():void => this.render(), this.blockManager);
+        this.eventManager = new EventManager(this.canvas, this.view, ():void => this.render(), this.blockManager, this.consoleManager);
         
     }
 
@@ -60,19 +61,18 @@ export class PyramidController {
     } 
 
     render(): void {
-        // make requests from PyramidManager
         let requests = [];
         this.blockManager.clean_roots();
-        this.requestBuilder.push_request_background([1., 1., 1., 1.], requests);
+        this.requestBuilder.push_request_background([0.96, 0.96, 0.96, 1.0], requests);
         this.requestBuilder.push_requests_blocks(this.blockManager, this.blockManager.get_roots(), false, requests);
         this.requestBuilder.push_request_header(requests);
         this.requestBuilder.push_request_logo(requests);
         this.requestBuilder.push_request_menu(requests);
         this.requestBuilder.push_requests_menublocks(requests);
         this.requestBuilder.push_request_lines(requests);
-        this.requestBuilder.push_request_trashbox(this.open_trashbox, this.consoleManager.get_console_height(), requests);
+        //this.requestBuilder.push_request_trashbox(this.open_trashbox, this.consoleManager.get_console_height(), requests);
         this.requestBuilder.push_requests_blocks(this.blockManager, [this.blockManager.get_holding_block()], true, requests);
 
-        this.webgl.draw_requests(requests, this.canvas.width, this.canvas.height);
+        this.webgl.draw_requests(requests, this.canvas.width, this.canvas.height); 
     }
 }

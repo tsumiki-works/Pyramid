@@ -133,7 +133,7 @@ export class BlockManager {
         * @memberOf block.blocks
         * @access private
         */
-        function determine_block_width(block: Block) {
+        let determine_block_width = (block: Block): void => {
             if (block.is_empty() || block.children.length == 0) {
                 block.x = 0.0;
                 block.width = ConstantBlock.BLOCK_UNIT_WIDTH;
@@ -180,7 +180,7 @@ export class BlockManager {
          * @memberOf block.blocks
          * @access private
          */
-        function determine_block_pos(block: Block, x: number, y: number) {
+        let determine_block_pos = (block: Block, x: number, y: number): void => {
             const center: number = x - block.x * wr;
             block.x = x;
             block.y = y;
@@ -192,8 +192,8 @@ export class BlockManager {
             }
         }
         // from now on
-        const x = target_block.x;
-        const y = target_block.y;
+        const x: number = target_block.x;
+        const y: number = target_block.y;
         determine_block_width(target_block);
         determine_block_pos(target_block, x, y);
     }
@@ -202,7 +202,7 @@ export class BlockManager {
     * A function to connect block if it can be connected.
     * @memberOf block.connect
     */
-    connect_block() {
+    connect_block(): void {
         /**
         * A function to get block's children connection.
         * @param {object} block
@@ -210,8 +210,8 @@ export class BlockManager {
         * @memberOf block.connect
         * @access private
         */
-        function get_block_connection(width: number, children_num: number) {
-            let res = [];
+        let get_block_connection = (width: number, children_num: number): number[] => {
+            let res: number[] = [];
             for (let i = 0; i < children_num; i++) {
                 res.push(width* (0.5 ** children_num) * (2 * i + 1) - width * 0.5);
             }
@@ -225,11 +225,11 @@ export class BlockManager {
         * @memberOf block.connect
         * @access private
         */
-        function get_connectable_idx(parent: Block, child: Block) {
-            let res_idx = -1, min_dist = -1;
-            let parent_connection = get_block_connection(parent.width, parent.children.length);
+        let get_connectable_idx = (parent: Block, child: Block): number => {
+            let res_idx: number = -1, min_dist: number = -1;
+            let parent_connection: number[] = get_block_connection(parent.width, parent.children.length);
             for (let i = 0; i < parent.children.length; i++) {
-                const dist = BlockCalc.square_distance(parent.x + parent_connection[i], parent.y,
+                const dist: number = BlockCalc.square_distance(parent.x + parent_connection[i], parent.y,
                     child.x, child.y);
                 if ((min_dist == -1 || min_dist > dist)){
                     min_dist = dist;
@@ -245,7 +245,7 @@ export class BlockManager {
         }
 
         // from now on
-        const nearest_block = this.find_block(this.roots, (block) => {
+        const nearest_block: Block = this.find_block(this.roots, (block: Block) => {
             return Math.abs(block.x - this.holding_block.x) <
                 (block.width + this.holding_block.width) * 0.25
                 && Math.abs(block.y - this.holding_block.y) < ConstantBlock.BLOCK_HEIGHT;
@@ -255,7 +255,7 @@ export class BlockManager {
             return;
         }
         if (this.holding_block.y < nearest_block.y) {
-            let index = get_connectable_idx(nearest_block, this.holding_block);
+            let index: number = get_connectable_idx(nearest_block, this.holding_block);
             if (index != -1){
                 nearest_block.children[index] = this.holding_block;
                 this.holding_block.parent = nearest_block;
@@ -263,7 +263,7 @@ export class BlockManager {
                 this.get_roots().push(this.holding_block);
             }
         } else {
-            let index = get_connectable_idx(this.holding_block, nearest_block);
+            let index: number = get_connectable_idx(this.holding_block, nearest_block);
             if (index != -1){
                 this.remove_block_from_roots(nearest_block);
                 this.get_roots().push(this.holding_block);

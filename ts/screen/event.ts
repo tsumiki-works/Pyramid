@@ -23,6 +23,13 @@ export class EventManager {
     private blockManager: BlockManager;
     private consoleManager: ConsoleManager;
 
+    private mousedown_listener: EventListener;
+    private mousewheel_listener: EventListener;
+    private left_mousemove_listener: EventListener;
+    private left_mouseup_listener: EventListener;
+    private right_mousemove_listener: EventListener;
+    private right_mouseup_listener: EventListener;
+
     constructor(_canvas: HTMLCanvasElement, _view: Vec3, _render: Function, _blockManager: BlockManager, _consoleManager: ConsoleManager){
         this.canvas = _canvas;
         this.view = _view;
@@ -32,8 +39,11 @@ export class EventManager {
         this.consoleManager = _consoleManager;
     }
     init_canvas_event(): void {
-        this.canvas.addEventListener("mousedown", (e => this.fun_mousedown(e)));
-        this.canvas.addEventListener("wheel", (e => this.fun_wheel(e)));
+        this.mousedown_listener = e => this.fun_mousedown(e);
+        this.mousewheel_listener = e => this.fun_wheel(e);
+        
+        this.canvas.addEventListener("mousedown", this.mousedown_listener);
+        this.canvas.addEventListener("wheel", this.mousewheel_listener);
     }
 
     private fun_mousedown(event): void {
@@ -73,9 +83,13 @@ export class EventManager {
                 }
                 if (is_generate) {
                     this.blockManager.set_holding_block_pos([pos_2dunnormalizedviewport[0], pos_2dunnormalizedviewport[1]]);
-                    this.canvas.addEventListener("mousemove", this.fun_left_mousemove);
-                    this.canvas.addEventListener("mouseup", this.fun_left_mouseup);
-                    this.canvas.removeEventListener("mousedown", this.fun_mousedown);
+
+                    this.left_mousemove_listener = e => this.fun_left_mousemove(e);
+                    this.left_mouseup_listener = e => this.fun_left_mouseup(e);
+
+                    this.canvas.addEventListener("mousemove", this.left_mousemove_listener);
+                    this.canvas.addEventListener("mouseup", this.left_mouseup_listener);
+                    this.canvas.removeEventListener("mousedown", this.mousedown_listener);
                 }
             } else {
                 const hit_result = this.blockManager.find_block(this.blockManager.get_roots(), (block) => {
@@ -88,9 +102,13 @@ export class EventManager {
                     console.log("hit_result = " + hit_result);
                     this.blockManager.remove_block_from_roots(hit_result);
                     this.blockManager.set_holding_block_pos([pos_2dunnormalizedviewport[0], pos_2dunnormalizedviewport[1]]);
-                    this.canvas.addEventListener("mousemove", this.fun_left_mousemove);
-                    this.canvas.addEventListener("mouseup", this.fun_left_mouseup);
-                    this.canvas.removeEventListener("mousedown", this.fun_mousedown);
+
+                    this.left_mousemove_listener = e => this.fun_left_mousemove(e);
+                    this.left_mouseup_listener = e => this.fun_left_mouseup(e);
+
+                    this.canvas.addEventListener("mousemove", this.left_mousemove_listener);
+                    this.canvas.addEventListener("mouseup", this.left_mouseup_listener);
+                    this.canvas.removeEventListener("mousedown", this.mousedown_listener);
                     //this.open_trashbox = true;
                 } else {
                     console.log("MOUSEPOS: " + event.pageX + ", " + event.pageY);
@@ -113,62 +131,73 @@ export class EventManager {
                 this.mouse_pos_before_drag_y = event.pageY;
                 this.view_pos_before_drag_x = this.view[0];
                 this.view_pos_before_drag_y = this.view[1];
-                this.canvas.addEventListener("mousemove", this.fun_right_mousemove);
-                this.canvas.addEventListener("mouseup", this.fun_right_mouseup);
-                this.canvas.removeEventListener("mousedown", this.fun_mousedown);
+
+                this.right_mousemove_listener = e => this.fun_right_mousemove(e);
+                this.right_mouseup_listener = e => this.fun_right_mouseup(e);
+
+                this.canvas.addEventListener("mousemove", this.right_mousemove_listener);
+                this.canvas.addEventListener("mouseup", this.right_mouseup_listener);
+                this.canvas.removeEventListener("mousedown", this.mousedown_listener);
             }
         }
         this.render();
     }
 
-    fun_left_mouseup(_) {
+    private fun_left_mouseup(_) {
+        console.log("mouseup");
         const pos_viewport: number[] = [this.blockManager.get_holding_block().x / this.canvas.width * 2.0, this.blockManager.get_holding_block().y / this.canvas.height * 2.0];
         const pos_clipping: Vec3 = Translation.convert_2dviewport_to_3dclipping(this.view[2], pos_viewport);
         const pos_view: Vec4 = Translation.convert_3dclipping_to_3dview(this.canvas.width, this.canvas.height, pos_clipping);
         const pos_view_vec3: Vec3 = [pos_view[0], pos_view[1], pos_view[2]];
-        const pos_world = Translation.convert_3dview_to_3dworld(this.view, pos_view_vec3);
+        const pos_world: Vec3 = Translation.convert_3dview_to_3dworld(this.view, pos_view_vec3);
         const pos_trashbox = Translation.convert_2dscreen_to_2dunnormalizedviewport(
             this.canvas.width,
             this.canvas.height,
             [this.canvas.width - ConstantEntity.TRASHBOX_WIDTH * 0.5, this.canvas.height - this.consoleManager.get_console_height() - ConstantEntity.TRASHBOX_HEIGHT * 0.5]
         );
-        this.canvas.removeEventListener("mousemove", this.fun_left_mousemove);
-        this.canvas.removeEventListener("mouseup", this.fun_left_mouseup);
-        this.canvas.addEventListener("mousedown", this.fun_mousedown);
+
+        this.mousedown_listener = e => this.fun_mousedown(e);
+
+        this.canvas.removeEventListener("mousemove", this.left_mousemove_listener);
+        this.canvas.removeEventListener("mouseup", this.left_mouseup_listener);
+        this.canvas.addEventListener("mousedown", this.mousedown_listener);
         if (BlockCalc.square_distance(pos_trashbox[0], pos_trashbox[1], this.blockManager.get_holding_block().x, this.blockManager.get_holding_block().y) > 10000) {
             this.blockManager.set_holding_block_pos([pos_world[0], pos_world[1]]);
             this.blockManager.connect_block();
         }
         else {
-            console.log("Success!Deleted!");
+
         }
         this.blockManager.reset_holding_block();
         //this.open_trashbox = false;
         this.render();
     }
 
-    fun_left_mousemove(event) {
+    private fun_left_mousemove(event) {
+        console.log("mousemove");
         const pos = Translation.convert_2dscreen_to_2dunnormalizedviewport(this.canvas.width, this.canvas.height, [event.pageX, event.pageY]);
         this.blockManager.set_holding_block_pos([pos[0], pos[1]]);
         this.render();
     }
 
 
-    fun_right_mouseup(_) {
-        this.canvas.removeEventListener("mousemove", this.fun_right_mousemove);
-        this.canvas.removeEventListener("mouseup", this.fun_right_mouseup);
-        this.canvas.addEventListener("mousedown", this.fun_mousedown);
+    private fun_right_mouseup(_) {
+        this.mousedown_listener = e => this.fun_mousedown(e);
+
+        this.canvas.removeEventListener("mousemove", this.right_mousemove_listener);
+        this.canvas.removeEventListener("mouseup", this.right_mouseup_listener);
+        this.canvas.addEventListener("mousedown", this.mousedown_listener);
         this.render();
     }
 
-    fun_right_mousemove(event) {
+    private fun_right_mousemove(event) {
         const c = -0.00176 * this.view[2] + 0.00235;
         this.view[0] = this.view_pos_before_drag_x - (this.mouse_pos_before_drag_x - event.pageX) * c;
         this.view[1] = this.view_pos_before_drag_y + (this.mouse_pos_before_drag_y - event.pageY) * c;
         this.render();
     }
 
-    fun_wheel(event) {
+    private fun_wheel(event) {
         if (event.pageX > ConstantEntity.MENU_WIDTH) {
             if (event.wheelDelta == 0)
                 return;
