@@ -18,6 +18,10 @@ export class Evaluator {
             type_id: PyramidType.Function,
             value: DefineOperation.defvar,
         });
+        this.sym_map.set("defun", {
+            type_id: PyramidType.Function,
+            value: DefineOperation.defun,
+        });
     }
 
     eval(defines: string[], target: string): any {
