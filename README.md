@@ -16,4 +16,13 @@ $ npm install typescript    # ./node_modules/typescript/bin/にtscがインス�
 $ npx tsc                   # ./ts/のすべて各スクリプトを./js/へコンパイルする
 ```
 
-以降、index.htmlを開き、適宜リロードする。
+なお、WebGL2.0はリソースの取扱いに対し、厳しいセキュリティを持っている。
+このために、ローカルデバッグ時でも、ローカルサーバーを立てる必要がある。
+
+frontendserver.pyは、このためのスクリプトで、これを実行すれば良い。
+
+```sh
+$ python frontendserver.py
+```
+
+[http://localhost:8000/](http://localhost:8000/)にアクセスすると、index.htmlが表示される。
