@@ -57,7 +57,7 @@ export class Popup {
         let elem_li_del = document.createElement("li");
         elem_li_del.classList.add("popup-menu-item");
         elem_li_del.innerText = "削除";
-        elem_li_del.onclick = (e => {this.popup_menu_content_delete(blockManager, block); this.delete_popup_menu()});
+        elem_li_del.onclick = (e => {this.popup_menu_content_delete(blockManager, block); this.delete_popup_menu(); this.render();});
         elem_li_array.push(elem_li_del);
 
         for(let i = 0; i < elem_li_array.length; i++){
