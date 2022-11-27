@@ -19,5 +19,4 @@ jobs:
     steps:
     # Runs a single command using the runners shell
     - name: install typescript and do transcompile.
-    - uses: actions/checkout@v1
-    - run: npm install typescript; npx tsc;
+      run: npm install typescript; npx tsc;
