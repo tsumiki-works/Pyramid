@@ -19,6 +19,9 @@ jobs:
     steps:
     - name: omajinai
       uses: actions/checkout@v1
-    # Runs a single command using the runners shell
-    - name: install typescript and do transcompile.
-      run: npm install typescript; npx tsc
+      
+    - name: install typescript
+      run: npm install typescript
+      
+    - name: do transcompule
+      run: npx tsc
