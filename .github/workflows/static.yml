@@ -54,7 +54,7 @@ jobs:
           URL: ${{ github.event.pull_request.html_url }}
           script: |
             github.rest.pulls.createReviewComment({
-              pull_number: context.pull.number,
+              pull_number: context.issue.number,
               owner: context.repo.owner,
               repo: context.repo.repo,
               body: "Review URL:  + ${{ steps.preview_repo.outputs.gh_page_url }}"
