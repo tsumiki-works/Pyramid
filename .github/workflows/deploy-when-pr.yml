@@ -1,0 +1,57 @@
+name: Deploy static content to Pages
+
+on:
+  pull_request:
+    types: [opened, synchronize, closed]
+  
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+  issues: write
+  pull-requests: write
+
+concurrency:
+  group: "pages"
+  cancel-in-progress: true
+
+jobs:
+  deploy:
+    if: startsWith(github.head_ref, 'dev/') && ((github.event.action == 'closed' && github.event.pull_request.merged == true) || github.event.action != 'closed')
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+      - name: Setup Node
+        uses: actions/setup-node@v3.5.1
+      - name: Install Dependency
+        run: npm ci
+      - name: Transcompile ts2js
+        run: npx tsc
+      - name: Setup Pages
+        uses: actions/configure-pages@v2
+      - name: Upload artifact
+        uses: actions/upload-pages-artifact@v1
+        with:
+          # Upload entire repository
+          path: '.'
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v1
+      - name: Post Comment
+        uses: actions/github-script@v6.3.3
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          url: ${{ github.event.pull_request.html_url }}
+          script: |
+            github.rest.issues.createComment({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              issue_number: context.issue.number,
+              body: "Review URL: ${{ steps.deployment.outputs.page_url }}"
+            }) 
