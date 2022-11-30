@@ -63,14 +63,14 @@ export class PyramidController {
         let requests = [];
         this.blockManager.clean_roots();
         this.requestBuilder.push_request_background([0.96, 0.96, 0.96, 1.0], requests);
-        this.requestBuilder.push_requests_blocks(this.blockManager, this.blockManager.get_roots(), false, requests);
+        this.blockManager.push_roots_requests(this.view, requests);
         this.requestBuilder.push_request_header(requests);
         this.requestBuilder.push_request_logo(requests);
         this.requestBuilder.push_request_menu(requests);
         this.requestBuilder.push_requests_menublocks(requests);
         this.requestBuilder.push_request_lines(requests);
         //this.requestBuilder.push_request_trashbox(this.open_trashbox, this.consoleManager.get_console_height(), requests);
-        this.requestBuilder.push_requests_blocks(this.blockManager, [this.blockManager.get_holding_block()], true, requests);
+        this.blockManager.push_holding_block_requests(this.canvas.width, this.canvas.height, this.view, requests);
 
         this.webgl.draw_requests(requests, this.canvas.width, this.canvas.height); 
     }

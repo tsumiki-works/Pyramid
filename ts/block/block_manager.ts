@@ -1,5 +1,8 @@
 import { Block } from "./block.js";
 import { BlockCalc } from "../lib/block_calc.js";
+import { Translation } from "../lib/translation.js";
+import { Vec3, Vec4 } from "../webgl/math.js";
+import { Request } from "../webgl/request.js";
 
 export class BlockManager {
 
@@ -88,7 +91,7 @@ export class BlockManager {
         return false;
     }
 
-    arrange_block(target_block: Block, wr: number, hr: number): void {
+    static arrange_block(target_block: Block, wr: number, hr: number): void {
         let determine_block_width = (block: Block): void => {
             if (block.is_empty() || block.children.length == 0) {
                 block.x = 0.0;
@@ -197,6 +200,30 @@ export class BlockManager {
             } else {
                 this.get_roots().push(this.holding_block);
             }
+        }
+    }
+
+    push_holding_block_requests(canvas_width: number, canvas_height: number, view: Vec3, requests: Request[]): void {
+        const pos_clipping_1: Vec4 = Translation.convert_view_to_clipping(
+            [-0.5, -0.5, view[2], 1.0],
+            canvas_width,
+            canvas_height
+        );
+        const pos_clipping_2: Vec4 = Translation.convert_view_to_clipping(
+            [0.5, 0.5, view[2], 1.0],
+            canvas_width,
+            canvas_height
+        );
+        const wr = canvas_width * 0.5 * (pos_clipping_2[0] / pos_clipping_2[3] - pos_clipping_1[0] / pos_clipping_1[3]);
+        const hr = canvas_height * 0.5 * (pos_clipping_2[1] / pos_clipping_2[3] - pos_clipping_1[1] / pos_clipping_2[3]);
+        BlockManager.arrange_block(this.holding_block, wr, hr);
+        this.holding_block.push_requests(wr, hr, view, true, requests);
+    }
+
+    push_roots_requests(view: Vec3, requests: Request[]): void {
+        for (const block of this.roots) {
+            BlockManager.arrange_block(block, 1.0, 1.0);
+            block.push_requests(1.0, 1.0, view, false, requests);
         }
     }
 

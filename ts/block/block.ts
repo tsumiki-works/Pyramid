@@ -36,7 +36,7 @@ export class Block {
     children: Block[];
     x: number;
     y: number;
-    width: number = Block.UNIT_WIDTH;
+    width: number;
     type: number;
     content: string;
     leftmost: number;
@@ -61,16 +61,29 @@ export class Block {
         return this.type == -1;
     }
 
-    create_request(wr: number, view: Vec3, is_ui: boolean): Request {
+    private create_request(wr: number, hr: number, view: Vec3, is_ui: boolean): Request {
         return {
             trans: [this.x, this.y, 0.0],
-            scale: [this.width * wr, Block.UNIT_HEIGHT, 1.0],
+            scale: [this.width * wr, Block.UNIT_HEIGHT * hr, 1.0],
             view: view,
             base_color: Block.convert_type_to_color(this.type),
             uv_offset: [0.0, 0.0, 0.0, 0.0],
             texture: null,
             is_ui: is_ui,
         };
+    }
+
+    push_requests(wr: number, hr: number, view: Vec3, is_ui: boolean, requests: Request[]): void {
+        if (this.is_empty()) {
+            return;
+        }
+        requests.push(this.create_request(wr, hr, view, is_ui));
+        for (const child of this.children) {
+            if (child === null || child.is_empty()) {
+                continue;
+            }
+            child.push_requests(wr, hr, view, is_ui, requests);
+        }
     }
 
     enumerate(): string {
