@@ -7,7 +7,8 @@ import { Roots } from "./block/roots.js";
 import { Block } from "./block/block.js";
 import { Translation } from "./lib/translation.js";
 import { ConsoleManager } from "./screen/console.js";
-import { ConstantEntity } from "./constant/constant_entity.js";
+import { CanvasItem } from "./screen/canvas_items.js";
+import { Menu } from "./screen/menu.js";
 import { Pager } from "./screen/pager.js";
 import { WorkspaceMover } from "./workspace_mover.js";
 import { BlockMover } from "./block/block_mover.js";
@@ -20,12 +21,26 @@ export class Pyramid {
     private tex_font: ImageTexture;
     private tex_trashbox: ImageTexture;
 
+    private canvas_items: CanvasItem[];
+    private menu: Menu;
+
     private view: Vec3 = [0.0, 0.0, -5.0];
 
     private console_manager: ConsoleManager;
 
     private roots: Roots;
     private holding_block: Block;
+
+    /* ============================================================================================================= */
+    /*     Constants                                                                                                 */
+    /* ============================================================================================================= */
+
+    static readonly LOGO_WIDTH: number = 191.95;
+    static readonly LOGO_HEIGHT: number = 32.0;
+    static readonly MENU_WIDTH: number = 190.0;
+    static readonly HEADER_HEIGHT: number = this.LOGO_HEIGHT + 18.0;
+    static readonly TRASHBOX_WIDTH: number = 128.0;
+    static readonly TRASHBOX_HEIGHT: number = 179.2;
 
     constructor() {
         this.canvas = document.getElementById("workspace") as HTMLCanvasElement;
@@ -34,6 +49,8 @@ export class Pyramid {
         this.tex_font = this.webgl.create_image_texture(document.getElementById("tex_font") as HTMLImageElement);
         this.tex_trashbox = this.webgl.create_image_texture(document.getElementById("tex_trashbox") as HTMLImageElement);
         this.roots = new Roots();
+        this.canvas_items = new Array<CanvasItem>();
+        this.menu = new Menu();
         this.holding_block = Block.create_empty_block();
         this.console_manager = new ConsoleManager(this.canvas, this.roots, this.view, () => this.render());
         // set up
@@ -41,6 +58,8 @@ export class Pyramid {
         this.canvas.height = this.canvas.clientHeight;
         // attach events
         this.init_events();
+        // create Canvas items
+        this.init_canvas_items();
         // warning
         if (this.canvas.clientWidth < 600 || this.canvas.clientHeight < 600) {
             alert("pyramid frontend warning: too small window size to use Pyramid comfortably.");
@@ -54,11 +73,12 @@ export class Pyramid {
         this.roots.clean();
         //this.requestBuilder.push_request_background([0.96, 0.96, 0.96, 1.0], requests);
         this.roots.push_requests(this.view, requests);
-        //this.requestBuilder.push_request_header(requests);
-        //this.requestBuilder.push_request_logo(requests);
-        //this.requestBuilder.push_request_menu(requests);
-        //this.requestBuilder.push_requests_menublocks(requests);
-        //this.requestBuilder.push_request_lines(requests);
+        for(const item of this.canvas_items){
+            item.push_requests(this.view, requests);
+        }
+        
+        //this.menu.push_requests(this.view, requests);
+
         //this.requestBuilder.push_request_trashbox(this.open_trashbox, this.consoleManager.get_console_height(), requests);
         if (!this.holding_block.is_empty()) {
             this.holding_block.arrange();
@@ -113,13 +133,13 @@ export class Pyramid {
 
     private fun_left_mousedown(e, pos_world: Vec3, hit_block: Block): void {
         // logo
-        if (e.pageX < ConstantEntity.LOGO_WIDTH + 12 && e.pageY < ConstantEntity.LOGO_HEIGHT + 18) {
+        if (e.pageX < Pyramid.LOGO_WIDTH + 12 && e.pageY < Pyramid.LOGO_HEIGHT + 18) {
             window.confirm("トップページに戻ると作業内容が失われます。よろしいですか。");
             Pager.goto_toppage();
             return;
         }
         // menu
-        if (e.pageX < ConstantEntity.MENU_WIDTH) {
+        if (e.pageX < Pyramid.MENU_WIDTH) {
             console.log("menu clicked"); //! debug
             //! [TODO] this.menu.clicked(e.pageX, e.pageY, this.console_manager);
             return;
@@ -157,4 +177,41 @@ export class Pyramid {
         this.render(); //! debug
     }
 
+    /* ============================================================================================================= */
+    /*     Canvas items                                                                                              */
+    /* ============================================================================================================= */
+
+    private init_canvas_items(): void {
+        const pos_header: number[] = Translation.convert_2dscreen_to_2dunnormalizedviewport(
+            this.canvas.width, this.canvas.height, [this.canvas.width * 0.5, Pyramid.LOGO_HEIGHT * 0.5]
+        );
+        const header: CanvasItem = new CanvasItem(
+            pos_header[0],
+            pos_header[1] - 9.0,
+            this.canvas.width, 
+            Pyramid.HEADER_HEIGHT,
+            [1., 1., 1., 1.],
+            [0., 0., 0., 0.],
+            null,
+            true,
+        );
+
+        const pos_logo: number[] = Translation.convert_2dscreen_to_2dunnormalizedviewport(
+            this.canvas.width, 
+            this.canvas.height, 
+            [Pyramid.LOGO_WIDTH * 0.5, Pyramid.LOGO_HEIGHT * 0.5]
+        );
+        const logo: CanvasItem = new CanvasItem(
+            pos_logo[0] + 12.0, 
+            pos_logo[1] - 8.0,
+            Pyramid.LOGO_WIDTH, 
+            Pyramid.LOGO_HEIGHT, 
+            [1., 1., 1., 1.],
+            [1., 0.166, 0., 0.],
+            this.tex01,
+            true,
+        );
+        this.canvas_items.push(header);
+        this.canvas_items.push(logo);
+    }
 }

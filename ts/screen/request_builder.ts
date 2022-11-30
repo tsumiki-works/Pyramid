@@ -1,9 +1,6 @@
-import { ConstantEntity } from "../constant/constant_entity.js";
-import { Translation } from "../lib/translation.js";
 import { Vec3, Vec4 } from "../webgl/math.js";
 import { Request } from "../webgl/request.js";
 import { WebGL } from "../webgl/webgl.js";
-import { Block } from "../block/block.js";
 import { ImageTexture } from "../webgl/image_texture.js";
 
 export class PyramidRequest {
@@ -11,60 +8,13 @@ export class PyramidRequest {
     private textures: ImageTexture[];
     private canvas: HTMLCanvasElement;
     private view: Vec3;
-    private webGL: WebGL;
 
-    constructor(_textures: ImageTexture[], _canvas: HTMLCanvasElement, _view: Vec3, _webGL: WebGL){
+    constructor(_textures: ImageTexture[], _canvas: HTMLCanvasElement, _view: Vec3){
         this.textures = _textures;
         this.canvas = _canvas;
         this.view = _view;
-        this.webGL = _webGL;
-        return;
     }
 
-    push_requests_menublocks(req: Request[]): void {
-        const MENU_WIDTH = 190.0;
-        const MENU_HEIGHT = this.canvas.height - ConstantEntity.LOGO_HEIGHT;
-        for (let i = 0; i < 5; i++) {
-            const pos: number[] = 
-                Translation.convert_2dscreen_to_2dunnormalizedviewport(
-                    this.canvas.width,
-                    this.canvas.height,
-                    [90, 100 + 60 * i]
-                );
-            let base_color: Vec4 = Block.convert_type_to_color(i);
-            let tmp_req: Request = {
-                trans: [pos[0], pos[1], 0.0],
-                scale: [100, 50, 1.0],
-                view: this.view,
-                base_color: base_color,
-                uv_offset: [0.0, 0.0, 0.0, 0.0],
-                texture: null,
-                is_ui: true,
-            }
-                
-            req.push(tmp_req);
-        }
-        // ブロック増設予定地
-        for (let i = 5; i < 10; i++) {
-            const pos: number[] = 
-                Translation.convert_2dscreen_to_2dunnormalizedviewport(
-                    this.canvas.width,
-                    this.canvas.height,
-                    [90, 120 + 60 * i]
-                );
-            let tmp_req: Request = {
-                trans: [pos[0], pos[1], 0.0],
-                scale: [100, 50, 1.0],
-                view: this.view,
-                base_color: [0.2, 0.2, 0.2, 0.5],
-                uv_offset: [0.0, 0.0, 0.0, 0.0],
-                texture: null,
-                is_ui: true,
-            }
-
-            req.push(tmp_req);
-        }
-    }
     // A function to push requests for drawing text
     //   * text: str          ... text you wanna draw
     //   * x: float           ... x coord of the center of the first character
@@ -135,37 +85,9 @@ export class PyramidRequest {
         req.push(tmp_req);
     }
 
-    push_request_header(req: Request[]): void {
-        const pos: number[] = Translation.convert_2dscreen_to_2dunnormalizedviewport(this.canvas.width, this.canvas.height, [this.canvas.width * 0.5, ConstantEntity.LOGO_HEIGHT * 0.5]);
-        let tmp_req: Request = {
-            trans: [pos[0], pos[1] - 9.0, 0.],
-            scale: [this.canvas.width, ConstantEntity.HEADER_HEIGHT, 1.0],
-            view: this.view,
-            base_color: [1., 1., 1., 1.],
-            uv_offset: [0., 0., 0., 0.],
-            texture: null,
-            is_ui: true,
-        }
-        req.push(tmp_req);
-    }
+    /*
 
-    push_request_logo(req: Request[]): void {
-        const pos: number[] = Translation.convert_2dscreen_to_2dunnormalizedviewport(
-            this.canvas.width, 
-            this.canvas.height, 
-            [ConstantEntity.LOGO_WIDTH * 0.5, ConstantEntity.LOGO_HEIGHT * 0.5]
-        );
-        let tmp_req: Request = {
-            trans: [pos[0] + 12.0, pos[1] - 8.0, 0.0],
-            scale: [ConstantEntity.LOGO_WIDTH, ConstantEntity.LOGO_HEIGHT, 1.0],
-            view: this.view,
-            base_color: [1., 1., 1., 1.],
-            uv_offset: [1., 0.166, 0., 0.],
-            texture: this.textures[0],
-            is_ui: true,
-        }
-        req.push(tmp_req);
-    }
+    ! [Todo] write these functions to 'menu.ts' 
 
     push_request_menu(req: Request[]): void {
         const MENU_HEIGHT: number = this.canvas.height - ConstantEntity.LOGO_HEIGHT;
@@ -184,6 +106,51 @@ export class PyramidRequest {
             is_ui: true,
         }
         req.push(tmp_req);
+    }
+
+    push_requests_menublocks(req: Request[]): void {
+        const MENU_WIDTH = 190.0;
+        const MENU_HEIGHT = this.canvas.height - ConstantEntity.LOGO_HEIGHT;
+        for (let i = 0; i < 5; i++) {
+            const pos: number[] = 
+                Translation.convert_2dscreen_to_2dunnormalizedviewport(
+                    this.canvas.width,
+                    this.canvas.height,
+                    [90, 100 + 60 * i]
+                );
+            let base_color: Vec4 = Block.convert_type_to_color(i);
+            let tmp_req: Request = {
+                trans: [pos[0], pos[1], 0.0],
+                scale: [100, 50, 1.0],
+                view: this.view,
+                base_color: base_color,
+                uv_offset: [0.0, 0.0, 0.0, 0.0],
+                texture: null,
+                is_ui: true,
+            }
+                
+            req.push(tmp_req);
+        }
+        // ブロック増設予定地
+        for (let i = 5; i < 10; i++) {
+            const pos: number[] = 
+                Translation.convert_2dscreen_to_2dunnormalizedviewport(
+                    this.canvas.width,
+                    this.canvas.height,
+                    [90, 120 + 60 * i]
+                );
+            let tmp_req: Request = {
+                trans: [pos[0], pos[1], 0.0],
+                scale: [100, 50, 1.0],
+                view: this.view,
+                base_color: [0.2, 0.2, 0.2, 0.5],
+                uv_offset: [0.0, 0.0, 0.0, 0.0],
+                texture: null,
+                is_ui: true,
+            }
+
+            req.push(tmp_req);
+        }
     }
 
     push_request_lines(req: Request[]): void {
@@ -220,6 +187,12 @@ export class PyramidRequest {
         req.push(tmp_req3);
     }
     
+    */
+    
+    /*
+
+    ! [Todo] write this somewhere
+
     push_request_trashbox(isopen: boolean, console_height: number, req: Request[]): void {
         const pos = Translation.convert_2dscreen_to_2dunnormalizedviewport(
             this.canvas.width,
@@ -237,4 +210,6 @@ export class PyramidRequest {
         }
         req.push(tmp_req);
     }
+
+    */
 }
