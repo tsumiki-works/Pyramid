@@ -57,5 +57,5 @@ jobs:
               issue_number: context.issue.number,
               owner: context.repo.owner,
               repo: context.repo.repo,
-              body: "Review URL:" + ${{ steps.deployment.outputs.page_url }} 
+              body: "Review URL: + ${{ steps.deployment.outputs.page_url }} "
             })
