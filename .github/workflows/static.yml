@@ -3,9 +3,8 @@ name: Deploy static content to Pages
 
 on:
   # Runs on pushes targeting the default branch
-  push:
-    branches: ["main"]
-
+  pull_request:
+  
   # Allows you to run this workflow manually from the Actions tab
   workflow_dispatch:
 
@@ -46,3 +45,15 @@ jobs:
       - name: Deploy to GitHub Pages
         id: deployment
         uses: actions/deploy-pages@v1
+      - name: Post Comment
+        uses: actions/github-script@v6.3.3
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          URL: ${{ github.event.pull_request.html_url }}
+          script: |
+            github.issues.createComment({
+              issue_number: context.issue.number,
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              body: "Review URL: " + ${{ steps.preview_repo.outputs.gh_page_url }}
+            })
