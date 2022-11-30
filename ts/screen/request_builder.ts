@@ -1,4 +1,3 @@
-import { ConstantBlock } from "../constant/constant_block.js";
 import { ConstantEntity } from "../constant/constant_entity.js";
 import { Translation } from "../lib/translation.js";
 import { Vec3, Vec4 } from "../webgl/math.js";
@@ -27,13 +26,18 @@ export class PyramidRequest {
         const MENU_WIDTH = 190.0;
         const MENU_HEIGHT = this.canvas.height - ConstantEntity.LOGO_HEIGHT;
         for (let i = 0; i < 5; i++) {
-            const pos: number[] = Translation.convert_2dscreen_to_2dunnormalizedviewport(this.canvas.width, this.canvas.height, [90, 100 + 60*i]);
-            let tmp_base_color: number[] = ConstantBlock.TYPE_TO_COL[i];
+            const pos: number[] = 
+                Translation.convert_2dscreen_to_2dunnormalizedviewport(
+                    this.canvas.width,
+                    this.canvas.height,
+                    [90, 100 + 60 * i]
+                );
+            let base_color: Vec4 = Block.convert_type_to_color(i);
             let tmp_req: Request = {
                 trans: [pos[0], pos[1], 0.0],
                 scale: [100, 50, 1.0],
                 view: this.view,
-                base_color: [tmp_base_color[0], tmp_base_color[1], tmp_base_color[2], tmp_base_color[3]],
+                base_color: base_color,
                 uv_offset: [0.0, 0.0, 0.0, 0.0],
                 texture: null,
                 is_ui: true,
@@ -43,8 +47,12 @@ export class PyramidRequest {
         }
         // ブロック増設予定地
         for (let i = 5; i < 10; i++) {
-            const pos = Translation.convert_2dscreen_to_2dunnormalizedviewport(this.canvas.width, this.canvas.height, [90, 120 + 60*i]);
-            let tmp_base_color: number[] = ConstantBlock.TYPE_TO_COL[i];
+            const pos: number[] = 
+                Translation.convert_2dscreen_to_2dunnormalizedviewport(
+                    this.canvas.width,
+                    this.canvas.height,
+                    [90, 120 + 60 * i]
+                );
             let tmp_req: Request = {
                 trans: [pos[0], pos[1], 0.0],
                 scale: [100, 50, 1.0],
@@ -100,19 +108,14 @@ export class PyramidRequest {
                 return;
             let tmp_col: Vec4 = [1.0, 0.0, 0.0, 0.5];
             if (!block.is_empty()){
-                tmp_col = [
-                    ConstantBlock.TYPE_TO_COL[block.type][0],
-                    ConstantBlock.TYPE_TO_COL[block.type][1],
-                    ConstantBlock.TYPE_TO_COL[block.type][2],
-                    ConstantBlock.TYPE_TO_COL[block.type][3],
-                ];
+                tmp_col = Block.convert_type_to_color(block.type);
             }
             requests.push(
                 entity_block(
                     block.x,
                     block.y,
                     block.width * wr,
-                    ConstantBlock.BLOCK_HEIGHT * hr,
+                    Block.UNIT_HEIGHT * hr,
                     tmp_col,
                 )
             );

@@ -5,7 +5,6 @@ import { ImageTexture } from "../webgl/image_texture.js";
 import { Vec3 } from "../webgl/math.js";
 import { WebGL } from "../webgl/webgl.js";
 import { ConsoleManager } from "./console.js";
-import { Entity } from "./entity.js";
 import { EventManager } from "./event.js";
 import { Popup } from "./popup.js";
 import { PyramidRequest } from "./request_builder.js";

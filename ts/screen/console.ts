@@ -4,6 +4,7 @@ import { BlockManager } from "../block/block_manager.js";
 
 import { Vec3 } from "../webgl/math.js";
 import { Evaluator } from "../evaluator/evaluator.js";
+import { Block } from "../block/block.js";
 
 export class ConsoleManager {
     private console_div: HTMLDivElement = document.getElementById("console") as HTMLDivElement;
@@ -107,7 +108,7 @@ export class ConsoleManager {
             case "generate":
                 if (words.length == 1) {
                     const pos_world = Translation.convert_2dscreen_to_3dworld(this.canvas.width, this.canvas.height, this.view, [400, 200]);
-                    this.blockManager.get_roots().push(BlockManager.create_block(pos_world[0], pos_world[1], 0, "0"));
+                    this.blockManager.get_roots().push(new Block(pos_world[0], pos_world[1], 0, "0"));
                     res = "generated at (400, 200) on screen";
                 } else if (words.length == 4) {
                     const x = parseInt(words[1]);
@@ -121,7 +122,7 @@ export class ConsoleManager {
                         res = ConsoleManager.exception_message("type is not integer.");
                     } else {
                         const pos_world = Translation.convert_2dscreen_to_3dworld(this.canvas.width, this.canvas.height, this.view, [x, y]);
-                        this.blockManager.get_roots().push(BlockManager.create_block(pos_world[0], pos_world[1], type, "0"));
+                        this.blockManager.get_roots().push(new Block(pos_world[0], pos_world[1], type, "0"));
                         res = "generated at (" + x + ", " + y + ") in screen";
                     }
                 } else {

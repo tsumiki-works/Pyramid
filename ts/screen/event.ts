@@ -1,7 +1,6 @@
 import { Vec3, Vec4 } from "../webgl/math.js";
 import { Translation } from "../lib/translation.js";
 import { BlockManager } from "../block/block_manager.js";
-import { ConstantBlock } from "../constant/constant_block.js";
 import { BlockCalc } from "../lib/block_calc.js";
 import { ConstantEntity } from "../constant/constant_entity.js";
 import { Popup } from "./popup.js";
@@ -61,28 +60,28 @@ export class EventManager {
                 let is_generate = false;
                 if (event.pageX > 40 && event.pageX < 140) {
                     if (event.pageY > 75 && event.pageY < 125) {
-                        this.blockManager.set_holding_block((BlockManager.create_block(pos_world[0], pos_world[1], 0, "0")));
+                        this.blockManager.set_holding_block((new Block(pos_world[0], pos_world[1], 0, "0")));
                         is_generate = true;
                     }
                     if (event.pageY > 135 && event.pageY < 185) {
-                        this.blockManager.set_holding_block((BlockManager.create_block(pos_world[0], pos_world[1], 1, "+")));
+                        this.blockManager.set_holding_block((new Block(pos_world[0], pos_world[1], 1, "+")));
                         is_generate = true;
                     }
                     if (event.pageY > 195 && event.pageY < 245) {
-                        this.blockManager.set_holding_block((BlockManager.create_block(pos_world[0], pos_world[1], 2, "-")));
+                        this.blockManager.set_holding_block((new Block(pos_world[0], pos_world[1], 2, "-")));
                         is_generate = true;
                     }
                     if (event.pageY > 255 && event.pageY < 305) {
-                        this.blockManager.set_holding_block((BlockManager.create_block(pos_world[0], pos_world[1], 3, "*")));
+                        this.blockManager.set_holding_block((new Block(pos_world[0], pos_world[1], 3, "*")));
                         is_generate = true;
                     }
                     if (event.pageY > 315 && event.pageY < 365) {
-                        this.blockManager.set_holding_block((BlockManager.create_block(pos_world[0], pos_world[1], 4, "/")));
+                        this.blockManager.set_holding_block((new Block(pos_world[0], pos_world[1], 4, "/")));
                         is_generate = true;
                     }
                 }
                 if (is_generate) {
-                    this.blockManager.set_holding_block_pos([pos_2dunnormalizedviewport[0], pos_2dunnormalizedviewport[1]]);
+                    this.blockManager.set_holding_block_pos(pos_2dunnormalizedviewport[0], pos_2dunnormalizedviewport[1]);
 
                     this.left_mousemove_listener = e => this.fun_left_mousemove(e);
                     this.left_mouseup_listener = e => this.fun_left_mouseup(e);
@@ -92,16 +91,16 @@ export class EventManager {
                     this.canvas.removeEventListener("mousedown", this.mousedown_listener);
                 }
             } else {
-                const hit_result = this.blockManager.find_block(this.blockManager.get_roots(), (block) => {
+                const hit_result = this.blockManager.find_block_from_roots((block: Block) => {
                     const block_half_width = block.width * 0.5;
                     return Math.abs(block.x - pos_world[0]) < block_half_width
-                        && Math.abs(block.y - pos_world[1]) < ConstantBlock.BLOCK_HALF_HEIGHT;
+                        && Math.abs(block.y - pos_world[1]) < Block.UNIT_HALF_HEIGHT;
                 });
                 if (!hit_result.is_empty()) {
                     this.blockManager.set_holding_block(hit_result);
                     console.log("hit_result = " + hit_result);
                     this.blockManager.remove_block_from_roots(hit_result);
-                    this.blockManager.set_holding_block_pos([pos_2dunnormalizedviewport[0], pos_2dunnormalizedviewport[1]]);
+                    this.blockManager.set_holding_block_pos(pos_2dunnormalizedviewport[0], pos_2dunnormalizedviewport[1]);
 
                     this.left_mousemove_listener = e => this.fun_left_mousemove(e);
                     this.left_mouseup_listener = e => this.fun_left_mouseup(e);
@@ -117,10 +116,10 @@ export class EventManager {
         }
         // mouseright down : move around workspace
         else if (event.which == 3) {
-            const hit_result = this.blockManager.find_block(this.blockManager.get_roots(), (block) => {
+            const hit_result = this.blockManager.find_block_from_roots((block: Block) => {
                 const block_half_width = block.width * 0.5;
                 return Math.abs(block.x - pos_world[0]) < block_half_width
-                    && Math.abs(block.y - pos_world[1]) < ConstantBlock.BLOCK_HALF_HEIGHT;
+                    && Math.abs(block.y - pos_world[1]) < Block.UNIT_HALF_HEIGHT;
             });
             if(!hit_result.is_empty()){
                 // create popup menu
@@ -161,7 +160,7 @@ export class EventManager {
         this.canvas.removeEventListener("mouseup", this.left_mouseup_listener);
         this.canvas.addEventListener("mousedown", this.mousedown_listener);
         if (BlockCalc.square_distance(pos_trashbox[0], pos_trashbox[1], this.blockManager.get_holding_block().x, this.blockManager.get_holding_block().y) > 10000) {
-            this.blockManager.set_holding_block_pos([pos_world[0], pos_world[1]]);
+            this.blockManager.set_holding_block_pos(pos_world[0], pos_world[1]);
             this.blockManager.connect_block();
         }
         else {
@@ -174,7 +173,7 @@ export class EventManager {
 
     private fun_left_mousemove(event) {
         const pos = Translation.convert_2dscreen_to_2dunnormalizedviewport(this.canvas.width, this.canvas.height, [event.pageX, event.pageY]);
-        this.blockManager.set_holding_block_pos([pos[0], pos[1]]);
+        this.blockManager.set_holding_block_pos(pos[0], pos[1]);
         this.render();
     }
 
