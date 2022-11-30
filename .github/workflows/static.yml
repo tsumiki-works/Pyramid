@@ -39,6 +39,6 @@ jobs:
               owner: context.repo.owner,
               repo: context.repo.repo,
               pull_number: context.issue.number,
-              comment_id: content.payload.comment.id,
+              comment_id: context.payload.number,
               body: "Review URL: ${{ steps.deployment.outputs.page_url }}"
             })
