@@ -91,62 +91,6 @@ export class BlockManager {
         return false;
     }
 
-    static arrange_block(target_block: Block, wr: number, hr: number): void {
-        let determine_block_width = (block: Block): void => {
-            if (block.is_empty() || block.children.length == 0) {
-                block.x = 0.0;
-                block.width = Block.UNIT_WIDTH;
-                block.leftmost = -Block.UNIT_WIDTH * 0.5;
-                block.rightmost = Block.UNIT_WIDTH * 0.5;
-                return;
-            }
-            if (block.children.length == 1) {
-                determine_block_width(block.children[0]);
-                block.x = block.children[0].x;
-                block.width = Block.UNIT_WIDTH;
-                block.leftmost = block.children[0].leftmost;
-                block.rightmost = block.children[0].rightmost;
-                return;
-            }
-            block.width = 1.0;
-            block.leftmost = 0.0;
-            block.rightmost = 0.0;
-            let i = 0;
-            for (const child of block.children) {
-                determine_block_width(child);
-                block.leftmost += child.leftmost;
-                block.rightmost += child.rightmost;
-                if (i == 0) {
-                    block.width += child.rightmost - child.x - child.width * 0.5;
-                } else if (i == block.children.length - 1) {
-                    block.width += child.x - child.width * 0.5 - child.leftmost;
-                } else {
-                    block.width += child.rightmost - child.leftmost;
-                }
-                i += 1;
-            }
-            block.x = block.leftmost
-                + (block.children[0].x - block.children[0].leftmost)
-                + (block.children[0].width * 0.5 - 0.5)
-                + block.width * 0.5;
-        }
-        let determine_block_pos = (block: Block, x: number, y: number): void => {
-            const center: number = x - block.x * wr;
-            block.x = x;
-            block.y = y;
-            let offset: number = center + block.leftmost * wr;
-            for (const child of block.children) {
-                const child_area = (child.rightmost - child.leftmost) * wr;
-                determine_block_pos(child, offset + child_area * 0.5 + child.x * wr, y - Block.UNIT_HEIGHT * hr);
-                offset += child_area;
-            }
-        }
-        const x: number = target_block.x;
-        const y: number = target_block.y;
-        determine_block_width(target_block);
-        determine_block_pos(target_block, x, y);
-    }
-
     connect_block(): void {
         let get_block_connection = (width: number, children_num: number): number[] => {
             let res: number[] = [];
@@ -216,13 +160,13 @@ export class BlockManager {
         );
         const wr = canvas_width * 0.5 * (pos_clipping_2[0] / pos_clipping_2[3] - pos_clipping_1[0] / pos_clipping_1[3]);
         const hr = canvas_height * 0.5 * (pos_clipping_2[1] / pos_clipping_2[3] - pos_clipping_1[1] / pos_clipping_2[3]);
-        BlockManager.arrange_block(this.holding_block, wr, hr);
+        this.holding_block.arrange(wr, hr);
         this.holding_block.push_requests(wr, hr, view, true, requests);
     }
 
     push_roots_requests(view: Vec3, requests: Request[]): void {
         for (const block of this.roots) {
-            BlockManager.arrange_block(block, 1.0, 1.0);
+            block.arrange(1.0, 1.0);
             block.push_requests(1.0, 1.0, view, false, requests);
         }
     }
