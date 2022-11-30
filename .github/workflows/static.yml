@@ -53,9 +53,9 @@ jobs:
           github-token: ${{ secrets.GITHUB_TOKEN }}
           url: ${{ github.event.pull_request.html_url }}
           script: |
-            github.rest.pulls.createReviewComment({
-              pull_number: context.issue.number,
+            github.rest.issues.createReviewComment({
+              issue_number: context.issue.number,
               owner: context.repo.owner,
               repo: context.repo.repo,
-              body: "Review URL:  " + ${{ steps.deployment.outputs.page_url }}
+              body: "Review URL:" + ${{ steps.deployment.outputs.page_url }} 
             })
