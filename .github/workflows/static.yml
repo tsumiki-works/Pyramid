@@ -4,7 +4,7 @@ name: Deploy static content to Pages
 on:
   # Runs on pushes targeting the default branch
   pull_request:
-    types: [opend, synchronized, reopend]
+    types: [opend, synchronize, reopend]
   
   # Allows you to run this workflow manually from the Actions tab
   workflow_dispatch:
