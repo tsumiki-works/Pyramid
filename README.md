@@ -27,5 +27,5 @@ $ python frontendserver.py
 
 [http://localhost:8000/](http://localhost:8000/)にアクセスすると、index.htmlが表示される。
 
-## Naming Rules
+## Naming Rules of Branch
 `dev/`から始まるブランチはプルリク時にデプロイされるので、デプロイしたいブランチ名には`dev/`をつける。
