@@ -29,27 +29,15 @@ jobs:
       url: ${{ steps.deployment.outputs.page_url }}
     runs-on: ubuntu-latest
     steps:
-      - name: Get Review Comments
-        id: review-comment-list
-        uses: actions/github-script@v6.3.3
-        with:
-          github-token: ${{ secrets.GITHUB_TOKEN }}
-          script: |
-            github.rest.pulls.listReviewComments({
-              owner: context.repo.owner,
-              repo: context.repo.repo,
-              pull_number: context.issue.number,
-            })
       - name: Post Comment
         uses: actions/github-script@v6.3.3
         with:
           github-token: ${{ secrets.GITHUB_TOKEN }}
           url: ${{ github.event.pull_request.html_url }}
           script: |
-            github.rest.pulls.createReplyForReviewComment({
+            github.rest.issues.createComment({
               owner: context.repo.owner,
               repo: context.repo.repo,
-              pull_number: context.issue.number,
-              comment_id: content.payload.comment.id,
+              issue_number: context.issue.number,
               body: "Review URL: ${{ steps.deployment.outputs.page_url }}"
             })
