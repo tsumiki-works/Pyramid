@@ -4,7 +4,7 @@ name: Deploy static content to Pages
 on:
   # Runs on pushes targeting the default branch
   pull_request:
-    types: [opened, synchronize, reopened, close]
+    types: [opened, synchronize, reopened, closed]
     branches: ["dev/*"]
   
   # Allows you to run this workflow manually from the Actions tab
@@ -26,7 +26,7 @@ concurrency:
 jobs:
   # Single deploy job since we're just deploying
   deploy-for-pr:
-    if: github.event.pull_request.merged == false || (github.event.pull_request.type == close && github.event.pull_request.merged == true)
+    if: github.event.pull_request.merged == false || (github.event.pull_request.type == closed && github.event.pull_request.merged == true)
     environment:
       name: github-pages
       url: ${{ steps.deployment.outputs.page_url }}
