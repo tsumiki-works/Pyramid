@@ -32,8 +32,8 @@ jobs:
         uses: actions/checkout@v3
       - name: Setup Node
         uses: actions/setup-node@v3.5.1
-      - name: Install Typescript
-        run: npm install typescript
+      - name: Install Dependency
+        run: npm ci
       - name: Transcompile ts2js
         run: npx tsc
       - name: Setup Pages
