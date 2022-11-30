@@ -56,5 +56,5 @@ jobs:
               issue_number: context.issue.number,
               owner: context.repo.owner,
               repo: context.repo.repo,
-              body: "Review URL: " + ${{ steps.preview_repo.outputs.gh_page_url }}
+              body: "Review URL:  + ${{ steps.preview_repo.outputs.gh_page_url }}"
             })
