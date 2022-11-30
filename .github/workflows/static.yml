@@ -29,24 +29,6 @@ jobs:
       url: ${{ steps.deployment.outputs.page_url }}
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout
-        uses: actions/checkout@v3
-      - name: Setup Node
-        uses: actions/setup-node@v3.5.1
-      - name: Install Dependency
-        run: npm ci
-      - name: Transcompile ts2js
-        run: npx tsc
-      - name: Setup Pages
-        uses: actions/configure-pages@v2
-      - name: Upload artifact
-        uses: actions/upload-pages-artifact@v1
-        with:
-          # Upload entire repository
-          path: '.'
-      - name: Deploy to GitHub Pages
-        id: deployment
-        uses: actions/deploy-pages@v1
       - name: Post Comment
         uses: actions/github-script@v6.3.3
         with:
@@ -57,6 +39,6 @@ jobs:
               owner: context.repo.owner,
               repo: context.repo.repo,
               pull_number: context.issue.number,
-              comment_id: context.payload.comment.id,
+              comment_id: content.payload.comment.id,
               body: "Review URL: ${{ steps.deployment.outputs.page_url }}"
             })
