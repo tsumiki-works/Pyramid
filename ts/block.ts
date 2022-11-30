@@ -1,11 +1,12 @@
-import { Vec3, Vec4 } from "../webgl/math.js";
-import { Request } from "../webgl/request.js";
+import { ConsoleManager } from "./screen/console.js";
+import { Vec3, Vec4 } from "./webgl/math.js";
+import { Request } from "./webgl/request.js";
 
 export class Block {
 
-    /* ===================================================================== */
-    /*                      Block Constants                                  */
-    /* ===================================================================== */
+    /* ============================================================================================================= */
+    /*     Constants                                                                                                 */
+    /* ============================================================================================================= */
 
     static readonly UNIT_WIDTH = 1.0;
     static readonly UNIT_HALF_WIDTH = 0.5;
@@ -36,9 +37,9 @@ export class Block {
         return new Block(0, 0, -1, "");
     }
 
-    /* ===================================================================== */
-    /*                                Block                                  */
-    /* ===================================================================== */
+    /* ============================================================================================================= */
+    /*     Block                                                                                                     */
+    /* ============================================================================================================= */
 
     parent: Block | null;
     children: Block[];
@@ -110,9 +111,9 @@ export class Block {
         return res;
     }
 
-    /* ===================================================================== */
-    /*                              Arrangement                              */
-    /* ===================================================================== */
+    /* ============================================================================================================= */
+    /*     Arrangement                                                                                               */
+    /* ============================================================================================================= */
 
     arrange(wr: number, hr: number): void {
         const x = this.x;
@@ -172,4 +173,87 @@ export class Block {
         }
     }
 
+    /* ============================================================================================================= */
+    /*     Popup                                                                                                     */
+    /* ============================================================================================================= */
+
+    clicked(event_page_x: number, event_page_y: number, console_manager: ConsoleManager) {
+        const popup_ = document.getElementById("popup-menu");
+        if (popup_ !== null) {
+            document.body.removeChild(popup_);
+        }
+        const popup = document.createElement("div");
+        popup.id = "popup-menu";
+        popup.style.display = "block";
+        popup.style.left = event_page_x + "px";
+        popup.style.top = event_page_y + "px";
+        const ul = document.createElement("ul");
+        let lis = [];
+        switch (this.type) {
+            case 0:
+                const li_edit = document.createElement("li");
+                li_edit.classList.add("popup-menu-item");
+                li_edit.innerText = "編集";
+                li_edit.onclick = (e => {
+                    this.remove_popup();
+                    this.event_popup_edit(event_page_x, event_page_y, console_manager);
+                });
+                lis.push(li_edit);
+                break;
+            case 1:
+            case 2:
+            case 3:
+            case 4:
+                const li_exe = document.createElement("li");
+                li_exe.classList.add("popup-menu-item");
+                li_exe.innerText = "実行";
+                li_exe.onclick = (e => {
+                    this.remove_popup();
+                    console_manager.run_command("eval " + this.enumerate());
+                });
+                lis.push(li_exe);
+                break;
+            default:
+                throw new Error("Pyramid Frontend error: the block type is not considered in `window.js`");
+        }
+        for (const li of lis) {
+            ul.appendChild(li);
+        }
+        popup.appendChild(ul);
+        document.body.appendChild(popup);
+    }
+
+    private remove_popup() {
+        const popup = document.getElementById("popup-menu");
+        if (popup !== null) {
+            document.body.removeChild(popup);
+        }
+    }
+
+    private event_popup_edit(event_page_x, event_page_y, console_manager) {
+        const popup = document.createElement("div");
+        popup.id = "popup-menu";
+        popup.style.display = "block";
+        popup.style.left = event_page_x + "px";
+        popup.style.top = event_page_y + "px";
+        document.body.appendChild(popup);
+        const input = document.createElement("input");
+        input.id = "popup-menu-edit";
+        input.style.width = "100px";
+        input.style.height = "30px";
+        input.contentEditable = "true";
+        input.addEventListener("keydown", (e => {
+            if(e.key == "Enter"){
+                if(!Number.isNaN(Number(input.value))){
+                    this.content = input.value;
+                    //! render
+                }else{
+                    console_manager.start_newline(ConsoleManager.exception_message("This block's value must be integer."));
+                }
+                this.remove_popup();
+            }
+        }));
+        popup.appendChild(input);
+        input.focus();
+    }
 }

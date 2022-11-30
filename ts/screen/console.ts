@@ -1,56 +1,43 @@
-import { Pyramid } from "../main.js";
 import { Translation } from "../lib/translation.js";
-import { BlockManager } from "../block/block_manager.js";
 
-import { Vec3 } from "../webgl/math.js";
+import { Vec3, Vec4 } from "../webgl/math.js";
 import { Evaluator } from "../evaluator/evaluator.js";
-import { Block } from "../block/block.js";
+import { Block } from "../block.js";
+import { Roots } from "../roots.js";
+import { Request } from "../webgl/request.js";
 
 export class ConsoleManager {
+
     private console_div: HTMLDivElement = document.getElementById("console") as HTMLDivElement;
     private content: HTMLDivElement = document.getElementById("console-content") as HTMLDivElement;
     private console_log: HTMLLabelElement = document.getElementById("console-log") as HTMLLabelElement;
     private canvas: HTMLCanvasElement;
+    private roots: Roots;
     private view: Vec3;
     private render: Function;
-    private blockManager: BlockManager;
     private evaluator: Evaluator;
 
-    /**
-    * A function to initialize console.
-    */
-    constructor(_canvas: HTMLCanvasElement, _view: Vec3, _render: Function, _blockManager: BlockManager) {
+    constructor(_canvas: HTMLCanvasElement, roots: Roots, _view: Vec3, _render: Function) {
         this.canvas = _canvas;
+        this.roots = roots;
         this.view = _view;
         this.render = _render;
-        this.blockManager = _blockManager;
         this.evaluator = new Evaluator();
+        // attach events
+        this.console_div.addEventListener("click", e => this.fun_click_console(e));
+        this.console_div.addEventListener("keydown", e => this.fun_keydown_console(e));
+        const observer = new MutationObserver(() => this.render());
+        const options = {
+            attriblutes: true,
+            attributeFilter: ["style"]
+        };
+        observer.observe(this.console_div, options);
+        const line = document.getElementById("console-line");
+        line.addEventListener("keydown", e => this.fun_prevent_enter_console_line(e));
+        line.focus();
+    }
+    
 
-        this.console_div.addEventListener("click", this.fun_click_console);
-        this.console_div.addEventListener("keydown", this.fun_keydown_console);
-        const observer = new MutationObserver(() => this.render());
-        const options = {
-            attriblutes: true,
-            attributeFilter: ["style"]
-        };
-        observer.observe(this.console_div, options);
-        const line = document.getElementById("console-line");
-        line.addEventListener("keydown", this.fun_prevent_enter_console_line);
-        line.focus();
-    }
-    init_console() {
-        this.console_div.addEventListener("click", this.fun_click_console);
-        this.console_div.addEventListener("keydown", this.fun_keydown_console);
-        const observer = new MutationObserver(() => this.render());
-        const options = {
-            attriblutes: true,
-            attributeFilter: ["style"]
-        };
-        observer.observe(this.console_div, options);
-        const line = document.getElementById("console-line");
-        line.addEventListener("keydown", this.fun_prevent_enter_console_line);
-        line.focus();
-    }
     /**
      * A function to get console element's height.
      * @return {float} the offfset height of console element.
@@ -108,7 +95,7 @@ export class ConsoleManager {
             case "generate":
                 if (words.length == 1) {
                     const pos_world = Translation.convert_2dscreen_to_3dworld(this.canvas.width, this.canvas.height, this.view, [400, 200]);
-                    this.blockManager.get_roots().push(new Block(pos_world[0], pos_world[1], 0, "0"));
+                    this.roots.push(new Block(pos_world[0], pos_world[1], 0, "0"));
                     res = "generated at (400, 200) on screen";
                 } else if (words.length == 4) {
                     const x = parseInt(words[1]);
@@ -122,7 +109,7 @@ export class ConsoleManager {
                         res = ConsoleManager.exception_message("type is not integer.");
                     } else {
                         const pos_world = Translation.convert_2dscreen_to_3dworld(this.canvas.width, this.canvas.height, this.view, [x, y]);
-                        this.blockManager.get_roots().push(new Block(pos_world[0], pos_world[1], type, "0"));
+                        this.roots.push(new Block(pos_world[0], pos_world[1], type, "0"));
                         res = "generated at (" + x + ", " + y + ") in screen";
                     }
                 } else {

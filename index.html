@@ -30,19 +30,12 @@
     <script type="module" src="js/webgl/program.js"></script>
     <script type="module" src="js/webgl/request.js"></script>
     <script type="module" src="js/webgl/webgl.js"></script>
-    <script type="module" src="js/block/block.js"></script>
-    <script type="module" src="js/block/block_manager.js"></script>
-    <script type="module" src="js/lib/block_calc.js"></script>
     <script type="module" src="js/lib/translation.js"></script>
     <script type="module" src="js/screen/console.js"></script>
     <script type="module" src="js/screen/entity.js"></script>
-    <script type="module" src="js/screen/event.js"></script>
     <script type="module" src="js/screen/pager.js"></script>
-    <script type="module" src="js/screen/popup.js"></script>
-    <script type="module" src="js/screen/screen.js"></script>
     <script type="module" src="js/screen/request_builder.js"></script>
     <script type="module" src="js/constant/constant_entity.js"></script>
-    <script type="module" src="js/constant/constant_block.js"></script>
     <script type="module" src="js/evaluator/operation/binary_operation.js"></script>
     <script type="module" src="js/evaluator/operation/define_operation.js"></script>
     <script type="module" src="js/evaluator/evaluator.js"></script>
@@ -50,11 +43,13 @@
     <script type="module" src="js/evaluator/pyramid_object.js"></script>
     <script type="module" src="js/evaluator/pyramid_type.js"></script>
     <script type="module" src="js/evaluator/stree.js"></script>
+    <script type="module" src="js/block.js"></script>
+    <script type="module" src="js/roots.js"></script>
     <script type="module" src="js/main.js"></script>
     <script type="module">
         import { Pyramid } from "./js/main.js"
         window.onload = () => {
-            new Pyramid().run();
+            new Pyramid();
         }
     </script>
 </body>
