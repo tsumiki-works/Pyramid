@@ -3,7 +3,7 @@ import { Translation } from "../lib/translation.js";
 import { Vec3, Vec4 } from "../webgl/math.js";
 import { Request } from "../webgl/request.js";
 import { WebGL } from "../webgl/webgl.js";
-import { Block } from "../block.js";
+import { Block } from "../block/block.js";
 import { ImageTexture } from "../webgl/image_texture.js";
 
 export class PyramidRequest {

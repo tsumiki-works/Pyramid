@@ -1,6 +1,6 @@
-import { ConsoleManager } from "./screen/console.js";
-import { Vec3, Vec4 } from "./webgl/math.js";
-import { Request } from "./webgl/request.js";
+import { ConsoleManager } from "../screen/console.js";
+import { Vec3, Vec4 } from "../webgl/math.js";
+import { Request } from "../webgl/request.js";
 
 export class Block {
 
@@ -46,10 +46,10 @@ export class Block {
     x: number;
     y: number;
     width: number;
-    type: number;
-    content: string;
-    leftmost: number;
-    rightmost: number;
+    private type: number;
+    private content: string;
+    private leftmost: number;
+    private rightmost: number;
 
     constructor(_x: number, _y: number, _type: number, _content: string){
         this.parent = null;
@@ -70,31 +70,6 @@ export class Block {
         return this.type == -1;
     }
 
-    private create_request(wr: number, hr: number, view: Vec3, is_ui: boolean): Request {
-        return {
-            trans: [this.x, this.y, 0.0],
-            scale: [this.width * wr, Block.UNIT_HEIGHT * hr, 1.0],
-            view: view,
-            base_color: Block.convert_type_to_color(this.type),
-            uv_offset: [0.0, 0.0, 0.0, 0.0],
-            texture: null,
-            is_ui: is_ui,
-        };
-    }
-
-    push_requests(wr: number, hr: number, view: Vec3, is_ui: boolean, requests: Request[]): void {
-        if (this.is_empty()) {
-            return;
-        }
-        requests.push(this.create_request(wr, hr, view, is_ui));
-        for (const child of this.children) {
-            if (child === null || child.is_empty()) {
-                continue;
-            }
-            child.push_requests(wr, hr, view, is_ui, requests);
-        }
-    }
-
     enumerate(): string {
         let res = "";
         if (this.children.length == 0) {
@@ -111,15 +86,40 @@ export class Block {
         return res;
     }
 
+    push_requests(view: Vec3, requests: Request[]): void {
+        if (this.is_empty()) {
+            return;
+        }
+        requests.push(this.create_request(view));
+        for (const child of this.children) {
+            if (child === null || child.is_empty()) {
+                continue;
+            }
+            child.push_requests(view, requests);
+        }
+    }
+
+    private create_request(view: Vec3): Request {
+        return {
+            trans: [this.x, this.y, 0.0],
+            scale: [this.width, Block.UNIT_HEIGHT, 1.0],
+            view: view,
+            base_color: Block.convert_type_to_color(this.type),
+            uv_offset: [0.0, 0.0, 0.0, 0.0],
+            texture: null,
+            is_ui: false,
+        };
+    }
+
     /* ============================================================================================================= */
     /*     Arrangement                                                                                               */
     /* ============================================================================================================= */
 
-    arrange(wr: number, hr: number): void {
+    arrange(): void {
         const x = this.x;
         const y = this.y;
         this.determine_width();
-        this.determine_pos(x, y, wr, hr);
+        this.determine_pos(x, y);
     }
 
     private determine_width() {
@@ -161,14 +161,14 @@ export class Block {
             + this.width * 0.5;
     }
 
-    private determine_pos(x: number, y: number, wr: number, hr: number) {
-        const center: number = x - this.x * wr;
+    private determine_pos(x: number, y: number) {
+        const center: number = x - this.x;
         this.x = x;
         this.y = y;
-        let offset: number = center + this.leftmost * wr;
+        let offset: number = center + this.leftmost;
         for (const child of this.children) {
-            const child_area = (child.rightmost - child.leftmost) * wr;
-            child.determine_pos(offset + child_area * 0.5 + child.x * wr, y - Block.UNIT_HEIGHT * hr, wr, hr);
+            const child_area = (child.rightmost - child.leftmost);
+            child.determine_pos(offset + child_area * 0.5 + child.x, y - Block.UNIT_HEIGHT);
             offset += child_area;
         }
     }
@@ -246,7 +246,7 @@ export class Block {
             if(e.key == "Enter"){
                 if(!Number.isNaN(Number(input.value))){
                     this.content = input.value;
-                    //! render
+                    //! [TODO] render
                 }else{
                     console_manager.start_newline(ConsoleManager.exception_message("This block's value must be integer."));
                 }

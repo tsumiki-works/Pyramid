@@ -3,13 +3,14 @@ import { ImageTexture } from "./webgl/image_texture.js";
 import { WebGL } from "./webgl/webgl.js";
 import { Vec3, Vec4 } from "./webgl/math.js";
 
-import { Roots } from "./roots.js";
-import { Block } from "./block.js";
+import { Roots } from "./block/roots.js";
+import { Block } from "./block/block.js";
 import { Translation } from "./lib/translation.js";
 import { ConsoleManager } from "./screen/console.js";
 import { ConstantEntity } from "./constant/constant_entity.js";
 import { Pager } from "./screen/pager.js";
 import { WorkspaceMover } from "./workspace_mover.js";
+import { BlockMover } from "./block/block_mover.js";
 
 export class Pyramid {
 
@@ -59,21 +60,10 @@ export class Pyramid {
         //this.requestBuilder.push_requests_menublocks(requests);
         //this.requestBuilder.push_request_lines(requests);
         //this.requestBuilder.push_request_trashbox(this.open_trashbox, this.consoleManager.get_console_height(), requests);
-        // holding block
-        const pos_clipping_1: Vec4 = Translation.convert_view_to_clipping(
-            [-0.5, -0.5, this.view[2], 1.0],
-            this.canvas.width,
-            this.canvas.height
-        );
-        const pos_clipping_2: Vec4 = Translation.convert_view_to_clipping(
-            [0.5, 0.5, this.view[2], 1.0],
-            this.canvas.width,
-            this.canvas.height
-        );
-        const wr = this.canvas.width * 0.5 * (pos_clipping_2[0] / pos_clipping_2[3] - pos_clipping_1[0] / pos_clipping_1[3]);
-        const hr = this.canvas.height * 0.5 * (pos_clipping_2[1] / pos_clipping_2[3] - pos_clipping_1[1] / pos_clipping_2[3]);
-        this.holding_block.arrange(wr, hr);
-        this.holding_block.push_requests(wr, hr, this.view, true, requests);
+        if (!this.holding_block.is_empty()) {
+            this.holding_block.arrange();
+            this.holding_block.push_requests(this.view, requests);
+        }
         // finish
         this.webgl.draw_requests(requests, this.canvas.width, this.canvas.height);
     }
@@ -136,8 +126,15 @@ export class Pyramid {
         }
         // move block
         if (!hit_block.is_empty()) {
-            console.log("hit left block : " + hit_block); //! debug
-            //! [TODO] move block
+            this.roots.remove_block(hit_block);
+            this.holding_block = hit_block;
+            new BlockMover(
+                this.holding_block,
+                this.mousedown_listener,
+                this.canvas,
+                this.view,
+                () => this.fun_release_holding_block()
+            );
             return;
         }
         console.log("MOUSEPOS: " + e.pageX + ", " + e.pageY); //! debug
@@ -145,12 +142,19 @@ export class Pyramid {
 
     private fun_right_mousedown(e, pos_world: Vec3, hit_block: Block): void {
         if (!hit_block.is_empty()) {
-            console.log("hit right block : " + hit_block); //! debug
             hit_block.clicked(e.pageX, e.pageY, this.console_manager);
             return;
         }
         // move workspace
         new WorkspaceMover(e.pageX, e.pageY, this.mousedown_listener, this.canvas, this.view);
+    }
+
+    private fun_release_holding_block() {
+        //! [TODO] check if block is thrown away into trashbox
+        //! [TODO] check if block can be connected
+        this.roots.push(this.holding_block);
+        this.holding_block = Block.create_empty_block();
+        this.render(); //! debug
     }
 
 }

@@ -2,8 +2,8 @@ import { Translation } from "../lib/translation.js";
 
 import { Vec3, Vec4 } from "../webgl/math.js";
 import { Evaluator } from "../evaluator/evaluator.js";
-import { Block } from "../block.js";
-import { Roots } from "../roots.js";
+import { Block } from "../block/block.js";
+import { Roots } from "../block/roots.js";
 import { Request } from "../webgl/request.js";
 
 export class ConsoleManager {

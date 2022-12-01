@@ -1,6 +1,6 @@
-import { Request } from "./webgl/request.js";
-import { Vec3 } from "./webgl/math.js";
-import { Block } from "./block.js";
+import { Request } from "../webgl/request.js";
+import { Vec3 } from "../webgl/math.js";
+import { Block } from "../block/block.js";
 
 export class Roots {
 
@@ -116,9 +116,8 @@ export class Roots {
 
     push_requests(view: Vec3, requests: Request[]): void {
         for (const block of this.roots) {
-            block.arrange(1.0, 1.0);
-            block.push_requests(1.0, 1.0, view, false, requests);
+            block.arrange();
+            block.push_requests(view, requests);
         }
     }
-
 }

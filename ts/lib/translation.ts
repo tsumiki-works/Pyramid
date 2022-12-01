@@ -1,6 +1,6 @@
 // A module for coordinates translation
 
-import { Matrix, Vec3, Vec4, Mat4x4 } from "../webgl/math.js";
+import { Matrix, Vec2, Vec3, Vec4 } from "../webgl/math.js";
 
 export class Translation {
     /**
@@ -10,10 +10,10 @@ export class Translation {
      *   * canvas_width=1280, canvas_height=640, xy=[640,480], the result is [0,0]
      * @param {float} canvas_width 
      * @param {float} canvas_height 
-     * @param {float[]} xy 
-     * @returns {float[]} unnormalized viewport coordinate 
+     * @param {Vec2} xy 
+     * @returns {Vec2} unnormalized viewport coordinate 
      */
-    static convert_2dscreen_to_2dunnormalizedviewport(canvas_width: number, canvas_height: number, xy: number[]): number[] {
+    static convert_2dscreen_to_2dunnormalizedviewport(canvas_width: number, canvas_height: number, xy: Vec2): Vec2 {
         return [
             canvas_width * -0.5 + xy[0],
             canvas_height * 0.5 - xy[1],
@@ -26,10 +26,10 @@ export class Translation {
      *   * canvas_width=1280, canvas_height=640, xy=[640,480], the result is [0,0]
      * @param {float} canvas_width 
      * @param {float} canvas_height 
-     * @param {float[]} xy 
-     * @returns {float[]} viewport coordinate 
+     * @param {Vec2} xy 
+     * @returns {Vec2} viewport coordinate 
      */
-    static convert_2dscreen_to_2dviewport(canvas_width: number, canvas_height: number, xy: number[]): number[] {
+    static convert_2dscreen_to_2dviewport(canvas_width: number, canvas_height: number, xy: Vec2): Vec2 {
         const hw: number = canvas_width * 0.5;
         const hh: number = canvas_height * 0.5;
         return [
@@ -43,7 +43,7 @@ export class Translation {
      * @param {float[]} xy normalized viewport coordinate 
      * @returns {float[]} clipping coordinate
      */
-    static convert_2dviewport_to_3dclipping(view_z: number, xy: number[]): Vec3{
+    static convert_2dviewport_to_3dclipping(view_z: number, xy: number[]): Vec3 {
         return [
             xy[0],
             xy[1],
@@ -90,12 +90,12 @@ export class Translation {
      * @param {float[]} xy screen coordinate
      * @returns {float[]} world coordinate
      */
-    static convert_2dscreen_to_3dworld(canvas_width: number, canvas_height: number, view: Vec3, xy: number[]): Vec3{
-        const pos_viewport: number[] = this.convert_2dscreen_to_2dviewport(canvas_width, canvas_height, [xy[0], xy[1]]);
+    static convert_2dscreen_to_3dworld(canvas_width: number, canvas_height: number, view: Vec3, xy: Vec2): Vec3 {
+        const pos_viewport: Vec2 = this.convert_2dscreen_to_2dviewport(canvas_width, canvas_height, [xy[0], xy[1]]);
         const pos_clipping: Vec3 = this.convert_2dviewport_to_3dclipping(view[2], pos_viewport);
         const pos_view: Vec4 = this.convert_3dclipping_to_3dview(canvas_width, canvas_height, pos_clipping);
-        const pos_view_vec3: Vec3 = [pos_view[0], pos_view[1], pos_view[2]];
-        const pos_world = this.convert_3dview_to_3dworld(view, pos_view_vec3);
+        const pos_view_: Vec3 = [pos_view[0], pos_view[1], pos_view[2]];
+        const pos_world: Vec3 = this.convert_3dview_to_3dworld(view, pos_view_);
         return pos_world;
     }
 }
