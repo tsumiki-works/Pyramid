@@ -1,6 +1,6 @@
 import { ImageTexture } from "../webgl/image_texture.js";
 import {Vec3, Vec4} from "../webgl/math.js"
-import {Request} from "../webgl/request.js" 
+import {GLRequest} from "../webgl/glrequest.js" 
 
 export class CanvasItem {
     private canvas_pos_x: number;
@@ -24,7 +24,7 @@ export class CanvasItem {
         this.is_ui = _is_ui;
     }
     
-    private create_request(_view: Vec3): Request{
+    private create_request(_view: Vec3): GLRequest{
         return {
             trans: [this.canvas_pos_x, this.canvas_pos_y, 0.0],
             scale: [this.scale_x, this.scale_y, 1.0],
@@ -36,7 +36,7 @@ export class CanvasItem {
         }
     }
 
-    push_requests(view: Vec3 , requests: Request[]): void {
+    push_requests(view: Vec3 , requests: GLRequest[]): void {
         requests.push(this.create_request(view));
     }
 }

@@ -1,4 +1,4 @@
-import { Request } from "../webgl/request.js";
+import { GLRequest } from "../webgl/glrequest.js";
 import { Vec3 } from "../webgl/math.js";
 import { Block } from "../block/block.js";
 
@@ -46,7 +46,7 @@ export class Roots {
         return false;
     }
 
-    push_requests(view: Vec3, requests: Request[]): void {
+    push_requests(view: Vec3, requests: GLRequest[]): void {
         this.roots = this.roots.filter(block => !block.is_empty());
         for (const block of this.roots) {
             block.arrange();

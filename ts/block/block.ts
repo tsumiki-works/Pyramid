@@ -1,6 +1,6 @@
 import { ConsoleManager } from "../screen/console.js";
 import { Vec3, Vec4 } from "../webgl/math.js";
-import { Request } from "../webgl/request.js";
+import { GLRequest } from "../webgl/glrequest.js";
 
 export class Block {
 
@@ -147,7 +147,7 @@ export class Block {
         return res;
     }
 
-    push_requests(view: Vec3, requests: Request[]): void {
+    push_requests(view: Vec3, requests: GLRequest[]): void {
         if (this.is_empty()) {
             return;
         }
@@ -160,7 +160,7 @@ export class Block {
         }
     }
 
-    private create_request(view: Vec3): Request {
+    private create_request(view: Vec3): GLRequest {
         return {
             trans: [this.x, this.y, 0.0],
             scale: [this.width, Block.UNIT_HEIGHT, 1.0],

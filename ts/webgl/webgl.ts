@@ -2,7 +2,7 @@ import { ImageTexture } from "./image_texture.js";
 import { Matrix, Vec4 } from "./math.js";
 import { Model } from "./model.js";
 import { Program } from "./program.js";
-import { Request } from "./request.js";
+import { GLRequest } from "./glrequest.js";
 
 export class WebGL {
 
@@ -43,7 +43,7 @@ export class WebGL {
         return new ImageTexture(this.gl, image);
     }
 
-    draw_requests(requests: Request[], width: number, height: number): void {
+    draw_requests(requests: GLRequest[], width: number, height: number): void {
         this.gl.viewport(0, 0, width, height);
         this.gl.clearColor(0.6, 0.6, 0.6, 1.0);
         this.gl.clear(this.gl.COLOR_BUFFER_BIT);

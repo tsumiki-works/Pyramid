@@ -3,7 +3,6 @@ import { ImageTexture } from "./webgl/image_texture.js";
 import { WebGL } from "./webgl/webgl.js";
 import { Vec3, Vec4 } from "./webgl/math.js";
 
-import { Roots } from "./block/roots.js";
 import { Block } from "./block/block.js";
 import { Translation } from "./lib/translation.js";
 import { ConsoleManager } from "./screen/console.js";
@@ -11,7 +10,7 @@ import { CanvasItem } from "./screen/canvas_items.js";
 import { Menu } from "./screen/menu.js";
 import { Pager } from "./screen/pager.js";
 import { WorkspaceMover } from "./workspace_mover.js";
-import { BlockMover } from "./block/block_mover.js";
+import { BlockManager } from "./block/block_manager.js";
 
 export class Pyramid {
 
@@ -26,10 +25,8 @@ export class Pyramid {
 
     private view: Vec3 = [0.0, 0.0, -5.0];
 
+    private block_manager: BlockManager;
     private console_manager: ConsoleManager;
-
-    private roots: Roots;
-    private holding_block: Block;
 
     /* ============================================================================================================= */
     /*     Constants                                                                                                 */
@@ -48,11 +45,10 @@ export class Pyramid {
         this.tex01 = this.webgl.create_image_texture(document.getElementById("tex01") as HTMLImageElement);
         this.tex_font = this.webgl.create_image_texture(document.getElementById("tex_font") as HTMLImageElement);
         this.tex_trashbox = this.webgl.create_image_texture(document.getElementById("tex_trashbox") as HTMLImageElement);
-        this.roots = new Roots();
         this.canvas_items = new Array<CanvasItem>();
         this.menu = new Menu();
-        this.holding_block = Block.create_empty_block();
-        this.console_manager = new ConsoleManager(this.canvas, this.roots, this.view, () => this.render());
+        this.block_manager = new BlockManager();
+        this.console_manager = new ConsoleManager(this.canvas, this.block_manager.roots, this.view, () => this.render());
         // set up
         this.canvas.width = this.canvas.clientWidth;
         this.canvas.height = this.canvas.clientHeight;
@@ -67,18 +63,15 @@ export class Pyramid {
 
     render(): void {
         let requests = [];
-        this.roots.push_requests(this.view, requests);
-        for(const item of this.canvas_items){
+        this.block_manager.push_roots_requests(this.view, requests);
+        for (const item of this.canvas_items) {
             item.push_requests(this.view, requests);
         }
-        
+
         //this.menu.push_requests(this.view, requests);
 
         //this.requestBuilder.push_request_trashbox(this.open_trashbox, this.consoleManager.get_console_height(), requests);
-        if (!this.holding_block.is_empty()) {
-            this.holding_block.arrange();
-            this.holding_block.push_requests(this.view, requests);
-        }
+        this.block_manager.push_holding_block_requests(this.view, requests);
         // finish
         this.webgl.draw_requests(requests, this.canvas.width, this.canvas.height);
     }
@@ -88,9 +81,13 @@ export class Pyramid {
     /* ============================================================================================================= */
 
     private mousedown_listener: EventListener;
+    private mouseup_listener: EventListener;
+    private mousemove_listener: EventListener;
 
     private init_events() {
         this.mousedown_listener = e => this.event_mousedown(e);
+        this.mouseup_listener = e => this.event_mouseup(e);
+        this.mousemove_listener = e => this.event_mousemove(e);
         this.canvas.addEventListener("mousedown", this.mousedown_listener);
         window.addEventListener("resize", () => {
             this.canvas.width = this.canvas.clientWidth;
@@ -100,76 +97,59 @@ export class Pyramid {
     }
 
     private event_mousedown(e) {
+        this.canvas.removeEventListener("mousedown", this.mousedown_listener);
+        this.canvas.addEventListener("mousemove", this.mousemove_listener);
+        this.canvas.addEventListener("mouseup", this.mouseup_listener);
         // remove popup if it exists
         const popup = document.getElementById("popup-menu");
         if (popup !== null) {
             document.body.removeChild(popup);
         }
-        // get cursor world coordinates
-        const pos_world: Vec3 = Translation.convert_2dscreen_to_3dworld(
+        // do event
+        if (e.which == 1) {
+            this.fun_left_mousedown(e);
+        } else if (e.which == 3) {
+            this.fun_right_mousedown(e);
+        }
+    }
+
+    private fun_left_mousedown(e): void {
+        //! [TODO] logo
+        if (e.pageX < Pyramid.LOGO_WIDTH + 12 && e.pageY < Pyramid.LOGO_HEIGHT + 18) {
+            window.confirm("トップページに戻ると作業内容が失われます。よろしいですか。");
+            Pager.goto_toppage();
+        }
+        //! [TODO] menu
+        else if (e.pageX < Pyramid.MENU_WIDTH /* && this.menu.on_left_mousedown(e.pageX, e.pageY, this.console_manager) */) { }
+        // roots
+        else if (!this.block_manager.on_left_mousedown(this.get_cursor_pos_world(e))) { }
+    }
+
+    private fun_right_mousedown(e): void {
+        //! [TODO] click right block
+        new WorkspaceMover(e.pageX, e.pageY, this.mousedown_listener, this.canvas, this.view);
+    }
+
+    private event_mouseup(_) {
+        this.canvas.removeEventListener("mouseup", this.mouseup_listener);
+        this.canvas.removeEventListener("mousemove", this.mousemove_listener);
+        this.canvas.addEventListener("mousedown", this.mousedown_listener);
+        this.block_manager.on_mouseup();
+        this.render();
+    }
+
+    private event_mousemove(e) {
+        this.block_manager.on_mousemove(this.get_cursor_pos_world(e));
+        this.render();
+    }
+
+    private get_cursor_pos_world(e): Vec3 {
+        return Translation.convert_2dscreen_to_3dworld(
             this.canvas.width,
             this.canvas.height,
             this.view,
             [e.pageX, e.pageY]
         );
-        // get hit block
-        const hit_block = this.roots.find_block((block: Block) => {
-            return block.is_hit(pos_world[0], pos_world[1]);
-        });
-        // do event
-        if (e.which == 1) {
-            this.fun_left_mousedown(e, pos_world, hit_block);
-        } else if (e.which == 3) {
-            this.fun_right_mousedown(e, pos_world, hit_block);
-        }
-    }
-
-    private fun_left_mousedown(e, pos_world: Vec3, hit_block: Block): void {
-        // logo
-        if (e.pageX < Pyramid.LOGO_WIDTH + 12 && e.pageY < Pyramid.LOGO_HEIGHT + 18) {
-            window.confirm("トップページに戻ると作業内容が失われます。よろしいですか。");
-            Pager.goto_toppage();
-            return;
-        }
-        // menu
-        if (e.pageX < Pyramid.MENU_WIDTH) {
-            console.log("menu clicked"); //! debug
-            //! [TODO] this.menu.clicked(e.pageX, e.pageY, this.console_manager);
-            return;
-        }
-        // move block
-        if (!hit_block.is_empty()) {
-            this.roots.remove_block(hit_block);
-            this.holding_block = hit_block;
-            new BlockMover(
-                this.holding_block,
-                this.mousedown_listener,
-                this.canvas,
-                this.view,
-                () => this.fun_release_holding_block()
-            );
-            return;
-        }
-        console.log("MOUSEPOS: " + e.pageX + ", " + e.pageY); //! debug
-    }
-
-    private fun_right_mousedown(e, pos_world: Vec3, hit_block: Block): void {
-        if (!hit_block.is_empty()) {
-            hit_block.clicked(e.pageX, e.pageY, this.console_manager);
-            return;
-        }
-        // move workspace
-        new WorkspaceMover(e.pageX, e.pageY, this.mousedown_listener, this.canvas, this.view);
-    }
-
-    private fun_release_holding_block() {
-        //! [TODO] check if block is thrown away into trashbox
-        const is_connected = this.roots.connect_block(this.holding_block);
-        if (!is_connected) {
-            this.roots.push(this.holding_block);
-        }
-        this.holding_block = Block.create_empty_block();
-        this.render(); //! debug
     }
 
     /* ============================================================================================================= */
@@ -183,7 +163,7 @@ export class Pyramid {
         const header: CanvasItem = new CanvasItem(
             pos_header[0],
             pos_header[1] - 9.0,
-            this.canvas.width, 
+            this.canvas.width,
             Pyramid.HEADER_HEIGHT,
             [1., 1., 1., 1.],
             [0., 0., 0., 0.],
@@ -192,15 +172,15 @@ export class Pyramid {
         );
 
         const pos_logo: number[] = Translation.convert_2dscreen_to_2dunnormalizedviewport(
-            this.canvas.width, 
-            this.canvas.height, 
+            this.canvas.width,
+            this.canvas.height,
             [Pyramid.LOGO_WIDTH * 0.5, Pyramid.LOGO_HEIGHT * 0.5]
         );
         const logo: CanvasItem = new CanvasItem(
-            pos_logo[0] + 12.0, 
+            pos_logo[0] + 12.0,
             pos_logo[1] - 8.0,
-            Pyramid.LOGO_WIDTH, 
-            Pyramid.LOGO_HEIGHT, 
+            Pyramid.LOGO_WIDTH,
+            Pyramid.LOGO_HEIGHT,
             [1., 1., 1., 1.],
             [1., 0.166, 0., 0.],
             this.tex01,

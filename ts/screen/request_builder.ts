@@ -1,5 +1,5 @@
 import { Vec3, Vec4 } from "../webgl/math.js";
-import { Request } from "../webgl/request.js";
+import { GLRequest } from "../webgl/glrequest.js";
 import { WebGL } from "../webgl/webgl.js";
 import { ImageTexture } from "../webgl/image_texture.js";
 
@@ -24,7 +24,7 @@ export class PyramidRequest {
     //   * color : [float; 4] ... the color of the text
     //   * is_ui: boolean     ... whether the text is UI or not
     //   * requests: []       ... target requests array
-    push_requests_text(text: string, x: number, y: number, width: number, height: number, color: Vec4, is_ui: boolean, requests: Request[]): void {
+    push_requests_text(text: string, x: number, y: number, width: number, height: number, color: Vec4, is_ui: boolean, requests: GLRequest[]): void {
 
         let get_font_offset_u = (ascii: number): number => {
             return ((ascii - 32) % 15) * FONT_WIDTH_SCALE;
@@ -32,8 +32,8 @@ export class PyramidRequest {
         let get_font_offset_v = (ascii: number): number => {
             return (Math.floor((ascii - 32) / 15)) * FONT_HEIGHT_SCALE;
         }
-        let entity_character = (x: number, y: number, width: number, height: number, color: Vec4, tex_scale_offset: Vec4, _is_ui: boolean): Request => {
-            let tmp_req: Request = {
+        let entity_character = (x: number, y: number, width: number, height: number, color: Vec4, tex_scale_offset: Vec4, _is_ui: boolean): GLRequest => {
+            let tmp_req: GLRequest = {
                 trans: [x, y, 0.0],
                 scale: [width, height, 1.0],
                 view: this.view,
@@ -72,8 +72,8 @@ export class PyramidRequest {
             cnt_chars += 1;
         }
     }
-    push_request_background(color: Vec4, req: Request[]): void {
-        let tmp_req: Request = {
+    push_request_background(color: Vec4, req: GLRequest[]): void {
+        let tmp_req: GLRequest = {
             trans: [0., 0., 0.],
             scale: [this.canvas.width, this.canvas.height, 1.0],
             view: this.view,
@@ -89,14 +89,14 @@ export class PyramidRequest {
 
     ! [Todo] write these functions to 'menu.ts' 
 
-    push_request_menu(req: Request[]): void {
+    push_request_menu(req: GLRequest[]): void {
         const MENU_HEIGHT: number = this.canvas.height - ConstantEntity.LOGO_HEIGHT;
         const pos: number[] = Translation.convert_2dscreen_to_2dunnormalizedviewport(
             this.canvas.width,
             this.canvas.height,
             [ConstantEntity.MENU_WIDTH * 0.5, MENU_HEIGHT * 0.5]
         );
-        let tmp_req: Request = {
+        let tmp_req: GLRequest = {
             trans: [pos[0], pos[1] - ConstantEntity.LOGO_HEIGHT - 18.0, 0.0],
             scale: [ConstantEntity.MENU_WIDTH, MENU_HEIGHT, 1.0],
             view: this.view,
@@ -108,7 +108,7 @@ export class PyramidRequest {
         req.push(tmp_req);
     }
 
-    push_requests_menublocks(req: Request[]): void {
+    push_requests_menublocks(req: GLRequest[]): void {
         const MENU_WIDTH = 190.0;
         const MENU_HEIGHT = this.canvas.height - ConstantEntity.LOGO_HEIGHT;
         for (let i = 0; i < 5; i++) {
@@ -119,7 +119,7 @@ export class PyramidRequest {
                     [90, 100 + 60 * i]
                 );
             let base_color: Vec4 = Block.convert_type_to_color(i);
-            let tmp_req: Request = {
+            let tmp_req: GLRequest = {
                 trans: [pos[0], pos[1], 0.0],
                 scale: [100, 50, 1.0],
                 view: this.view,
@@ -139,7 +139,7 @@ export class PyramidRequest {
                     this.canvas.height,
                     [90, 120 + 60 * i]
                 );
-            let tmp_req: Request = {
+            let tmp_req: GLRequest = {
                 trans: [pos[0], pos[1], 0.0],
                 scale: [100, 50, 1.0],
                 view: this.view,
@@ -153,9 +153,9 @@ export class PyramidRequest {
         }
     }
 
-    push_request_lines(req: Request[]): void {
+    push_request_lines(req: GLRequest[]): void {
         const pos = Translation.convert_2dscreen_to_2dunnormalizedviewport(this.canvas.width, this.canvas.height, [ConstantEntity.MENU_WIDTH * 0.5, ConstantEntity.HEADER_HEIGHT * 0.5]);
-        let tmp_req: Request = {
+        let tmp_req: GLRequest = {
             trans: [pos[0] + this.canvas.width *0.5 - ConstantEntity.MENU_WIDTH * 0.5, pos[1] - 24.0, 0.0],
             scale: [this.canvas.width, 1.0, 1.0],
             view: this.view,
@@ -164,7 +164,7 @@ export class PyramidRequest {
             texture: null,
             is_ui: true,
         }
-        let tmp_req2: Request = {
+        let tmp_req2: GLRequest = {
             trans: [pos[0], pos[1] - 356.0, 0.0],
             scale: [ConstantEntity.MENU_WIDTH - 30.0, 1.0, 1.0],
             view: this.view,
@@ -173,7 +173,7 @@ export class PyramidRequest {
             texture: null,
             is_ui: true,
         }
-        let tmp_req3: Request = {
+        let tmp_req3: GLRequest = {
             trans: [pos[0] + ConstantEntity.MENU_WIDTH * 0.5, pos[1] - this.canvas.height * 0.5, 0.0],
             scale: [1.0, this.canvas.height - ConstantEntity.HEADER_HEIGHT, 1.0],
             view: this.view,
@@ -193,13 +193,13 @@ export class PyramidRequest {
 
     ! [Todo] write this somewhere
 
-    push_request_trashbox(isopen: boolean, console_height: number, req: Request[]): void {
+    push_request_trashbox(isopen: boolean, console_height: number, req: GLRequest[]): void {
         const pos = Translation.convert_2dscreen_to_2dunnormalizedviewport(
             this.canvas.width,
             this.canvas.height,
             [this.canvas.width - ConstantEntity.TRASHBOX_WIDTH * 0.5, this.canvas.height - console_height - ConstantEntity.TRASHBOX_HEIGHT * 0.5]
         );
-        let tmp_req: Request = {
+        let tmp_req: GLRequest = {
             trans: [pos[0], pos[1], 0.0],
             scale: [ConstantEntity.TRASHBOX_WIDTH, ConstantEntity.TRASHBOX_HEIGHT, 1.0],
             view: this.view,

@@ -1,7 +1,7 @@
 import { ImageTexture } from "./image_texture";
 import { Vec3, Vec4 } from "./math";
 
-export type Request = {
+export type GLRequest = {
     trans: Vec3;
     scale: Vec3;
     view: Vec3;
