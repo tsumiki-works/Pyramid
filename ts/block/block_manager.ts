@@ -13,16 +13,16 @@ export class BlockManager {
         this.holding_block = Block.create_empty_block();
     }
 
-    push_roots_requests(view: Vec3, requests: GLRequest[]): void {
-        this.roots.push_requests(view, requests);
+    push_roots_requests(requests: GLRequest[]): void {
+        this.roots.push_requests(requests);
     }
 
-    push_holding_block_requests(view: Vec3, requests: GLRequest[]): void {
+    push_holding_block_requests(requests: GLRequest[]): void {
         if (this.holding_block.is_empty()) {
             return;
         }
         this.holding_block.arrange();
-        this.holding_block.push_requests(view, requests);
+        this.holding_block.push_requests(requests);
     }
 
     on_left_mousedown(cursor_pos_world: Vec3): boolean {

@@ -1,5 +1,5 @@
 import { ConsoleManager } from "../screen/console.js";
-import { Vec3, Vec4 } from "../webgl/math.js";
+import { Vec4 } from "../webgl/math.js";
 import { GLRequest } from "../webgl/glrequest.js";
 
 export class Block {
@@ -147,24 +147,24 @@ export class Block {
         return res;
     }
 
-    push_requests(view: Vec3, requests: GLRequest[]): void {
+    push_requests(requests: GLRequest[]): void {
         if (this.is_empty()) {
             return;
         }
-        requests.push(this.create_request(view));
+        requests.push(this.create_request());
         for (const child of this.children) {
             if (child === null || child.is_empty()) {
                 continue;
             }
-            child.push_requests(view, requests);
+            child.push_requests(requests);
         }
     }
 
-    private create_request(view: Vec3): GLRequest {
+    private create_request(): GLRequest {
         return {
             trans: [this.x, this.y, 0.0],
             scale: [this.width, Block.UNIT_HEIGHT, 1.0],
-            view: view,
+            view: null,
             base_color: Block.convert_type_to_color(this.type),
             uv_offset: [0.0, 0.0, 0.0, 0.0],
             texture: null,

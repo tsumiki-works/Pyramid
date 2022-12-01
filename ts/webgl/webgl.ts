@@ -57,7 +57,7 @@ export class WebGL {
         let mat_view = null;
         let mat_proj = null;
         for (const request of requests) {
-            if (view_tmp != request.view || is_ui != request.is_ui) {
+            if (request.view && (view_tmp != request.view || is_ui != request.is_ui)) {
                 if (request.is_ui) {
                     mat_view = Matrix.identity();
                 } else {

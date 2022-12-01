@@ -62,16 +62,27 @@ export class Pyramid {
     }
 
     render(): void {
+        const req_for_setting_view = {
+            trans: [0, 0, 0],
+            scale: [0, 0, 0],
+            view: this.view,
+            base_color: [0, 0, 0, 0],
+            uv_offset: [0, 0, 0, 0],
+            texture: null,
+            is_ui: false,
+        };
         let requests = [];
-        this.block_manager.push_roots_requests(this.view, requests);
+        requests.push(req_for_setting_view);
+        this.block_manager.push_roots_requests(requests);
         for (const item of this.canvas_items) {
             item.push_requests(this.view, requests);
         }
-
+        
         //this.menu.push_requests(this.view, requests);
-
+        
         //this.requestBuilder.push_request_trashbox(this.open_trashbox, this.consoleManager.get_console_height(), requests);
-        this.block_manager.push_holding_block_requests(this.view, requests);
+        requests.push(req_for_setting_view);
+        this.block_manager.push_holding_block_requests(requests);
         // finish
         this.webgl.draw_requests(requests, this.canvas.width, this.canvas.height);
     }

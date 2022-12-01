@@ -1,5 +1,4 @@
 import { GLRequest } from "../webgl/glrequest.js";
-import { Vec3 } from "../webgl/math.js";
 import { Block } from "../block/block.js";
 
 export class Roots {
@@ -46,11 +45,11 @@ export class Roots {
         return false;
     }
 
-    push_requests(view: Vec3, requests: GLRequest[]): void {
+    push_requests(requests: GLRequest[]): void {
         this.roots = this.roots.filter(block => !block.is_empty());
         for (const block of this.roots) {
             block.arrange();
-            block.push_requests(view, requests);
+            block.push_requests(requests);
         }
     }
 }
