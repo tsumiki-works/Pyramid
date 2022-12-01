@@ -56,22 +56,17 @@ export class Pyramid {
         // set up
         this.canvas.width = this.canvas.clientWidth;
         this.canvas.height = this.canvas.clientHeight;
-        // attach events
         this.init_events();
-        // create Canvas items
         this.init_canvas_items();
-        // warning
+        // finish
         if (this.canvas.clientWidth < 600 || this.canvas.clientHeight < 600) {
             alert("pyramid frontend warning: too small window size to use Pyramid comfortably.");
         }
-        // finish
         this.render();
     }
 
     render(): void {
         let requests = [];
-        this.roots.clean();
-        //this.requestBuilder.push_request_background([0.96, 0.96, 0.96, 1.0], requests);
         this.roots.push_requests(this.view, requests);
         for(const item of this.canvas_items){
             item.push_requests(this.view, requests);
@@ -119,9 +114,7 @@ export class Pyramid {
         );
         // get hit block
         const hit_block = this.roots.find_block((block: Block) => {
-            const block_half_width = block.width * 0.5;
-            return Math.abs(block.x - pos_world[0]) < block_half_width
-                && Math.abs(block.y - pos_world[1]) < Block.UNIT_HALF_HEIGHT;
+            return block.is_hit(pos_world[0], pos_world[1]);
         });
         // do event
         if (e.which == 1) {
@@ -171,8 +164,10 @@ export class Pyramid {
 
     private fun_release_holding_block() {
         //! [TODO] check if block is thrown away into trashbox
-        //! [TODO] check if block can be connected
-        this.roots.push(this.holding_block);
+        const is_connected = this.roots.connect_block(this.holding_block);
+        if (!is_connected) {
+            this.roots.push(this.holding_block);
+        }
         this.holding_block = Block.create_empty_block();
         this.render(); //! debug
     }

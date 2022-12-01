@@ -41,33 +41,94 @@ export class Block {
     /*     Block                                                                                                     */
     /* ============================================================================================================= */
 
-    parent: Block | null;
-    children: Block[];
+    private children: Block[];
     x: number;
     y: number;
-    width: number;
+    private width: number;
     private type: number;
     private content: string;
-    private leftmost: number;
-    private rightmost: number;
 
-    constructor(_x: number, _y: number, _type: number, _content: string){
-        this.parent = null;
+    constructor(_x: number, _y: number, _type: number, _content: string) {
         this.children = new Array<Block>(Block.convert_type_to_children_num(_type));
-        for(let i = 0; i < this.children.length; i++) {
+        for (let i = 0; i < this.children.length; i++) {
             this.children[i] = new Block(0, 0, -1, "");
         }
         this.x = _x;
         this.y = _y;
         this.width = Math.max(this.children.length * Block.UNIT_WIDTH, Block.UNIT_WIDTH),
-        this.type = _type;
+            this.type = _type;
         this.content = _content;
         this.leftmost = -Block.UNIT_HALF_WIDTH;
         this.rightmost = Block.UNIT_HALF_WIDTH;
     }
 
+    private copy_with(target: Block) {
+        this.children = target.children;
+        this.x = target.x;
+        this.y = target.y;
+        this.width = target.width;
+        this.type = target.type;
+        this.content = target.content;
+    }
+
     is_empty(): boolean {
         return this.type == -1;
+    }
+
+    is_hit(x: number, y: number): boolean {
+        return Math.abs(this.x - x) < this.width * 0.5
+            && Math.abs(this.y - y) < Block.UNIT_HEIGHT * 0.5;
+    }
+
+    find(f: Function): Block {
+        if (this.is_empty()) {
+            return Block.create_empty_block();
+        }
+        if (f(this)) {
+            return this;
+        }
+        for (const child of this.children) {
+            if (child.is_empty()) {
+                continue;
+            }
+            if (f(child)) {
+                return child;
+            }
+            const res = child.find(f);
+            if (!res.is_empty()) {
+                return res;
+            }
+        }
+        return Block.create_empty_block();
+    }
+
+    remove(target: Block): boolean {
+        if (this === target) {
+            throw new Error("Pyramid frontend error: tried to remove self.");
+        }
+        for (let i = 0; i < this.children.length; ++i) {
+            if (this.children[i] === target) {
+                this.children[i] = Block.create_empty_block();
+                return true;
+            }
+            if (this.children[i].remove(target)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    connect_with(target: Block): boolean {
+        if (this.is_empty() && this.is_hit(target.x, target.y)) {
+            this.copy_with(target);
+            return true;
+        }
+        for (const child of this.children) {
+            if (child.connect_with(target)) {
+                return true;
+            }
+        }
+        return false;
     }
 
     enumerate(): string {
@@ -114,6 +175,9 @@ export class Block {
     /* ============================================================================================================= */
     /*     Arrangement                                                                                               */
     /* ============================================================================================================= */
+
+    private leftmost: number;
+    private rightmost: number;
 
     arrange(): void {
         const x = this.x;
@@ -243,11 +307,11 @@ export class Block {
         input.style.height = "30px";
         input.contentEditable = "true";
         input.addEventListener("keydown", (e => {
-            if(e.key == "Enter"){
-                if(!Number.isNaN(Number(input.value))){
+            if (e.key == "Enter") {
+                if (!Number.isNaN(Number(input.value))) {
                     this.content = input.value;
                     //! [TODO] render
-                }else{
+                } else {
                     console_manager.start_newline(ConsoleManager.exception_message("This block's value must be integer."));
                 }
                 this.remove_popup();
