@@ -9,6 +9,7 @@ import { Translation } from "./lib/translation.js";
 import { ConsoleManager } from "./screen/console.js";
 import { ConstantEntity } from "./constant/constant_entity.js";
 import { Pager } from "./screen/pager.js";
+import { WorkspaceMover } from "./workspace_mover.js";
 
 export class Pyramid {
 
@@ -38,12 +39,7 @@ export class Pyramid {
         this.canvas.width = this.canvas.clientWidth;
         this.canvas.height = this.canvas.clientHeight;
         // attach events
-        this.canvas.addEventListener("mousedown", e => this.event_mousedown(e));
-        window.addEventListener("resize", () => {
-            this.canvas.width = this.canvas.clientWidth;
-            this.canvas.height = this.canvas.clientHeight;
-            this.render();
-        });
+        this.init_events();
         // warning
         if (this.canvas.clientWidth < 600 || this.canvas.clientHeight < 600) {
             alert("pyramid frontend warning: too small window size to use Pyramid comfortably.");
@@ -85,6 +81,18 @@ export class Pyramid {
     /* ============================================================================================================= */
     /*     Event                                                                                                     */
     /* ============================================================================================================= */
+
+    private mousedown_listener: EventListener;
+
+    private init_events() {
+        this.mousedown_listener = e => this.event_mousedown(e);
+        this.canvas.addEventListener("mousedown", this.mousedown_listener);
+        window.addEventListener("resize", () => {
+            this.canvas.width = this.canvas.clientWidth;
+            this.canvas.height = this.canvas.clientHeight;
+            this.render();
+        });
+    }
 
     private event_mousedown(e) {
         // remove popup if it exists
@@ -141,7 +149,8 @@ export class Pyramid {
             hit_block.clicked(e.pageX, e.pageY, this.console_manager);
             return;
         }
-        //! [TODO] move workspace
+        // move workspace
+        new WorkspaceMover(e.pageX, e.pageY, this.mousedown_listener, this.canvas, this.view);
     }
 
 }
