@@ -1,4 +1,3 @@
-import { ConsoleManager } from "../screen/console.js";
 import { Vec4 } from "../webgl/math.js";
 import { GLRequest } from "../webgl/glrequest.js";
 
@@ -241,7 +240,7 @@ export class Block {
     /*     Popup                                                                                                     */
     /* ============================================================================================================= */
 
-    clicked(event_page_x: number, event_page_y: number, console_manager: ConsoleManager) {
+    clicked(event_page_x: number, event_page_y: number) {
         const popup_ = document.getElementById("popup-menu");
         if (popup_ !== null) {
             document.body.removeChild(popup_);
@@ -260,7 +259,7 @@ export class Block {
                 li_edit.innerText = "編集";
                 li_edit.onclick = (e => {
                     this.remove_popup();
-                    this.event_popup_edit(event_page_x, event_page_y, console_manager);
+                    this.event_popup_edit(event_page_x, event_page_y);
                 });
                 lis.push(li_edit);
                 break;
@@ -273,7 +272,7 @@ export class Block {
                 li_exe.innerText = "実行";
                 li_exe.onclick = (e => {
                     this.remove_popup();
-                    console_manager.run_command("eval " + this.enumerate());
+                    // console_manager.run_command("eval " + this.enumerate());
                 });
                 lis.push(li_exe);
                 break;
@@ -294,7 +293,7 @@ export class Block {
         }
     }
 
-    private event_popup_edit(event_page_x, event_page_y, console_manager) {
+    private event_popup_edit(event_page_x, event_page_y) {
         const popup = document.createElement("div");
         popup.id = "popup-menu";
         popup.style.display = "block";
@@ -312,7 +311,8 @@ export class Block {
                     this.content = input.value;
                     //! [TODO] render
                 } else {
-                    console_manager.start_newline(ConsoleManager.exception_message("This block's value must be integer."));
+                    // ![TODO] make another way
+                    // console_manager.start_newline(ConsoleManager.exception_message("This block's value must be integer."));
                 }
                 this.remove_popup();
             }

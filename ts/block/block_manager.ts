@@ -13,6 +13,10 @@ export class BlockManager {
         this.holding_block = Block.create_empty_block();
     }
 
+    push_block_into_roots(block: Block): void {
+        this.roots.push(block);
+    }
+
     push_roots_requests(requests: GLRequest[]): void {
         this.roots.push_requests(requests);
     }
