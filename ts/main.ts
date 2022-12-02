@@ -1,4 +1,3 @@
-import { Evaluator } from "./evaluator/evaluator.js";
 import { ImageTexture } from "./webgl/image_texture.js";
 import { WebGL } from "./webgl/webgl.js";
 import { Vec3, Vec4 } from "./webgl/math.js";
@@ -135,8 +134,10 @@ export class Pyramid {
     }
 
     private fun_right_mousedown(e): void {
-        //! [TODO] click right block
-        new WorkspaceMover(e.pageX, e.pageY, this.mousedown_listener, this.canvas, this.view);
+        if (this.block_manager.on_right_mousedown(e, this.get_cursor_pos_world(e))) { }
+        else {
+            new WorkspaceMover(e.pageX, e.pageY, this.mousedown_listener, this.canvas, this.view);
+        }
     }
 
     private event_mouseup(_) {
@@ -206,10 +207,8 @@ export class Pyramid {
     private console_div: HTMLDivElement = document.getElementById("console") as HTMLDivElement;
     private content: HTMLDivElement = document.getElementById("console-content") as HTMLDivElement;
     private console_log: HTMLLabelElement = document.getElementById("console-log") as HTMLLabelElement;
-    private evaluator: Evaluator;
 
     init_terminal(){
-        this.evaluator = new Evaluator();
         // attach events
         this.console_div.addEventListener("click", e => this.fun_click_console(e));
         this.console_div.addEventListener("keydown", e => this.fun_keydown_console(e));
@@ -258,16 +257,6 @@ export class Pyramid {
         }
     }
     /**
-     * A function to send calculation request to backend server.
-     * @param {string} stree like (+ (+ 1 2) 3)
-     * @param {string} out_type console, 
-     */
-    private send_calc_request_to_server(defines: string[], stree: string, out_type: string): void{
-        const res = this.evaluator.eval(defines, stree);
-        
-        return res;
-    }
-    /**
      * A function to run command.
      * @param {string} command
      */
@@ -277,43 +266,6 @@ export class Pyramid {
         let res = "";
         switch (words[0]) {
             case "":
-                break;
-            case "generate":
-                if (words.length == 1) {
-                    const pos_world = Translation.convert_2dscreen_to_3dworld(this.canvas.width, this.canvas.height, this.view, [400, 200]);
-                    this.block_manager.push_block_into_roots(new Block(pos_world[0], pos_world[1], 0, "0"));
-                    res = "generated at (400, 200) on screen";
-                } else if (words.length == 5) {
-                    const x = parseInt(words[1]);
-                    const y = parseInt(words[2]);
-                    const type = parseInt(words[3]);
-                    if (isNaN(x)) {
-                        res = this.exception_message("x is not integer.");
-                    } else if (isNaN(y)) {
-                        res = this.exception_message("y is not integer.");
-                    } else if (isNaN(type)) {
-                        res = this.exception_message("type is not integer.");
-                    } else {
-                        const pos_world = Translation.convert_2dscreen_to_3dworld(this.canvas.width, this.canvas.height, this.view, [x, y]);
-                        this.block_manager.push_block_into_roots(new Block(pos_world[0], pos_world[1], type, words[4]));
-                        res = "generated at (" + x + ", " + y + ") in screen";
-                    }
-                } else {
-                    res = this.exception_message("'generate' has to have 0 or 3 parameters.");
-                }
-                break;
-            case "eval":
-                let stree = "";
-                if (words.length > 1) {
-                    let tmp: string[] = words;
-                    tmp.shift();
-                    stree = tmp.join(" ");
-                    let cut_stree: string = stree.substring(1, stree.length - 1);
-                    const response = this.send_calc_request_to_server([], cut_stree, "console");
-                    res = this.maybe_backend_error_message(response);
-                } else {
-                    res = this.exception_message("'eval' has to have 1 parameter.")
-                }
                 break;
             default:
                 res = this.exception_message("invalid command '" + words[0] + "'.");
