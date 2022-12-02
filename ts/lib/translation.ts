@@ -68,7 +68,7 @@ export class Translation {
         return Matrix.multiple_matrix_vector(inv_proj, pos);
     }
 
-    static convert_view_to_clipping(pos: Vec4, width: number, height: number) {
+    static convert_view_to_clipping(pos: Vec4, width: number, height: number): Vec4 {
         const mat_proj = Matrix.perse(45.0, width / height, 0.1, 1000.0);
         return Matrix.multiple_matrix_vector(mat_proj, pos);
     }

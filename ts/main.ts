@@ -4,7 +4,7 @@ import { Vec3, Vec4 } from "./webgl/math.js";
 
 import { Block } from "./block/block.js";
 import { Translation } from "./lib/translation.js";
-import { CanvasItem } from "./screen/canvas_items.js";
+import { CanvasDrawable } from "./screen/canvas_items.js";
 import { Menu } from "./screen/menu.js";
 import { Pager } from "./screen/pager.js";
 import { WorkspaceMover } from "./workspace_mover.js";
@@ -19,7 +19,7 @@ export class Pyramid {
     private tex_font: ImageTexture;
     private tex_trashbox: ImageTexture;
 
-    private canvas_items: CanvasItem[];
+    private canvas_items: GLRequest[];
     private menu: Menu;
 
     private view: Vec3 = [0.0, 0.0, -5.0];
@@ -43,14 +43,12 @@ export class Pyramid {
         this.tex01 = this.webgl.create_image_texture(document.getElementById("tex01") as HTMLImageElement);
         this.tex_font = this.webgl.create_image_texture(document.getElementById("tex_font") as HTMLImageElement);
         this.tex_trashbox = this.webgl.create_image_texture(document.getElementById("tex_trashbox") as HTMLImageElement);
-        this.canvas_items = new Array<CanvasItem>();
         this.menu = new Menu(this.canvas.width, this.canvas.height);
         this.block_manager = new BlockManager();
         // set up
         this.canvas.width = this.canvas.clientWidth;
         this.canvas.height = this.canvas.clientHeight;
         this.init_events();
-        this.init_canvas_items();
         this.init_terminal();
         // finish
         if (this.canvas.clientWidth < 600 || this.canvas.clientHeight < 600) {
@@ -71,10 +69,8 @@ export class Pyramid {
         };
         let requests = [];
         requests.push(req_for_setting_view);
+        this.push_requests_canvas_items(requests);
         this.block_manager.push_roots_requests(requests);
-        for (const item of this.canvas_items) {
-            item.push_requests(this.view, requests);
-        }
         
         this.menu.push_requests(this.view, requests);
         
@@ -166,38 +162,46 @@ export class Pyramid {
     /*     Canvas items                                                                                              */
     /* ============================================================================================================= */
 
-    private init_canvas_items(): void {
+    private push_requests_canvas_items(requests: GLRequest[]): void {
+        const background: GLRequest = {
+            trans: [0., 0., 0.],
+            scale: [this.canvas.width, this.canvas.height, 1.],
+            view: this.view,
+            base_color: [0, 0, 0, 0],
+            uv_offset: [0., 0., 0., 0.],
+            texture: null,
+            is_ui: true,
+        };
         const pos_header: number[] = Translation.convert_2dscreen_to_2dunnormalizedviewport(
             this.canvas.width, this.canvas.height, [this.canvas.width * 0.5, Pyramid.LOGO_HEIGHT * 0.5]
         );
-        const header: CanvasItem = new CanvasItem(
-            pos_header[0],
-            pos_header[1] - 9.0,
-            this.canvas.width,
-            Pyramid.HEADER_HEIGHT,
-            [1., 1., 1., 1.],
-            [0., 0., 0., 0.],
-            null,
-            true,
-        );
+        const header: GLRequest = {
+            trans: [pos_header[0], pos_header[1] - 9.0, 0.],
+            scale: [this.canvas.width, Pyramid.HEADER_HEIGHT, 1.],
+            view: this.view,
+            base_color: [1., 1., 1., 1.],
+            uv_offset: [0., 0., 0., 0.],
+            texture: null,
+            is_ui: true,
+        };
 
         const pos_logo: number[] = Translation.convert_2dscreen_to_2dunnormalizedviewport(
             this.canvas.width,
             this.canvas.height,
             [Pyramid.LOGO_WIDTH * 0.5, Pyramid.LOGO_HEIGHT * 0.5]
         );
-        const logo: CanvasItem = new CanvasItem(
-            pos_logo[0] + 12.0,
-            pos_logo[1] - 8.0,
-            Pyramid.LOGO_WIDTH,
-            Pyramid.LOGO_HEIGHT,
-            [1., 1., 1., 1.],
-            [1., 0.166, 0., 0.],
-            this.tex01,
-            true,
-        );
-        this.canvas_items.push(header);
-        this.canvas_items.push(logo);
+        const logo: GLRequest = {
+            trans: [pos_logo[0] + 12.0, pos_logo[1] - 8.0, 0.],
+            scale: [Pyramid.LOGO_WIDTH, Pyramid.LOGO_HEIGHT, 1.],
+            view: this.view,
+            base_color: [1., 1., 1., 1.],
+            uv_offset: [1., 0.166, 0., 0.],
+            texture: this.tex01,
+            is_ui: true,
+        };
+        requests.push(background);
+        requests.push(header);
+        requests.push(logo);
     }
 
     /* ============================================================================================================= */
