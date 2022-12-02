@@ -126,7 +126,6 @@ export class Pyramid {
     private fun_left_mousedown(e): void {
         //! [TODO] logo
         if (e.pageX < Pyramid.LOGO_WIDTH + 12 && e.pageY < Pyramid.LOGO_HEIGHT + 18) {
-            window.confirm("トップページに戻ると作業内容が失われます。よろしいですか。");
             Pager.goto_toppage();
         }
         //! [TODO] menu
