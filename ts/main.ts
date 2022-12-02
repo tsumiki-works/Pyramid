@@ -10,6 +10,7 @@ import { Menu } from "./screen/menu.js";
 import { Pager } from "./screen/pager.js";
 import { WorkspaceMover } from "./workspace_mover.js";
 import { BlockManager } from "./block/block_manager.js";
+import { GLRequest } from "./webgl/glrequest.js";
 
 export class Pyramid {
 
@@ -44,7 +45,7 @@ export class Pyramid {
         this.tex_font = this.webgl.create_image_texture(document.getElementById("tex_font") as HTMLImageElement);
         this.tex_trashbox = this.webgl.create_image_texture(document.getElementById("tex_trashbox") as HTMLImageElement);
         this.canvas_items = new Array<CanvasItem>();
-        this.menu = new Menu();
+        this.menu = new Menu(this.canvas.width, this.canvas.height);
         this.block_manager = new BlockManager();
         // set up
         this.canvas.width = this.canvas.clientWidth;
@@ -76,7 +77,7 @@ export class Pyramid {
             item.push_requests(this.view, requests);
         }
         
-        //this.menu.push_requests(this.view, requests);
+        this.menu.push_requests(this.view, requests);
         
         //this.requestBuilder.push_request_trashbox(this.open_trashbox, this.consoleManager.get_console_height(), requests);
         requests.push(req_for_setting_view);
