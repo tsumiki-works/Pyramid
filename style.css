@@ -2,9 +2,10 @@ html,
 body {
     margin: 0;
     padding: 0;
+    overflow:hidden;
 }
 
-canvas {
+div#workspace {
     position: absolute;
     background-color: #f6f6f6;
     width: 100vw;
@@ -12,6 +13,29 @@ canvas {
     margin: 0;
     padding: 0;
     vertical-align: bottom;
+}
+
+.pyramid-block {
+    position: absolute;
+    width: auto;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.pyramid-block span {
+    color: white;
+    font-weight: bold;
+    user-select: none;
+}
+
+div#menu {
+    position: absolute;
+    background-color: gray;
+    left: 0;
+    top: 0;
+    width: 190px;
+    height: 100vh;
 }
 
 div#console {
@@ -44,6 +68,14 @@ div#console-content label {
         monospace;
 }
 
+div#logo-wrapper {
+    position: absolute;
+    background-color: white;
+    left: 0;
+    top: 0;
+    width: 100vw;
+}
+
 div#popup-menu {
     display: none;
     position: fixed;
@@ -70,12 +102,13 @@ li.popup-menu-item:hover {
     background-color: lightcyan;
 }
 
-label:focus {
-    outline: none;
+#popup-menu-edit {
+    width: 10em;
+    height: 2em;
 }
 
-img {
-    display: none;
+label:focus {
+    outline: none;
 }
 
 span.exception {

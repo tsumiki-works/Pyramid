@@ -1,163 +1,148 @@
-import { Vec4 } from "../webgl/math.js";
-import { GLRequest } from "../webgl/glrequest.js";
-import { PyramidObject, PyramidType, PyramidTypeID } from "./pyramid_object.js";
+import { Popup } from "../popup.js";
+import { BlockFormatter } from "./block_formatter.js";
 
-export class Block {
+export class Block extends HTMLElement {
 
-    /* ============================================================================================================= */
-    /*     Constants                                                                                                 */
-    /* ============================================================================================================= */
+    static readonly UNIT_WIDTH = 100.0;
+    static readonly UNIT_HALF_WIDTH = 50.0;
+    static readonly UNIT_HEIGHT = 50.0;
+    static readonly UNIT_HALF_HEIGHT = 25.0;
 
-    static readonly UNIT_WIDTH = 1.0;
-    static readonly UNIT_HALF_WIDTH = 0.5;
-    static readonly UNIT_HEIGHT = 0.5;
-    static readonly UNIT_HALF_HEIGHT = 0.25;
-    static convert_type_to_children_num(pyramid_type: PyramidType): number {
-        switch (pyramid_type.type_id) {
-            case PyramidTypeID.Nil: return 0;
-            case PyramidTypeID.I32: return 0;
-            case PyramidTypeID.F32: return 0;
-            case PyramidTypeID.Bool: return 0;
-            case PyramidTypeID.String: return 0;
-            case PyramidTypeID.Function: return pyramid_type.attribute.args_cnt;
-            case PyramidTypeID.List: return
-        }
-    }
-    static create_empty_block(): Block {
-        return new Block(0, 0, [0, 0, 0, 0], { type_id: PyramidTypeID.Nil, attribute: null }, "nil");
-    }
+    protected readonly pyramid_type: PyramidType;
+    protected readonly child_blocks: Block[];
+    protected readonly span: HTMLSpanElement;
+    protected parent: Block | null;
 
-    /* ============================================================================================================= */
-    /*     Block                                                                                                     */
-    /* ============================================================================================================= */
-
-    private max_children_num: number;
-    private children: Block[];
-    x: number;
-    y: number;
-    private color: Vec4;
-    private width: number;
-    private pyramid_type: PyramidType;
-    private content: any;
-
-    constructor(x: number, y: number, color: Vec4, pyramid_type: PyramidType, content: any) {
-        this.max_children_num = Block.convert_type_to_children_num(pyramid_type);
-        if (this.max_children_num === Infinity) {
-            this.children = new Array<Block>();
+    constructor(pyramid_type?: PyramidType) {
+        super();
+        // fields
+        if (typeof pyramid_type === "undefined") {
+            this.pyramid_type = { type_id: PyramidTypeID.Empty, attribute: null };
         } else {
-            this.children = new Array<Block>(Block.convert_type_to_children_num(pyramid_type));
+            this.pyramid_type = pyramid_type;
         }
-        for (let i = 0; i < this.children.length; i++) {
-            this.children[i] = Block.create_empty_block();
+        this.child_blocks = [];
+        this.span = document.createElement("span");
+        this.appendChild(this.span);
+        this.parent = null;
+        // html div element
+        this.classList.add("pyramid-block");
+        this.style.left = "-10px";
+        this.style.top = "-10px";
+        this.style.backgroundColor = "rgba(255, 0, 0, 0.2)";
+        this.style.minWidth = Block.UNIT_WIDTH + "px";
+        this.style.minHeight = Block.UNIT_HEIGHT + "px";
+        document.getElementById("blocks").appendChild(this);
+        // event
+        this.init_events();
+    }
+    kill(): void {
+        for (const child of this.child_blocks) {
+            child.parent = null;
+            child.kill();
         }
-        this.x = x;
-        this.y = y;
-        this.color = color;
-        this.width = Math.max(this.children.length * Block.UNIT_WIDTH, Block.UNIT_WIDTH);
-        this.pyramid_type = pyramid_type;
-        this.content = content;
-        this.leftmost = -Block.UNIT_HALF_WIDTH;
-        this.rightmost = Block.UNIT_HALF_WIDTH;
+        if (this.parent !== null) {
+            this.parent.replace_child(this);
+        }
+        this.remove();
     }
 
-    private copy_with(target: Block) {
-        this.children = target.children;
-        this.x = target.x;
-        this.y = target.y;
-        this.color = target.color;
-        this.width = target.width;
-        this.pyramid_type = target.pyramid_type;
-        this.content = target.content;
+    set_left(x: number): void {
+        this.style.left = (x - this.get_width() * 0.5) + "px";
+    }
+    set_top(y: number): void {
+        this.style.top = (y - this.get_height() * 0.5) + "px";
+    }
+    set_parent(parent: Block): void {
+        this.parent = parent;
     }
 
+    get_x(): number {
+        return this.offsetLeft + this.get_width() * 0.5;
+    }
+    get_y(): number {
+        return this.offsetTop + this.get_height() * 0.5;
+    }
+    get_width(): number {
+        return this.offsetWidth;
+    }
+    get_height(): number {
+        return this.offsetHeight;
+    }
+    get_child_blocks(): Block[] {
+        return this.child_blocks;
+    }
     get_type(): PyramidType {
         return this.pyramid_type;
     }
+    get_content(): string {
+        return this.span.innerText;
+    }
+    get_root(): Block {
+        if (this.parent === null) {
+            return this;
+        } else {
+            return this.parent.get_root();
+        }
+    }
 
     is_empty(): boolean {
-        return this.pyramid_type.type_id === PyramidTypeID.Nil;
+        return this.pyramid_type.type_id === PyramidTypeID.Empty;
+    }
+    is_hit(target: Block): boolean {
+        return Math.abs(this.get_x() - target.get_x()) < this.get_width() * 0.5
+            && Math.abs(this.get_y() - target.get_y()) < Block.UNIT_HEIGHT * 0.5;
     }
 
-    is_hit(x: number, y: number): boolean {
-        return Math.abs(this.x - x) < this.width * 0.5
-            && Math.abs(this.y - y) < Block.UNIT_HEIGHT * 0.5;
-    }
-
-    find(f: Function): Block {
-        if (this.is_empty()) {
-            return Block.create_empty_block();
-        }
-        if (f(this)) {
-            return this;
-        }
-        for (const child of this.children) {
-            if (child.is_empty()) {
-                continue;
-            }
-            if (f(child)) {
-                return child;
-            }
-            const res = child.find(f);
-            if (!res.is_empty()) {
-                return res;
-            }
-        }
-        return Block.create_empty_block();
-    }
-
-    remove(target: Block): boolean {
+    replace_child(target: Block, after?: Block) {
         if (this === target) {
             throw new Error("Pyramid frontend error: tried to remove self.");
         }
-        for (let i = 0; i < this.children.length; ++i) {
-            if (this.children[i] === target) {
-                this.children[i] = Block.create_empty_block();
-                return true;
-            }
-            if (this.children[i].remove(target)) {
-                return true;
+        for (let i = 0; i < this.child_blocks.length; ++i) {
+            if (this.child_blocks[i] === target) {
+                if (typeof after === "undefined") {
+                    this.child_blocks[i] = new Block();
+                } else {
+                    this.child_blocks[i] = after;
+                }
+                this.child_blocks[i].parent = this;
+                target.parent = null;
+                this.get_root().format();
+                return;
             }
         }
-        return false;
+        throw new Error("Pyramid frontend error: tried to unexisting block.");
     }
 
-    connect_with(target: Block): boolean {
-        if (this.is_empty() && this.is_hit(target.x, target.y)) {
-            this.copy_with(target);
-            return true;
-        }
-        for (const child of this.children) {
-            if (child.connect_with(target)) {
-                return true;
-            }
-        }
-        return false;
+    format() {
+        BlockFormatter.format(this);
     }
 
+    //! [TODO]
     eval(env: Map<String, any>): PyramidObject {
         switch (this.pyramid_type.type_id) {
-            case PyramidTypeID.Nil:
-                throw new Error("evaluated nil");
+            case PyramidTypeID.Empty:
+                throw new Error("evaluated Empty");
             case PyramidTypeID.I32:
                 //! [TODO]
-                return { pyramid_type: this.pyramid_type, value: this.content };
+                return { pyramid_type: this.pyramid_type, value: this.get_content() };
             case PyramidTypeID.F32:
                 //! [TODO]
-                return { pyramid_type: this.pyramid_type, value: this.content };
+                return { pyramid_type: this.pyramid_type, value: this.get_content() };
             case PyramidTypeID.Bool:
                 //! [TODO]
-                return { pyramid_type: this.pyramid_type, value: this.content };
+                return { pyramid_type: this.pyramid_type, value: this.get_content() };
             case PyramidTypeID.String:
                 //! [TODO]
-                return { pyramid_type: this.pyramid_type, value: this.content };
+                return { pyramid_type: this.pyramid_type, value: this.get_content() };
             case PyramidTypeID.List:
                 //! [TODO]
-                return { pyramid_type: this.pyramid_type, value: this.content };
+                return { pyramid_type: this.pyramid_type, value: this.get_content() };
             case PyramidTypeID.Function:
                 //! [TODO]
-                const f = env.get(this.content);
+                const f = env.get(this.get_content());
                 if (typeof f !== "function") {
-                    throw new Error(this.content + " function undefined");
+                    throw new Error(this.get_content() + " function undefined");
                 } else {
                     return {
                         pyramid_type: this.pyramid_type.attribute.return_type,
@@ -167,93 +152,81 @@ export class Block {
         }
     }
 
-    push_requests(requests: GLRequest[]): void {
+    /* ============================================================================================================= */
+    /*     Events                                                                                                    */
+    /* ============================================================================================================= */
+
+    private mousedown_listener: EventListener;
+    private mousemove_listener: EventListener;
+    private mouseup_listener: EventListener;
+
+    private init_events() {
+        this.mousedown_listener = (e: MouseEvent) => this.event_mousedown(e);
+        this.mousemove_listener = (e: MouseEvent) => this.event_mousemove(e);
+        this.mouseup_listener = (e: MouseEvent) => this.event_mouseup(e);
+        this.addEventListener("mousedown", this.mousedown_listener);
+    }
+
+    private event_mousedown(e: MouseEvent) {
         if (this.is_empty()) {
             return;
         }
-        requests.push(this.create_request());
-        for (const child of this.children) {
-            if (child === null || child.is_empty()) {
-                continue;
+        if (e.button === 0) {
+            const parent = this.parent;
+            if (parent !== null) {
+                parent.replace_child(this);
             }
-            child.push_requests(requests);
-        }
-    }
-
-    private create_request(): GLRequest {
-        return {
-            trans: [this.x, this.y, 0.0],
-            scale: [this.width, Block.UNIT_HEIGHT, 1.0],
-            view: null,
-            base_color: this.color,
-            uv_offset: [0.0, 0.0, 0.0, 0.0],
-            texture: null,
-            is_ui: false,
-        };
-    }
-
-    /* ============================================================================================================= */
-    /*     Arrangement                                                                                               */
-    /* ============================================================================================================= */
-
-    private leftmost: number;
-    private rightmost: number;
-
-    arrange(): void {
-        const x = this.x;
-        const y = this.y;
-        this.determine_width();
-        this.determine_pos(x, y);
-    }
-
-    private determine_width() {
-        if (this.is_empty() || this.children.length == 0) {
-            this.x = 0.0;
-            this.width = Block.UNIT_WIDTH;
-            this.leftmost = -Block.UNIT_WIDTH * 0.5;
-            this.rightmost = Block.UNIT_WIDTH * 0.5;
-            return;
-        }
-        if (this.children.length == 1) {
-            this.children[0].determine_width();
-            this.x = this.children[0].x;
-            this.width = Block.UNIT_WIDTH;
-            this.leftmost = this.children[0].leftmost;
-            this.rightmost = this.children[0].rightmost;
-            return;
-        }
-        this.width = 1.0;
-        this.leftmost = 0.0;
-        this.rightmost = 0.0;
-        let i = 0;
-        for (const child of this.children) {
-            child.determine_width();
-            this.leftmost += child.leftmost;
-            this.rightmost += child.rightmost;
-            if (i == 0) {
-                this.width += child.rightmost - child.x - child.width * 0.5;
-            } else if (i == this.children.length - 1) {
-                this.width += child.x - child.width * 0.5 - child.leftmost;
-            } else {
-                this.width += child.rightmost - child.leftmost;
+            this.parent = null;
+            document.getElementById("blocks").removeChild(this);
+            document.getElementById("blocks").appendChild(this);
+            this.get_root().format();
+            this.removeEventListener("mousedown", this.mousedown_listener);
+            document.addEventListener("mousemove", this.mousemove_listener);
+            document.addEventListener("mouseup", this.mouseup_listener);
+            e.stopPropagation();
+        } else if (e.button === 2) {
+            if (this.is_empty()) {
+                return;
             }
-            i += 1;
+            new Popup(e.pageX, e.pageY, this.build_popup_event());
+            this.get_root().format();
+            e.stopPropagation();
         }
-        this.x = this.leftmost
-            + (this.children[0].x - this.children[0].leftmost)
-            + (this.children[0].width * 0.5 - 0.5)
-            + this.width * 0.5;
     }
 
-    private determine_pos(x: number, y: number) {
-        const center: number = x - this.x;
-        this.x = x;
-        this.y = y;
-        let offset: number = center + this.leftmost;
-        for (const child of this.children) {
-            const child_area = (child.rightmost - child.leftmost);
-            child.determine_pos(offset + child_area * 0.5 + child.x, y - Block.UNIT_HEIGHT);
-            offset += child_area;
+    private event_mousemove(e: MouseEvent) {
+        this.style.left = (e.pageX - this.get_width() * 0.5) + "px";
+        this.style.top = (e.pageY - this.get_height() * 0.5) + "px";
+        this.get_root().format();
+    }
+
+    private event_mouseup(_: MouseEvent) {
+        const blocks = document.querySelectorAll('#blocks pyramid-block');
+        for (let i = 0; i < blocks.length; ++i) {
+            const block = blocks[i] as Block;
+            if (block.pyramid_type.type_id === PyramidTypeID.Empty && this.is_hit(block)) {
+                if (block.parent === null) {
+                    throw new Error("empty block cannot be at the top level but found.");
+                }
+                block.parent.replace_child(block, this);
+                block.kill();
+                break;
+            }
         }
+        document.removeEventListener("mousemove", this.mousemove_listener);
+        document.removeEventListener("mouseup", this.mouseup_listener);
+        this.addEventListener("mousedown", this.mousedown_listener);
+    }
+
+    protected build_popup_event(): [string, EventListener][] {
+        return [
+            ["削除", _ => this.popup_event_kill()],
+        ];
+    }
+
+    protected popup_event_kill() {
+        this.kill();
+        Popup.remove_popup();
     }
 }
+customElements.define('pyramid-block', Block);

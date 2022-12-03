@@ -1,323 +1,43 @@
-import { ImageTexture } from "./webgl/image_texture.js";
-import { WebGL } from "./webgl/webgl.js";
-import { Vec3, Vec4 } from "./webgl/math.js";
-
-import { Block } from "./block/block.js";
-import { Translation } from "./lib/translation.js";
-import { CanvasDrawable } from "./screen/canvas_items.js";
-import { Menu } from "./screen/menu.js";
-import { Pager } from "./screen/pager.js";
-import { WorkspaceMover } from "./workspace_mover.js";
-import { BlockManager } from "./block/block_manager.js";
-import { GLRequest } from "./webgl/glrequest.js";
+import { ConsoleManager } from "./console_manager.js";
+import { MenuManager } from "./menu.js";
+import { Popup } from "./popup.js";
 
 export class Pyramid {
 
-    private canvas: HTMLCanvasElement;
-    private webgl: WebGL;
-    private tex01: ImageTexture;
-    private tex_font: ImageTexture;
-    private tex_trashbox: ImageTexture;
-
-    private canvas_items: GLRequest[];
-    private menu: Menu;
-
-    private view: Vec3 = [0.0, 0.0, -5.0];
-
-    private block_manager: BlockManager;
-
-    /* ============================================================================================================= */
-    /*     Constants                                                                                                 */
-    /* ============================================================================================================= */
-
-    static readonly LOGO_WIDTH: number = 191.95;
-    static readonly LOGO_HEIGHT: number = 32.0;
-    static readonly MENU_WIDTH: number = 190.0;
-    static readonly HEADER_HEIGHT: number = this.LOGO_HEIGHT + 18.0;
-    static readonly TRASHBOX_WIDTH: number = 128.0;
-    static readonly TRASHBOX_HEIGHT: number = 179.2;
+    private workspace: HTMLDivElement;
 
     constructor() {
-        this.canvas = document.getElementById("workspace") as HTMLCanvasElement;
-        this.webgl = new WebGL(this.canvas);
-        this.tex01 = this.webgl.create_image_texture(document.getElementById("tex01") as HTMLImageElement);
-        this.tex_font = this.webgl.create_image_texture(document.getElementById("tex_font") as HTMLImageElement);
-        this.tex_trashbox = this.webgl.create_image_texture(document.getElementById("tex_trashbox") as HTMLImageElement);
-        this.menu = new Menu(this.canvas.width, this.canvas.height);
-        this.block_manager = new BlockManager();
-        // set up
-        this.canvas.width = this.canvas.clientWidth;
-        this.canvas.height = this.canvas.clientHeight;
+        this.workspace = document.getElementById("workspace") as HTMLDivElement;
+        new MenuManager();
+        new ConsoleManager();
         this.init_events();
-        this.init_terminal();
-        // finish
-        if (this.canvas.clientWidth < 600 || this.canvas.clientHeight < 600) {
-            alert("pyramid frontend warning: too small window size to use Pyramid comfortably.");
-        }
-        this.render();
     }
-
-    render(): void {
-        const req_for_setting_view = {
-            trans: [0, 0, 0],
-            scale: [0, 0, 0],
-            view: this.view,
-            base_color: [0, 0, 0, 0],
-            uv_offset: [0, 0, 0, 0],
-            texture: null,
-            is_ui: false,
-        };
-        let requests = [];
-        requests.push(req_for_setting_view);
-        this.push_requests_canvas_items(requests);
-        this.block_manager.push_roots_requests(requests);
-        
-        this.menu.push_requests(this.view, requests);
-        
-        //this.requestBuilder.push_request_trashbox(this.open_trashbox, this.consoleManager.get_console_height(), requests);
-        requests.push(req_for_setting_view);
-        this.block_manager.push_holding_block_requests(requests);
-        // finish
-        this.webgl.draw_requests(requests, this.canvas.width, this.canvas.height);
-    }
-
-    /* ============================================================================================================= */
-    /*     Event                                                                                                     */
-    /* ============================================================================================================= */
 
     private mousedown_listener: EventListener;
-    private mouseup_listener: EventListener;
     private mousemove_listener: EventListener;
+    private mouseup_listener: EventListener;
 
     private init_events() {
-        this.mousedown_listener = e => this.event_mousedown(e);
-        this.mouseup_listener = e => this.event_mouseup(e);
-        this.mousemove_listener = e => this.event_mousemove(e);
-        this.canvas.addEventListener("mousedown", this.mousedown_listener);
-        window.addEventListener("resize", () => {
-            this.canvas.width = this.canvas.clientWidth;
-            this.canvas.height = this.canvas.clientHeight;
-            this.render();
-        });
+        this.mousedown_listener = (e: MouseEvent) => this.event_mousedown(e);
+        this.mousemove_listener = (e: MouseEvent) => this.event_mousemove(e);
+        this.mouseup_listener = (e: MouseEvent) => this.event_mouseup(e);
+        this.workspace.addEventListener("mousedown", this.mousedown_listener);
     }
 
-    private event_mousedown(e) {
-        this.canvas.removeEventListener("mousedown", this.mousedown_listener);
-        this.canvas.addEventListener("mousemove", this.mousemove_listener);
-        this.canvas.addEventListener("mouseup", this.mouseup_listener);
-        // remove popup if it exists
-        const popup = document.getElementById("popup-menu");
-        if (popup !== null) {
-            document.body.removeChild(popup);
-        }
-        // do event
-        if (e.which == 1) {
-            this.fun_left_mousedown(e);
-        } else if (e.which == 3) {
-            this.fun_right_mousedown(e);
+    private event_mousedown(e: MouseEvent) {
+        Popup.remove_popup();
+        if (e.button === 2) {
+            this.workspace.removeEventListener("mousedown", this.mousedown_listener);
+            document.addEventListener("mousemove", this.mousemove_listener);
+            document.addEventListener("mouseup", this.mouseup_listener);
         }
     }
 
-    private fun_left_mousedown(e): void {
-        //! [TODO] logo
-        if (e.pageX < Pyramid.LOGO_WIDTH + 12 && e.pageY < Pyramid.LOGO_HEIGHT + 18) {
-            Pager.goto_toppage();
-        }
-        //! [TODO] menu
-        else if (e.pageX < Pyramid.MENU_WIDTH /* && this.menu.on_left_mousedown(e.pageX, e.pageY, this.console_manager) */) { }
-        // roots
-        else if (!this.block_manager.on_left_mousedown(this.get_cursor_pos_world(e))) { }
+    private event_mouseup(_: MouseEvent) {
+        document.removeEventListener("mousemove", this.mousemove_listener);
+        document.removeEventListener("mouseup", this.mouseup_listener);
+        this.workspace.addEventListener("mousedown", this.mousedown_listener);
     }
 
-    private fun_right_mousedown(e): void {
-        if (this.block_manager.on_right_mousedown(e, this.get_cursor_pos_world(e))) { }
-        else {
-            new WorkspaceMover(e.pageX, e.pageY, this.mousedown_listener, this.canvas, this.view);
-        }
-    }
-
-    private event_mouseup(_) {
-        this.canvas.removeEventListener("mouseup", this.mouseup_listener);
-        this.canvas.removeEventListener("mousemove", this.mousemove_listener);
-        this.canvas.addEventListener("mousedown", this.mousedown_listener);
-        this.block_manager.on_mouseup();
-        this.render();
-    }
-
-    private event_mousemove(e) {
-        this.block_manager.on_mousemove(this.get_cursor_pos_world(e));
-        this.render();
-    }
-
-    private get_cursor_pos_world(e): Vec3 {
-        return Translation.convert_2dscreen_to_3dworld(
-            this.canvas.width,
-            this.canvas.height,
-            this.view,
-            [e.pageX, e.pageY]
-        );
-    }
-
-    /* ============================================================================================================= */
-    /*     Canvas items                                                                                              */
-    /* ============================================================================================================= */
-
-    private push_requests_canvas_items(requests: GLRequest[]): void {
-        const background: GLRequest = {
-            trans: [0., 0., 0.],
-            scale: [this.canvas.width, this.canvas.height, 1.],
-            view: this.view,
-            base_color: [0, 0, 0, 0],
-            uv_offset: [0., 0., 0., 0.],
-            texture: null,
-            is_ui: true,
-        };
-        const pos_header: number[] = Translation.convert_2dscreen_to_2dunnormalizedviewport(
-            this.canvas.width, this.canvas.height, [this.canvas.width * 0.5, Pyramid.LOGO_HEIGHT * 0.5]
-        );
-        const header: GLRequest = {
-            trans: [pos_header[0], pos_header[1] - 9.0, 0.],
-            scale: [this.canvas.width, Pyramid.HEADER_HEIGHT, 1.],
-            view: this.view,
-            base_color: [1., 1., 1., 1.],
-            uv_offset: [0., 0., 0., 0.],
-            texture: null,
-            is_ui: true,
-        };
-
-        const pos_logo: number[] = Translation.convert_2dscreen_to_2dunnormalizedviewport(
-            this.canvas.width,
-            this.canvas.height,
-            [Pyramid.LOGO_WIDTH * 0.5, Pyramid.LOGO_HEIGHT * 0.5]
-        );
-        const logo: GLRequest = {
-            trans: [pos_logo[0] + 12.0, pos_logo[1] - 8.0, 0.],
-            scale: [Pyramid.LOGO_WIDTH, Pyramid.LOGO_HEIGHT, 1.],
-            view: this.view,
-            base_color: [1., 1., 1., 1.],
-            uv_offset: [1., 0.166, 0., 0.],
-            texture: this.tex01,
-            is_ui: true,
-        };
-        requests.push(background);
-        requests.push(header);
-        requests.push(logo);
-    }
-
-    /* ============================================================================================================= */
-    /*     Pyramid Console                                                                                            */
-    /* ============================================================================================================= */
-
-    private console_div: HTMLDivElement = document.getElementById("console") as HTMLDivElement;
-    private content: HTMLDivElement = document.getElementById("console-content") as HTMLDivElement;
-    private console_log: HTMLLabelElement = document.getElementById("console-log") as HTMLLabelElement;
-
-    init_terminal(){
-        // attach events
-        this.console_div.addEventListener("click", e => this.fun_click_console(e));
-        this.console_div.addEventListener("keydown", e => this.fun_keydown_console(e));
-        const observer = new MutationObserver(() => this.render());
-        const options = {
-            attriblutes: true,
-            attributeFilter: ["style"]
-        };
-        observer.observe(this.console_div, options);
-        const line = document.getElementById("console-line");
-        line.addEventListener("keydown", e => this.fun_prevent_enter_console_line(e));
-        line.focus();
-    }
-    
-    /**
-     * A function to get console element's height.
-     * @return {float} the offfset height of console element.
-     */
-    private get_console_height(): number {
-        return this.console_div.offsetHeight;
-    }
-    /**
-     * An event handler for console.onclick.
-     * Wherever you click on console, you're focused on console line.
-     */
-    private fun_click_console(_: Event): void {
-        document.getElementById("console-line").focus();
-    }
-    /**
-     * An event handler for console.onkeydown.
-     * Detecting enter hit and run command inputed.
-     */
-    private fun_keydown_console(event: KeyboardEvent): void{
-        if (event.key == "Enter") {
-            this.run_command(document.getElementById("console-line").innerText);
-            this.render();
-        }
-    }
-    /**
-     * An event handler for console-line.onkeydown.
-     * It prevents enter and make a newline in console-line.
-     */
-    private fun_prevent_enter_console_line(event: KeyboardEvent): void {
-        if (event.key === 'Enter') {
-            return event.preventDefault();
-        }
-    }
-    /**
-     * A function to run command.
-     * @param {string} command
-     */
-    private run_command(command: string): void {
-        const words: string[] = command.trim().split(/\s+/);
-        console.log(words[0]);
-        let res = "";
-        switch (words[0]) {
-            case "":
-                break;
-            default:
-                res = this.exception_message("invalid command '" + words[0] + "'.");
-                break;
-        }
-        this.start_newline(res);
-    }
-    private replace_escape(message: string): string {
-        let message1: string = message.replaceAll("<", "&lt;");
-        let message2: string = message1.replaceAll(">", "&gt;");
-        return message2;
-    }
-    private exception_message(message: string): string {
-        return "<span class=\"exception\">pyramid frontend exception:</span> " + this.replace_escape(message);
-    }
-    private maybe_backend_error_message(message): string {
-        if (message.length > 22 && message.slice(0, 22) == "pyramid backend error:") {
-            return "<span class=\"exception\">pyramid backend error:</span> " + this.replace_escape(message.slice(22));
-        } else {
-            return message;
-        }
-    }
-    /**
-     * A function to start new line.
-     * @param {string} log if it's "" then nothing will be printed.
-     */
-    private start_newline(log): void {
-        const prev_line: HTMLLabelElement = document.getElementById("console-line") as HTMLLabelElement;
-        const prev_line_head: HTMLLabelElement = document.getElementById("console-line-head") as HTMLLabelElement;
-        const line_head: HTMLLabelElement = document.createElement("label") as HTMLLabelElement;
-        const new_line: HTMLLabelElement = document.createElement("label") as HTMLLabelElement;
-        prev_line.removeEventListener("keydown", this.fun_prevent_enter_console_line);
-        prev_line.contentEditable = "false";
-        prev_line.id = "";
-        prev_line_head.id = "";
-        line_head.innerText = "# ";
-        line_head.id = "console-line-head";
-        new_line.contentEditable = "true";
-        new_line.id = "console-line";
-        this.console_log.innerHTML += "# " + prev_line.innerText + "<br>";
-        this.content.removeChild(prev_line);
-        this.content.removeChild(prev_line_head);
-        if (log.length != 0) {
-            this.console_log.innerHTML += log + "<br>";
-        }
-        this.content.appendChild(line_head);
-        this.content.appendChild(new_line);
-        new_line.focus();
-        new_line.addEventListener("keydown", this.fun_prevent_enter_console_line);
-    }
+    private event_mousemove(_: MouseEvent) { }
 }

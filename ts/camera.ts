@@ -1,4 +1,3 @@
-import { Vec3 } from "./webgl/math.js";
 export class Camera {
     private view: Vec3;
     private is_moving: boolean;
