@@ -11,6 +11,7 @@ export class MenuManager {
 
     private constructor() {
         this.menu = document.getElementById("menu") as HTMLDivElement;
+        this.menu.style.top = document.getElementById("logo-wrapper").offsetHeight + "px";
         this.menu_blocks = new Array<MenuBlock>();
         this.mousedown_listener = (e: MouseEvent) => this.event_mousedown(e);
         this.menu.addEventListener("mousedown", this.mousedown_listener);
@@ -21,6 +22,9 @@ export class MenuManager {
             MenuManager.instance = new MenuManager();
         }
         return MenuManager.instance;
+    }
+    set_left(left: number): void {
+        this.menu.style.left = left + "px";
     }
 
     get_width(): number {
@@ -36,20 +40,27 @@ export class MenuManager {
         */
     }       
 
-    add_menu_content(color: string, text: string, block_constructor: Function): void {
+    add_menu_content(menu_content: PyramidMenuContent): void {
         let tmp_menublock: MenuBlock = new MenuBlock(
             this.menu.offsetWidth * 0.5 - MenuBlock.UNIT_WIDTH * 0.5, 
-            (this.menu_blocks.length + 1) * MenuBlock.UNIT_HEIGHT * 1.2 - (MenuBlock.UNIT_HEIGHT * 0.2), 
-            color, 
-            text,
-            block_constructor,
+            this.menu_blocks.length * MenuBlock.UNIT_HEIGHT * 1.2 + MenuBlock.UNIT_HEIGHT * 0.5, 
+            menu_content.color, 
+            menu_content.text,
+            menu_content.block_constructor,
         );
         this.menu.appendChild(tmp_menublock);
         this.menu_blocks.push(tmp_menublock);
     }
 
     
-    static add_menu_tab(): void {
+    add_menu_tab(): void {
         //! [TODO]
+    }
+
+    clear(): void {
+        for(const mb of this.menu_blocks){
+            mb.remove();
+        }
+        this.menu_blocks.splice(0);
     }
 }

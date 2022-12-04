@@ -51,6 +51,10 @@ div#workspace {
     user-select: none;
 }
 
+div#tutorial-doc {
+    position: absolute;
+}
+
 div#menu {
     position: absolute;
     background-color: gray;

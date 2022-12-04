@@ -23,3 +23,8 @@ type PyramidObject = {
     pyramid_type: PyramidType;
     value: any;
 };
+type PyramidMenuContent = {
+    color: string;
+    text: string;
+    block_constructor: Function;
+}
