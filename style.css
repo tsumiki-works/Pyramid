@@ -29,6 +29,20 @@ div#workspace {
     user-select: none;
 }
 
+.pyramid-menublock {
+    position: absolute;
+    width: auto;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.pyramid-menublock span {
+    color: white;
+    font-weight: bold;
+    user-select: none;
+}
+
 div#menu {
     position: absolute;
     background-color: gray;

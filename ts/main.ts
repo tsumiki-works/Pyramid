@@ -1,5 +1,7 @@
+import { AtomBlock } from "./block/atom_block.js";
+import { FunBlock } from "./block/fun_block.js";
 import { ConsoleManager } from "./console_manager.js";
-import { MenuManager } from "./menu.js";
+import { MenuManager } from "./menu/menu.js";
 import { Popup } from "./popup.js";
 
 export class Pyramid {
@@ -8,9 +10,13 @@ export class Pyramid {
 
     constructor() {
         this.workspace = document.getElementById("workspace") as HTMLDivElement;
-        new MenuManager();
         new ConsoleManager();
+        this.init();
+    }
+
+    private init(){
         this.init_events();
+        this.init_menu();
     }
 
     private mousedown_listener: EventListener;
@@ -40,4 +46,16 @@ export class Pyramid {
     }
 
     private event_mousemove(_: MouseEvent) { }
+
+    private init_menu(){
+        MenuManager.getInstance().add_menu_content(
+            "blue",
+            "0", 
+            ((_l: number, _t: number) => new AtomBlock(_l, _t, "0", PyramidTypeID.I32))
+        );
+        MenuManager.getInstance().add_menu_content(
+            "green",
+            "+",
+            ((_l: number, _t: number) => new FunBlock(_l, _t, "+", {args_cnt: 2, return_type: { type_id: PyramidTypeID.I32, attribute: null }})));
+    }
 }
