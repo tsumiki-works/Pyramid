@@ -1,3 +1,4 @@
+import { isConstructorDeclaration } from "typescript";
 import { Popup } from "../popup.js";
 import { BlockFormatter } from "./block_formatter.js";
 import { EmptyBlock } from "./empty_block.js";
@@ -91,6 +92,7 @@ export abstract class Block extends HTMLElement {
         return this.pyramid_type.type_id === PyramidTypeID.Empty;
     }
     is_hit(target: Block): boolean {
+        console.log(target.get_x());
         return Math.abs(this.get_x() - target.get_x()) < this.get_width() * 0.5
             && Math.abs(this.get_y() - target.get_y()) < Block.UNIT_HEIGHT * 0.5;
     }
@@ -153,10 +155,15 @@ export abstract class Block extends HTMLElement {
     }
 
     private event_mouseup(_: MouseEvent) {
-        const blocks = document.querySelectorAll('#blocks pyramid-block');
+        //console.log(this.pyramid_type);
+        const blocks = document.querySelectorAll('#blocks pyramid-block-empty');
+        console.log(blocks.length);
+        //console.log("aaa");
         for (let i = 0; i < blocks.length; ++i) {
             const block = blocks[i] as Block;
-            if (block.pyramid_type.type_id === PyramidTypeID.Empty && this.is_hit(block)) {
+            //console.log(block);
+            if (this.is_hit(block) && block.pyramid_type.type_id === PyramidTypeID.Empty) {
+                console.log("hit");
                 if (block.parent === null) {
                     throw new Error("empty block cannot be at the top level but found.");
                 }
@@ -165,6 +172,7 @@ export abstract class Block extends HTMLElement {
                 break;
             }
         }
+        //console.log("ccc");
         document.removeEventListener("mousemove", this.mousemove_listener);
         document.removeEventListener("mouseup", this.mouseup_listener);
         this.addEventListener("mousedown", this.mousedown_listener);
