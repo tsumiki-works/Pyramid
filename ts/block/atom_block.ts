@@ -16,7 +16,7 @@ export class AtomBlock extends Block {
         this.style.left = left + "px";
         this.style.top = top + "px";
         this.style.backgroundColor = "blue"; //! [TODO]
-        this.span.innerText = content;
+        this.innerText = content;
     }
     protected override build_popup_event(): [string, EventListener][] {
         return [
@@ -38,7 +38,7 @@ export class AtomBlock extends Block {
         input.addEventListener("keydown", (e => {
             if (e.key == "Enter") {
                 if (!Number.isNaN(Number(input.value))) {
-                    this.span.innerText = input.value;
+                    this.innerText = input.value;
                     this.get_root().format();
                 }
                 Popup.remove_popup();

@@ -8,16 +8,17 @@ export class FunBlock extends Block {
         this.style.left = left + "px";
         this.style.top = top + "px";
         this.style.backgroundColor = "green"; //! [TODO]
-        this.span.innerText = content;
+        this.innerText = content;
         this.is_folding = false;
         if (fun_attribute.args_cnt === Infinity) {
-            this.child_blocks.push(new Block());
+            const child = new Block();
+            child.set_parent(this);
+            this.appendChild(child);
         } else {
             for (let i = 0; i < fun_attribute.args_cnt; ++i) {
                 const child = new Block();
                 child.set_parent(this);
-                this.child_blocks.push(child);
-
+                this.appendChild(child);
             }
         }
         this.format();
@@ -51,23 +52,32 @@ export class FunBlock extends Block {
     }
     private popup_event_kill_self() {
         Popup.remove_popup();
-        for (const child of this.child_blocks) {
+        for (const child of this.get_children()) {
+            const x = child.get_x();
+            const y = child.get_y();
             child.set_parent(null);
+            const tmp = new Block();
+            tmp.set_parent(this);
+            this.replaceChild(tmp, child);
             if (child.is_empty()) {
                 child.kill();
+            } else {
+                document.getElementById("blocks").appendChild(child);
+                child.set_left(x);
+                child.set_top(y);
             }
         }
-        this.remove();
+        this.kill();
     }
     private static disable_child_blocks(block: Block) {
-        for (const child of block.get_child_blocks()) {
+        for (const child of block.get_children()) {
             child.classList.remove("pyramid-block");
             child.classList.add("pyramid-block-disable");
             FunBlock.disable_child_blocks(child);
         }
     }
     private static enable_child_blocks(block: Block) {
-        for (const child of block.get_child_blocks()) {
+        for (const child of block.get_children()) {
             child.classList.remove("pyramid-block-disable");
             child.classList.add("pyramid-block");
             FunBlock.enable_child_blocks(child);

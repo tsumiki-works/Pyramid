@@ -15,8 +15,8 @@ export class BlockFormatter {
     }
 
     private static determine_width(block: Block): FormatResult {
-        const child_blocks = block.get_child_blocks();
-        if (block.is_empty() || child_blocks.length == 0 || block.classList.contains("pyramid-block-folding")) {
+        const children = block.get_children();
+        if (block.is_empty() || children.length == 0 || block.classList.contains("pyramid-block-folding")) {
             block.style.minWidth = Block.UNIT_WIDTH + "px";
             return {
                 x: 0,
@@ -25,8 +25,8 @@ export class BlockFormatter {
                 childrens: [],
             };
         }
-        if (child_blocks.length == 1) {
-            const res = BlockFormatter.determine_width(child_blocks[0]);
+        if (children.length == 1) {
+            const res = BlockFormatter.determine_width(children[0]);
             block.style.minWidth = Block.UNIT_WIDTH + "px";
             return {
                 x: res.x,
@@ -40,13 +40,13 @@ export class BlockFormatter {
         let rightmost = 0.0;
         let childrens: FormatResult[] = [];
         let i = 0;
-        for (const child of child_blocks) {
+        for (const child of children) {
             const res = BlockFormatter.determine_width(child);
             leftmost += res.leftmost;
             rightmost += res.rightmost;
             if (i == 0) {
                 width += res.rightmost - res.x - child.get_width() * 0.5;
-            } else if (i == child_blocks.length - 1) {
+            } else if (i == children.length - 1) {
                 width += res.x - child.get_width() * 0.5 - res.leftmost;
             } else {
                 width += res.rightmost - res.leftmost;
@@ -57,7 +57,7 @@ export class BlockFormatter {
         block.style.minWidth = width + "px";
         const x = leftmost
             + (childrens[0].x - childrens[0].leftmost)
-            + (child_blocks[0].get_width() * 0.5 - Block.UNIT_HALF_WIDTH)
+            + (children[0].get_width() * 0.5 - Block.UNIT_HALF_WIDTH)
             + block.get_width() * 0.5;
         return {
             x: x,
@@ -72,13 +72,12 @@ export class BlockFormatter {
         block.set_left(x);
         block.set_top(y);
         let offset: number = center + res.leftmost;
-        const child_blocks = block.get_child_blocks();
         for (let i = 0; i < res.childrens.length; ++i) {
             const child_area = (res.childrens[i].rightmost - res.childrens[i].leftmost);
             BlockFormatter.determine_pos(
                 offset + child_area * 0.5 + res.childrens[i].x,
                 y + block.get_height(),
-                child_blocks[i],
+                block.get_children()[i],
                 res.childrens[i]
             );
             offset += child_area;

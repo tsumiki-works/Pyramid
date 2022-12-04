@@ -15,12 +15,19 @@ div#workspace {
     vertical-align: bottom;
 }
 
+div#trash * {
+    display: none;
+}
+
 .pyramid-block {
     position: absolute;
     width: auto;
     display: flex;
     justify-content: center;
     align-items: center;
+    color: white;
+    font-weight: bold;
+    user-select: none;
 }
 
 .pyramid-block-disable {
@@ -29,12 +36,6 @@ div#workspace {
 
 .pyramid-block-folding {
     border: thick double red;
-}
-
-.pyramid-block span {
-    color: white;
-    font-weight: bold;
-    user-select: none;
 }
 
 div#menu {
