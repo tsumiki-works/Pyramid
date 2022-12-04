@@ -15,11 +15,8 @@ div#workspace {
     vertical-align: bottom;
 }
 
-div#trash * {
-    display: none;
-}
-
-.pyramid-block {
+.pyramid-block,
+.pyramid-menublock {
     position: absolute;
     width: auto;
     display: flex;

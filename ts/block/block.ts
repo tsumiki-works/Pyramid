@@ -38,10 +38,13 @@ export class Block extends HTMLElement {
             this.parent.replaceChild(tmp, this);
             this.parent.get_root().format();
         }
+        this.parent = null;
         if (this.is_empty()) {
             this.remove();
             return;
         }
+        this.classList.remove("pyramid-block");
+        this.classList.add("pyramid-block-disable");
         document.getElementById("trash").appendChild(this);
     }
     copy_with(block: Block): void {
