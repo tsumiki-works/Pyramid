@@ -1,7 +1,8 @@
 import { Popup } from "../popup.js";
 import { BlockFormatter } from "./block_formatter.js";
+import { EmptyBlock } from "./empty_block.js";
 
-export class Block extends HTMLElement {
+export abstract class Block extends HTMLElement {
 
     static readonly UNIT_WIDTH = 100.0;
     static readonly UNIT_HALF_WIDTH = 50.0;
@@ -13,7 +14,7 @@ export class Block extends HTMLElement {
     protected readonly span: HTMLSpanElement;
     protected parent: Block | null;
 
-    constructor(pyramid_type?: PyramidType) {
+    protected constructor(pyramid_type?: PyramidType) {
         super();
         // fields
         if (typeof pyramid_type === "undefined") {
@@ -29,7 +30,7 @@ export class Block extends HTMLElement {
         this.classList.add("pyramid-block");
         this.style.left = "-10px";
         this.style.top = "-10px";
-        this.style.backgroundColor = "rgba(255, 0, 0, 0.2)";
+        this.style.backgroundColor = "rgb(0, 0, 0, 0.5)";
         this.style.minWidth = Block.UNIT_WIDTH + "px";
         this.style.minHeight = Block.UNIT_HEIGHT + "px";
         document.getElementById("blocks").appendChild(this);
@@ -101,7 +102,7 @@ export class Block extends HTMLElement {
         for (let i = 0; i < this.child_blocks.length; ++i) {
             if (this.child_blocks[i] === target) {
                 if (typeof after === "undefined") {
-                    this.child_blocks[i] = new Block();
+                    this.child_blocks[i] = new EmptyBlock();
                 } else {
                     this.child_blocks[i] = after;
                 }
@@ -117,40 +118,8 @@ export class Block extends HTMLElement {
     format() {
         BlockFormatter.format(this);
     }
-
-    //! [TODO]
-    eval(env: Map<String, any>): PyramidObject {
-        switch (this.pyramid_type.type_id) {
-            case PyramidTypeID.Empty:
-                throw new Error("evaluated Empty");
-            case PyramidTypeID.I32:
-                //! [TODO]
-                return { pyramid_type: this.pyramid_type, value: this.get_content() };
-            case PyramidTypeID.F32:
-                //! [TODO]
-                return { pyramid_type: this.pyramid_type, value: this.get_content() };
-            case PyramidTypeID.Bool:
-                //! [TODO]
-                return { pyramid_type: this.pyramid_type, value: this.get_content() };
-            case PyramidTypeID.String:
-                //! [TODO]
-                return { pyramid_type: this.pyramid_type, value: this.get_content() };
-            case PyramidTypeID.List:
-                //! [TODO]
-                return { pyramid_type: this.pyramid_type, value: this.get_content() };
-            case PyramidTypeID.Function:
-                //! [TODO]
-                const f = env.get(this.get_content());
-                if (typeof f !== "function") {
-                    throw new Error(this.get_content() + " function undefined");
-                } else {
-                    return {
-                        pyramid_type: this.pyramid_type.attribute.return_type,
-                        value: f(this.children, env),
-                    };
-                }
-        }
-    }
+    
+    protected abstract eval(env: Map<String, any>): PyramidObject
 
     /* ============================================================================================================= */
     /*     Events                                                                                                    */
@@ -230,4 +199,3 @@ export class Block extends HTMLElement {
         Popup.remove_popup();
     }
 }
-customElements.define('pyramid-block', Block);

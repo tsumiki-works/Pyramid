@@ -47,5 +47,29 @@ export class AtomBlock extends Block {
         popup.appendChild(input);
         input.focus();
     }
+
+    eval(env: Map<String, any>): PyramidObject{
+        switch (this.pyramid_type.type_id) {
+            case PyramidTypeID.Empty:
+                throw new Error("evaluated Empty");
+            case PyramidTypeID.I32:
+                //! [TODO]
+                return { pyramid_type: this.pyramid_type, value: this.get_content() };
+            case PyramidTypeID.F32:
+                //! [TODO]
+                return { pyramid_type: this.pyramid_type, value: this.get_content() };
+            case PyramidTypeID.Bool:
+                //! [TODO]
+                return { pyramid_type: this.pyramid_type, value: this.get_content() };
+            case PyramidTypeID.String:
+                //! [TODO]
+                return { pyramid_type: this.pyramid_type, value: this.get_content() };
+            case PyramidTypeID.List:
+                //! [TODO]
+                return { pyramid_type: this.pyramid_type, value: this.get_content() };
+            default:
+                throw new Error("pyramid backend error:" + this.get_content() + "is not atom object.");
+        }
+    }
 }
 customElements.define('pyramid-block-atom', AtomBlock);

@@ -1,5 +1,6 @@
 import { Popup } from "../popup.js";
 import { Block } from "./block.js";
+import { EmptyBlock } from "./empty_block.js";
 
 export class FunBlock extends Block {
     private is_folding: boolean;
@@ -11,10 +12,10 @@ export class FunBlock extends Block {
         this.span.innerText = content;
         this.is_folding = false;
         if (fun_attribute.args_cnt === Infinity) {
-            this.child_blocks.push(new Block());
+            this.child_blocks.push(new EmptyBlock());
         } else {
             for (let i = 0; i < fun_attribute.args_cnt; ++i) {
-                const child = new Block();
+                const child = new EmptyBlock();
                 child.set_parent(this);
                 this.child_blocks.push(child);
 
@@ -71,6 +72,18 @@ export class FunBlock extends Block {
             child.classList.remove("pyramid-block-disable");
             child.classList.add("pyramid-block");
             FunBlock.enable_child_blocks(child);
+        }
+    }
+
+    eval(env: Map<String, any>): PyramidObject {
+        const f = env.get(this.get_content());
+        if (typeof f !== "function") {
+            throw new Error("pyramid backend error:" + this.get_content() + " function undefined");
+        } else {
+            return {
+                pyramid_type: this.pyramid_type.attribute.return_type,
+                value: f(this.children, env),
+            };
         }
     }
 }
