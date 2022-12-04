@@ -12,7 +12,7 @@ export abstract class Block extends HTMLElement {
     protected readonly pyramid_type: PyramidType;
     protected readonly child_blocks: Block[];
     protected readonly span: HTMLSpanElement;
-    protected parent: Block | null;
+    parent: Block | null;
 
     protected constructor(pyramid_type?: PyramidType) {
         super();
@@ -95,31 +95,13 @@ export abstract class Block extends HTMLElement {
             && Math.abs(this.get_y() - target.get_y()) < Block.UNIT_HEIGHT * 0.5;
     }
 
-    replace_child(target: Block, after?: Block) {
-        if (this === target) {
-            throw new Error("Pyramid frontend error: tried to remove self.");
-        }
-        for (let i = 0; i < this.child_blocks.length; ++i) {
-            if (this.child_blocks[i] === target) {
-                if (typeof after === "undefined") {
-                    this.child_blocks[i] = new EmptyBlock();
-                } else {
-                    this.child_blocks[i] = after;
-                }
-                this.child_blocks[i].parent = this;
-                target.parent = null;
-                this.get_root().format();
-                return;
-            }
-        }
-        throw new Error("Pyramid frontend error: tried to unexisting block.");
-    }
+    abstract replace_child(target: Block, after?: Block)
 
     format() {
         BlockFormatter.format(this);
     }
     
-    protected abstract eval(env: Map<String, any>): PyramidObject
+    abstract eval(env: Map<String, any>): PyramidObject
 
     /* ============================================================================================================= */
     /*     Events                                                                                                    */

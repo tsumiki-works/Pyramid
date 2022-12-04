@@ -7,8 +7,10 @@ export class EmptyBlock extends Block {
         this.style.backgroundColor = "rgba(255, 0, 0, 0.2)"; //! [TODO]
     }
 
+    replace_child(target: Block, after?: Block){}
+
     eval(env: Map<String, any>): PyramidObject{
         return null;
     }
 }
-customElements.define('pyramid-block-atom', EmptyBlock);
+customElements.define('pyramid-block-empty', EmptyBlock);

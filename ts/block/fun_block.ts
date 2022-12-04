@@ -75,6 +75,26 @@ export class FunBlock extends Block {
         }
     }
 
+    replace_child(target: Block, after?: Block) {
+        if (this === target) {
+            throw new Error("Pyramid frontend error: tried to remove self.");
+        }
+        for (let i = 0; i < this.child_blocks.length; ++i) {
+            if (this.child_blocks[i] === target) {
+                if (typeof after === "undefined") {
+                    this.child_blocks[i] = new EmptyBlock();
+                } else {
+                    this.child_blocks[i] = after;
+                }
+                this.child_blocks[i].parent = this;
+                target.parent = null;
+                this.get_root().format();
+                return;
+            }
+        }
+        throw new Error("Pyramid frontend error: tried to unexisting block.");
+    } t
+
     eval(env: Map<String, any>): PyramidObject {
         const f = env.get(this.get_content());
         if (typeof f !== "function") {
