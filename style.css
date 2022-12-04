@@ -23,6 +23,14 @@ div#workspace {
     align-items: center;
 }
 
+.pyramid-block-disable {
+    display: none;
+}
+
+.pyramid-block-folding {
+    border: thick double red;
+}
+
 .pyramid-block span {
     color: white;
     font-weight: bold;

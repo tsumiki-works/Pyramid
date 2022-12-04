@@ -16,7 +16,7 @@ export class BlockFormatter {
 
     private static determine_width(block: Block): FormatResult {
         const child_blocks = block.get_child_blocks();
-        if (block.is_empty() || child_blocks.length == 0) {
+        if (block.is_empty() || child_blocks.length == 0 || block.classList.contains("pyramid-block-folding")) {
             block.style.minWidth = Block.UNIT_WIDTH + "px";
             return {
                 x: 0,
@@ -77,7 +77,7 @@ export class BlockFormatter {
             const child_area = (res.childrens[i].rightmost - res.childrens[i].leftmost);
             BlockFormatter.determine_pos(
                 offset + child_area * 0.5 + res.childrens[i].x,
-                y + Block.UNIT_HEIGHT,
+                y + block.get_height(),
                 child_blocks[i],
                 res.childrens[i]
             );

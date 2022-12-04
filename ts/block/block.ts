@@ -168,6 +168,7 @@ export class Block extends HTMLElement {
     }
 
     private event_mousedown(e: MouseEvent) {
+        Popup.remove_popup();
         if (this.is_empty()) {
             return;
         }
