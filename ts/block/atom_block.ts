@@ -1,20 +1,11 @@
 import { Popup } from "../popup.js";
 import { Block } from "./block.js";
 
-export class AtomBlock extends Block {
-    constructor(left: number, top: number, content: string, type_id: PyramidTypeID) {
-        switch (type_id) {
-            case PyramidTypeID.I32:
-            case PyramidTypeID.F32:
-            case PyramidTypeID.Bool:
-            case PyramidTypeID.String:
-                break;
-            default:
-                throw new Error(type_id + " is not atom.");
-        }
-        super({ type_id: type_id, attribute: null });
-        this.style.left = left + "px";
-        this.style.top = top + "px";
+export class AtomBlock extends FullBlock {
+    constructor(className: string, pyramid_type: PyramidType, content: string) {
+        super(className, "blue", pyramid_type);
+        //this.style.left = left + "px";
+        //this.style.top = top + "px";
         this.style.backgroundColor = "blue"; //! [TODO]
         this.innerText = content;
     }
