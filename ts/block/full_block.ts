@@ -1,14 +1,16 @@
 import { Popup } from "../popup.js";
-import  { Block } from "./block.js"
+import { Block } from "./block.js"
 import { EmptyBlock } from "./empty_block";
 
-export abstract class FullBlock extends Block{
-    constructor(className: string, backgroundColor: string, pyramid_type: PyramidType, content: string){
-        super(className, backgroundColor, pyramid_type);
+export abstract class FullBlock extends Block {
+    constructor(backgroundColor: string, className: string, pyramid_type: PyramidType, left: number, top: number, content: string) {
+        super(backgroundColor, className, pyramid_type);
+        this.style.left = left + "px";
+        this.style.top = top + "px";
         this.innerText = content;
         //event
         this.init_events();
-    } 
+    }
 
     kill(): void {
         if (this.parent !== null) {
@@ -58,42 +60,6 @@ export abstract class FullBlock extends Block{
     }
 
     abstract eval(env: Map<String, any>): PyramidObject;
-
-        //! [TODO]
-    /*
-    eval(env: Map<String, any>): PyramidObject {
-        switch (this.pyramid_type.type_id) {
-            case PyramidTypeID.Empty:
-                throw new Error("evaluated Empty");
-            case PyramidTypeID.I32:
-                //! [TODO]
-                return { pyramid_type: this.pyramid_type, value: this.get_content() };
-            case PyramidTypeID.F32:
-                //! [TODO]
-                return { pyramid_type: this.pyramid_type, value: this.get_content() };
-            case PyramidTypeID.Bool:
-                //! [TODO]
-                return { pyramid_type: this.pyramid_type, value: this.get_content() };
-            case PyramidTypeID.String:
-                //! [TODO]
-                return { pyramid_type: this.pyramid_type, value: this.get_content() };
-            case PyramidTypeID.List:
-                //! [TODO]
-                return { pyramid_type: this.pyramid_type, value: this.get_content() };
-            case PyramidTypeID.Function:
-                //! [TODO]
-                const f = env.get(this.get_content());
-                if (typeof f !== "function") {
-                    throw new Error(this.get_content() + " function undefined");
-                } else {
-                    return {
-                        pyramid_type: this.pyramid_type.attribute.return_type,
-                        value: f(this.children, env),
-                    };
-                }
-        }
-    }
-    */
 
     /* ============================================================================================================= */
     /*     Events                                                                                                    */
@@ -174,5 +140,5 @@ export abstract class FullBlock extends Block{
         this.kill();
         Popup.remove_popup();
     }
-    
+
 }

@@ -1,4 +1,5 @@
 import { BlockFormatter } from "./block_formatter.js";
+//import { FullBlock } from "./full_block.js";
 
 export abstract class Block extends HTMLElement {
 
@@ -10,17 +11,19 @@ export abstract class Block extends HTMLElement {
     protected pyramid_type: PyramidType;
     protected parent: Block | null;
 
-    constructor(className: string, _backgroundColor: string, _pyramid_type: PyramidType) {
+    constructor(backgroundColor: string, className: string, pyramid_type: PyramidType) {
         super();
         // fields
-        this.pyramid_type = _pyramid_type;
+        this.pyramid_type = pyramid_type;
         this.parent = null;
         // html div element
         this.classList.add(className);
         this.style.left = "-10px";
         this.style.top = "-10px";
         //! [TODO] invaild literal check
-        this.style.backgroundColor = _backgroundColor;
+        // Now, the way to set colors are dangerous.
+        //ex) "blue", "rgba(0, 0, 0, 0.2)"...
+        this.style.backgroundColor = backgroundColor;
         this.style.minWidth = Block.UNIT_WIDTH + "px";
         this.style.minHeight = Block.UNIT_HEIGHT + "px";
         document.getElementById("blocks").appendChild(this);
@@ -50,6 +53,7 @@ export abstract class Block extends HTMLElement {
         }
         this.style.top = -(parent.getBoundingClientRect().top - top) + "px";
     }
+    //! [ToDo]
     set_parent(parent: Block): void {
         this.parent = parent;
     }
@@ -69,6 +73,7 @@ export abstract class Block extends HTMLElement {
     get_type(): PyramidType {
         return this.pyramid_type;
     }
+    //! [ToDo]
     get_root(): Block {
         if (this.parent === null) {
             return this;
