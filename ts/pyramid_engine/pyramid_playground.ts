@@ -1,7 +1,7 @@
 import { PyramidEngine } from "./pyramid_engine.js";
 import { Popup } from "../popup.js";
 import { MenuManager } from "../menu/menu.js";
-import { AtomBlock } from "../block/atom_block.js";
+import { I32Block } from "../block/i32_block.js";
 import { FunBlock } from "../block/fun_block.js";
 
 /**
@@ -34,7 +34,7 @@ export class PyramidPlayground extends PyramidEngine {
         MenuManager.getInstance().add_menu_content({
             color: "blue",
             text: "0", 
-            block_constructor: ((_l: number, _t: number) => new AtomBlock(_l, _t, "0", PyramidTypeID.I32))
+            block_constructor: ((_l: number, _t: number) => new I32Block(_l, _t, "0"))
         });
         MenuManager.getInstance().add_menu_content({
             color: "green",

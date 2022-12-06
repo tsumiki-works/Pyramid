@@ -1,4 +1,4 @@
-import { AtomBlock } from "./atom_block";
+import { AtomBlock } from "./atom_block.js";
 
 export class I32Block extends AtomBlock {
     constructor(left: number, top: number, content: string){
@@ -16,3 +16,4 @@ export class I32Block extends AtomBlock {
         return { pyramid_type: this.pyramid_type, value: this.get_content() };
     }
 }
+customElements.define('pyramid-block-i32', I32Block);

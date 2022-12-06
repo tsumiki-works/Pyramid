@@ -1,6 +1,6 @@
 import { Popup } from "../popup.js";
 import { Block } from "./block.js"
-import { EmptyBlock } from "./empty_block";
+import { EmptyBlock } from "./empty_block.js";
 
 export abstract class FullBlock extends Block {
     constructor(backgroundColor: string, className: string, pyramid_type: PyramidType, left: number, top: number, content: string) {

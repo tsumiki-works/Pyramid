@@ -1,5 +1,5 @@
 import { Popup } from "../popup.js";
-import { FullBlock } from "./full_block"
+import { FullBlock } from "./full_block.js"
 
 export abstract class AtomBlock extends FullBlock {
     constructor(pyramid_type: PyramidType, left: number, top: number, content: string) {

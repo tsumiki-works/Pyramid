@@ -1,5 +1,5 @@
 import { BlockFormatter } from "./block_formatter.js";
-//import { FullBlock } from "./full_block.js";
+import { FullBlock } from "./full_block.js";
 
 export abstract class Block extends HTMLElement {
 
@@ -73,7 +73,6 @@ export abstract class Block extends HTMLElement {
     get_type(): PyramidType {
         return this.pyramid_type;
     }
-    //! [ToDo]
     get_root(): Block {
         if (this.parent === null) {
             return this;
@@ -81,10 +80,12 @@ export abstract class Block extends HTMLElement {
             return this.parent.get_root();
         }
     }
+    get_children(): Array<Block>{
+        return Array.from(this.children) as Array<FullBlock>;
+    }
     is_empty(): boolean {
         return this.pyramid_type.type_id === PyramidTypeID.Empty;
     }
-
     format() {
         BlockFormatter.format(this);
     }
