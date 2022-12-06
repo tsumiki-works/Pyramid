@@ -11,13 +11,13 @@ export abstract class Block extends HTMLElement {
     protected pyramid_type: PyramidType;
     protected parent: Block | null;
 
-    constructor(backgroundColor: string, className: string, pyramid_type: PyramidType) {
+    constructor(backgroundColor: string, pyramid_type: PyramidType) {
         super();
         // fields
         this.pyramid_type = pyramid_type;
         this.parent = null;
         // html div element
-        this.classList.add(className);
+        this.classList.add("pyramid-block");
         this.style.left = "-10px";
         this.style.top = "-10px";
         //! [TODO] invaild literal check
@@ -27,6 +27,24 @@ export abstract class Block extends HTMLElement {
         this.style.minWidth = Block.UNIT_WIDTH + "px";
         this.style.minHeight = Block.UNIT_HEIGHT + "px";
         document.getElementById("blocks").appendChild(this);
+    }
+    connect_with(target: Block): boolean {
+        if (this === target) {
+            return false;
+        }
+        for (const child of this.get_children()) {
+            if (child.is_empty() && child.is_hit(target) && child.classList.contains("pyramid-empty-block")) {
+                this.replaceChild(target, child);
+                target.parent = this;
+                this.get_root().format();
+                return true;
+            }
+            const res = child.connect_with(target);
+            if (res) {
+                return true;
+            }
+        }
+        return false;
     }
     copy_with(block: Block): void {
         this.pyramid_type = block.pyramid_type;
@@ -58,6 +76,7 @@ export abstract class Block extends HTMLElement {
         this.parent = parent;
     }
 
+
     get_x(): number {
         return this.getBoundingClientRect().left + this.get_width() * 0.5;
     }
@@ -82,6 +101,10 @@ export abstract class Block extends HTMLElement {
     }
     get_children(): Array<Block>{
         return Array.from(this.children) as Array<FullBlock>;
+    }
+    is_hit(target: Block): boolean {
+        return Math.abs(this.get_x() - target.get_x()) < this.get_width() * 0.5
+            && Math.abs(this.get_y() - target.get_y()) < Block.UNIT_HEIGHT * 0.5;
     }
     is_empty(): boolean {
         return this.pyramid_type.type_id === PyramidTypeID.Empty;

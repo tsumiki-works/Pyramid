@@ -6,7 +6,6 @@ export class FunBlock extends FullBlock {
     private is_folding: boolean;
     constructor(left: number, top: number, content: string, fun_attribute: FunctionAttribute) {
         super("green", 
-            "fun_block",
             { type_id: PyramidTypeID.Function,
                 attribute: fun_attribute 
             },
