@@ -3,8 +3,8 @@ import { Block } from "./block.js"
 import { EmptyBlock } from "./empty_block.js";
 
 export abstract class FullBlock extends Block {
-    constructor(backgroundColor: string, className: string, pyramid_type: PyramidType, left: number, top: number, content: string) {
-        super(backgroundColor, className, pyramid_type);
+    constructor(backgroundColor: string, pyramid_type: PyramidType, left: number, top: number, content: string) {
+        super(backgroundColor, pyramid_type);
         this.style.left = left + "px";
         this.style.top = top + "px";
         this.innerText = content;
@@ -27,30 +27,6 @@ export abstract class FullBlock extends Block {
         this.classList.remove("pyramid-block");
         this.classList.add("pyramid-block-disable");
         document.getElementById("trash").appendChild(this);
-    }
-
-    connect_with(target: FullBlock): boolean {
-        if (this === target) {
-            return false;
-        }
-        for (const child of this.get_children()) {
-            if (child.is_empty() && child.is_hit(target) && child.classList.contains("pyramid-empty-block")) {
-                this.replaceChild(target, child);
-                target.parent = this;
-                this.get_root().format();
-                return true;
-            }
-            const res = child.connect_with(target);
-            if (res) {
-                return true;
-            }
-        }
-        return false;
-    }
-
-    is_hit(target: FullBlock): boolean {
-        return Math.abs(this.get_x() - target.get_x()) < this.get_width() * 0.5
-            && Math.abs(this.get_y() - target.get_y()) < Block.UNIT_HEIGHT * 0.5;
     }
     get_content(): string {
         return this.innerText;
@@ -121,6 +97,7 @@ export abstract class FullBlock extends Block {
     private event_mouseup(_: MouseEvent) {
         const roots = Array.from(document.getElementById("blocks").children) as Array<FullBlock>;
         for (const root of roots) {
+            console.log(root);
             if (root.connect_with(this)) {
                 break;
             }

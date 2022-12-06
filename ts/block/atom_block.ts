@@ -3,7 +3,7 @@ import { FullBlock } from "./full_block.js"
 
 export abstract class AtomBlock extends FullBlock {
     constructor(pyramid_type: PyramidType, left: number, top: number, content: string) {
-        super("blue", "atom_block", pyramid_type, left, top, content);
+        super("blue", pyramid_type, left, top, content);
     }
 
     abstract eval(env: Map<String, any>): PyramidObject;
