@@ -15,6 +15,7 @@ export class BlockFormatter {
     }
 
     private static determine_width(block: Block): FormatResult {
+        //! [ToDo]
         const children = block.get_children();
         if (block.is_empty() || children.length == 0 || block.classList.contains("pyramid-block-folding")) {
             block.style.minWidth = Block.UNIT_WIDTH + "px";
