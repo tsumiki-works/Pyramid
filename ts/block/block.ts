@@ -1,4 +1,5 @@
 import { BlockFormatter } from "./block_formatter.js";
+import { EmptyBlock } from "./empty_block.js";
 import { FullBlock } from "./full_block.js";
 
 export abstract class Block extends HTMLElement {
@@ -28,11 +29,28 @@ export abstract class Block extends HTMLElement {
         this.style.minHeight = Block.UNIT_HEIGHT + "px";
         document.getElementById("blocks").appendChild(this);
     }
+    kill(): void {
+        if (this.parent !== null) {
+            const tmp = new EmptyBlock(); //! [TODO]
+            tmp.set_parent(this.parent);
+            this.parent.replaceChild(tmp, this);
+            this.parent.get_root().format();
+        }
+        this.parent = null;
+        if (this.is_empty()) {
+            this.remove();
+            return;
+        }
+        this.classList.remove("pyramid-block");
+        this.classList.add("pyramid-block-disable");
+        document.getElementById("trash").appendChild(this);
+    }
     connect_with(target: Block): boolean {
         if (this === target) {
             return false;
         }
         for (const child of this.get_children()) {
+            console.log(child.classList.contains("pyramid-empty-block"));
             if (child.is_empty() && child.is_hit(target) && child.classList.contains("pyramid-empty-block")) {
                 this.replaceChild(target, child);
                 target.parent = this;

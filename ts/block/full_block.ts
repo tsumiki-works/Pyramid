@@ -11,23 +11,6 @@ export abstract class FullBlock extends Block {
         //event
         this.init_events();
     }
-
-    kill(): void {
-        if (this.parent !== null) {
-            const tmp = new EmptyBlock();
-            tmp.set_parent(this.parent);
-            this.parent.replaceChild(tmp, this);
-            this.parent.get_root().format();
-        }
-        this.parent = null;
-        if (this.is_empty()) {
-            this.remove();
-            return;
-        }
-        this.classList.remove("pyramid-block");
-        this.classList.add("pyramid-block-disable");
-        document.getElementById("trash").appendChild(this);
-    }
     get_content(): string {
         return this.innerText;
     }
@@ -95,9 +78,8 @@ export abstract class FullBlock extends Block {
     }
 
     private event_mouseup(_: MouseEvent) {
-        const roots = Array.from(document.getElementById("blocks").children) as Array<FullBlock>;
+        const roots = Array.from(document.getElementById("blocks").children) as Array<Block>;
         for (const root of roots) {
-            console.log(root);
             if (root.connect_with(this)) {
                 break;
             }
