@@ -1,4 +1,5 @@
 import { Popup } from "../popup.js";
+import { Block } from "./block.js";
 import { EmptyBlock } from "./empty_block.js";
 import { FullBlock } from "./full_block.js";
 
@@ -39,14 +40,14 @@ export class FunBlock extends FullBlock {
         }
     }
     
-    private static disable_child_blocks(block: FullBlock) {
+    private static disable_child_blocks(block: Block) {
         for (const child of block.get_children()) {
             child.classList.remove("pyramid-block");
             child.classList.add("pyramid-block-disable");
             FunBlock.disable_child_blocks(child);
         }
     }
-    private static enable_child_blocks(block: FullBlock) {
+    private static enable_child_blocks(block: Block) {
         for (const child of block.get_children()) {
             child.classList.remove("pyramid-block-disable");
             child.classList.add("pyramid-block");

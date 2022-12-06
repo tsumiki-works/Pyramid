@@ -14,8 +14,8 @@ export abstract class FullBlock extends Block {
     get_content(): string {
         return this.innerText;
     }
-    get_children(): Array<FullBlock> {
-        return Array.from(this.children) as Array<FullBlock>;
+    get_children(): Array<Block> {
+        return Array.from(this.children) as Array<Block>;
     }
 
     abstract eval(env: Map<String, any>): PyramidObject;

@@ -8,8 +8,5 @@ export class EmptyBlock extends Block {
             });
         this.classList.add("pyramid-empty-block");
     }
-
-    //! [TODO] Find method where Empty block's kill method is called
-    //kill(){};
 }
 customElements.define('pyramid-block-empty', EmptyBlock);

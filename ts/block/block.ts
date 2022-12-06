@@ -50,11 +50,12 @@ export abstract class Block extends HTMLElement {
             return false;
         }
         for (const child of this.get_children()) {
-            console.log(child.classList.contains("pyramid-empty-block"));
-            if (child.is_empty() && child.is_hit(target) && child.classList.contains("pyramid-empty-block")) {
+            if (child.is_empty() && child.is_hit(target)) {
                 this.replaceChild(target, child);
                 target.parent = this;
                 this.get_root().format();
+                child.parent = null;
+                child.kill();
                 return true;
             }
             const res = child.connect_with(target);
