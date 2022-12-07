@@ -13,48 +13,28 @@
 </head>
 
 <body oncontextmenu="return false;">
-    <canvas id="workspace"></canvas>
+    <div id="workspace">
+        <div id="blocks"></div>
+        <div id="trash"></div>
+    </div>
+    <div id="menu">
+        
+    </div>
     <div id="console">
         <div id="console-content">
             <label id="console-log"></label>
             <label id="console-line-head"># </label><label id="console-line" contentEditable="true"></label>
         </div>
     </div>
-    <img crossOrigin="anonymous" id="tex01" src="images/tex01.png">
-    <img crossOrigin="anonymous" id="tex_font" src="images/tex_font.png">
-    <img crossOrigin="anonymous" id="tex_trashbox" src="images/tex_ui_trash.png">
-    <script type="module" src="js/webgl/constant_buffer.js"></script>
-    <script type="module" src="js/webgl/image_texture.js"></script>
-    <script type="module" src="js/webgl/math.js"></script>
-    <script type="module" src="js/webgl/model.js"></script>
-    <script type="module" src="js/webgl/program.js"></script>
-    <script type="module" src="js/webgl/request.js"></script>
-    <script type="module" src="js/webgl/webgl.js"></script>
-    <script type="module" src="js/block/block.js"></script>
-    <script type="module" src="js/block/block_manager.js"></script>
-    <script type="module" src="js/lib/block_calc.js"></script>
-    <script type="module" src="js/lib/translation.js"></script>
-    <script type="module" src="js/screen/console.js"></script>
-    <script type="module" src="js/screen/entity.js"></script>
-    <script type="module" src="js/screen/event.js"></script>
-    <script type="module" src="js/screen/pager.js"></script>
-    <script type="module" src="js/screen/popup.js"></script>
-    <script type="module" src="js/screen/screen.js"></script>
-    <script type="module" src="js/screen/request_builder.js"></script>
-    <script type="module" src="js/constant/constant_entity.js"></script>
-    <script type="module" src="js/constant/constant_block.js"></script>
-    <script type="module" src="js/evaluator/operation/binary_operation.js"></script>
-    <script type="module" src="js/evaluator/operation/define_operation.js"></script>
-    <script type="module" src="js/evaluator/evaluator.js"></script>
-    <script type="module" src="js/evaluator/parser.js"></script>
-    <script type="module" src="js/evaluator/pyramid_object.js"></script>
-    <script type="module" src="js/evaluator/pyramid_type.js"></script>
-    <script type="module" src="js/evaluator/stree.js"></script>
+    <div id="logo-wrapper">
+        <img id="logo" src="images/logo.svg" width = "12%" alt="ピラミッドのロゴ">
+    </div>
+    <script src="js/types.js"></script>
     <script type="module" src="js/main.js"></script>
     <script type="module">
         import { Pyramid } from "./js/main.js"
         window.onload = () => {
-            new Pyramid().run();
+            new Pyramid("playground");
         }
     </script>
 </body>
