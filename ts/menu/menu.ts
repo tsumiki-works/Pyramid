@@ -1,5 +1,3 @@
-import { FunBlock } from "../block/concrete_block/fun_block.js";
-import { I32Block } from "../block/concrete_block/i32_block.js";
 import { MenuBlock } from "./menu_block.js";
 
 export class MenuManager {
@@ -14,8 +12,6 @@ export class MenuManager {
         this.menu = document.getElementById("menu") as HTMLDivElement;
         this.menu.style.top = document.getElementById("logo-wrapper").offsetHeight + "px";
         this.menu_blocks = new Array<MenuBlock>();
-        this.mousedown_listener = (e: MouseEvent) => this.event_mousedown(e);
-        this.menu.addEventListener("mousedown", this.mousedown_listener);
     }
     
     static getInstance(): MenuManager {
@@ -30,17 +26,7 @@ export class MenuManager {
 
     get_width(): number {
         return this.menu.offsetWidth;
-    }
-
-    private event_mousedown(_: MouseEvent): void {
-        //! [TODO]
-        //! debug
-        /*
-        document.getElementById("blocks").appendChild(new FunBlock(window.innerWidth * 0.5, window.innerHeight * 0.5, "+", { args_cnt: 2, return_type: { type_id: PyramidTypeID.I32, attribute: null } }));
-        document.getElementById("blocks").appendChild(new I32Block(window.innerWidth * 0.5 + 100, window.innerHeight * 0.5 + 100, "12"));
-        document.getElementById("blocks").appendChild(new I32Block(window.innerWidth * 0.5 + 200, window.innerHeight * 0.5 + 200, "3"));
-        */
-    }       
+    }    
 
     add_menu_content(menu_content: PyramidMenuContent): void {
         let tmp_menublock: MenuBlock = new MenuBlock(
