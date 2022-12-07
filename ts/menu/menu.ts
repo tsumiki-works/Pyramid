@@ -1,5 +1,5 @@
-import { FunBlock } from "../block/fun_block.js";
-import { I32Block } from "../block/i32_block.js";
+import { FunBlock } from "../block/concrete_block/fun_block.js";
+import { I32Block } from "../block/concrete_block/i32_block.js";
 import { MenuBlock } from "./menu_block.js";
 
 export class MenuManager {

@@ -1,4 +1,4 @@
-import { AtomBlock } from "./atom_block.js";
+import { AtomBlock } from "../atom_block.js";
 
 export class I32Block extends AtomBlock {
     constructor(left: number, top: number, content: string){

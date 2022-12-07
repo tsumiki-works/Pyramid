@@ -1,8 +1,8 @@
 import { PyramidEngine } from "./pyramid_engine.js";
 import { Popup } from "../popup.js";
 import { MenuManager } from "../menu/menu.js";
-import { I32Block } from "../block/i32_block.js";
-import { FunBlock } from "../block/fun_block.js";
+import { I32Block } from "../block/concrete_block/i32_block.js";
+import { FunBlock } from "../block/concrete_block/fun_block.js";
 
 /**
  * This class is PyramidEngine for Playgorund.

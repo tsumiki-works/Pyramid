@@ -1,5 +1,5 @@
 import { BlockFormatter } from "./block_formatter.js";
-import { EmptyBlock } from "./empty_block.js";
+import { EmptyBlock } from "./concrete_block/empty_block.js";
 import { FullBlock } from "./full_block.js";
 
 export abstract class Block extends HTMLElement {

@@ -1,7 +1,7 @@
-import { Popup } from "../popup.js";
-import { Block } from "./block.js";
+import { Popup } from "../../popup.js";
+import { Block } from "../block.js";
 import { EmptyBlock } from "./empty_block.js";
-import { FullBlock } from "./full_block.js";
+import { FullBlock } from "../full_block.js";
 
 export class FunBlock extends FullBlock {
     private is_folding: boolean;
