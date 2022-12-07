@@ -1,7 +1,8 @@
 import { BlockFormatter } from "./block_formatter.js";
+import { EmptyBlock } from "./concrete_block/empty-block.js";
 import { FullBlock } from "./full_block.js";
 
-export class Block extends HTMLElement {
+export abstract class Block extends HTMLElement {
 
     static readonly UNIT_WIDTH = 100.0;
     static readonly UNIT_HALF_WIDTH = 50.0;
@@ -28,31 +29,8 @@ export class Block extends HTMLElement {
         this.style.minHeight = Block.UNIT_HEIGHT + "px";
         document.getElementById("blocks").appendChild(this);
     }
-    static create_empty_block(): Block {
-        let tmp = new Block("rgba(0, 0, 0, 0.2)",
-        {
-            type_id: PyramidTypeID.Empty,
-            attribute: null
-        });
-        return tmp;
-    }
 
-    kill(): void {
-        if (this.parent !== null) {
-            const tmp = Block.create_empty_block(); //! [TODO]
-            tmp.set_parent(this.parent);
-            this.parent.replaceChild(tmp, this);
-            this.parent.get_root().format();
-        }
-        this.parent = null;
-        if (this.is_empty()) {
-            this.remove();
-            return;
-        }
-        this.classList.remove("pyramid-block");
-        this.classList.add("pyramid-block-disable");
-        document.getElementById("trash").appendChild(this);
-    }
+    abstract kill(): void;
     connect_with(target: Block): boolean {
         if (this === target) {
             return false;
@@ -140,4 +118,3 @@ export class Block extends HTMLElement {
         BlockFormatter.format(this);
     }
 }
-customElements.define('pyramid-block', Block);
