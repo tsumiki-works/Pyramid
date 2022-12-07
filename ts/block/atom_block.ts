@@ -42,4 +42,3 @@ export abstract class AtomBlock extends FullBlock {
         input.focus();
     }
 }
-//customElements.define('pyramid-block-atom', AtomBlock);
