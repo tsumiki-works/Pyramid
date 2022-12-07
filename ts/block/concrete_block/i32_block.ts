@@ -12,7 +12,7 @@ export class I32Block extends AtomBlock {
         content)
     }
 
-    eval(env: Map<String, any>): PyramidObject{
+    eval(env: Map<string, any>): PyramidObject{
         return { pyramid_type: this.pyramid_type, value: this.get_content() };
     }
 }

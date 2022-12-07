@@ -6,7 +6,7 @@ export abstract class AtomBlock extends FullBlock {
         super("blue", pyramid_type, left, top, content);
     }
 
-    abstract eval(env: Map<String, any>): PyramidObject;
+    abstract eval(env: Map<string, any>): PyramidObject;
 
     /* ============================================================================================================= */
     /*     Events                                                                                                    */

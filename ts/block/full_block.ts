@@ -30,7 +30,7 @@ export abstract class FullBlock extends Block {
         return Array.from(this.children) as Array<Block>;
     }
 
-    abstract eval(env: Map<String, any>): PyramidObject;
+    abstract eval(env: Map<string, any>): PyramidObject;
 
     /* ============================================================================================================= */
     /*     Events                                                                                                    */
