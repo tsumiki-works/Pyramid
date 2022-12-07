@@ -1,6 +1,7 @@
 import { Popup } from "../../popup.js";
 import { Block } from "../block.js";
 import { FullBlock } from "../full_block.js";
+import { EmptyBlock } from "./empty-block.js";
 
 export class FunBlock extends FullBlock {
     private is_folding: boolean;
@@ -14,12 +15,12 @@ export class FunBlock extends FullBlock {
             content);
         this.is_folding = false;
         if (fun_attribute.args_cnt === Infinity) {
-            const child = Block.create_empty_block();
+            const child = new EmptyBlock();
             child.set_parent(this); //![ToDo]
             this.appendChild(child);
         } else {
             for (let i = 0; i < fun_attribute.args_cnt; ++i) {
-                const child = Block.create_empty_block();
+                const child = new EmptyBlock();
                 child.set_parent(this);
                 this.appendChild(child);
             }
@@ -90,7 +91,7 @@ export class FunBlock extends FullBlock {
             const x = child.get_x();
             const y = child.get_y();
             child.set_parent(null);
-            const tmp = Block.create_empty_block();
+            const tmp = new EmptyBlock();
             tmp.set_parent(this);
             this.replaceChild(tmp, child);
             if (child.is_empty()) {

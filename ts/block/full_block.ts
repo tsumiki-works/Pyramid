@@ -1,5 +1,6 @@
 import { Popup } from "../popup.js";
 import { Block } from "./block.js"
+import { EmptyBlock } from "./concrete_block/empty-block.js";
 
 export abstract class FullBlock extends Block {
     constructor(backgroundColor: string, pyramid_type: PyramidType, left: number, top: number, content: string) {
@@ -9,6 +10,18 @@ export abstract class FullBlock extends Block {
         this.innerText = content;
         //event
         this.init_events();
+    }
+    kill(): void {
+        if (this.parent !== null) {
+            const tmp = new EmptyBlock() //! [TODO]
+            tmp.set_parent(this.parent);
+            this.parent.replaceChild(tmp, this);
+            this.parent.get_root().format();
+        }
+        this.parent = null;
+        this.classList.remove("pyramid-block");
+        this.classList.add("pyramid-block-disable");
+        document.getElementById("trash").appendChild(this);
     }
     get_content(): string {
         return this.innerText;
@@ -23,11 +36,7 @@ export abstract class FullBlock extends Block {
     /*     Events                                                                                                    */
     /* ============================================================================================================= */
 
-    private mousedown_listener: EventListener;
-    private mousemove_listener: EventListener;
-    private mouseup_listener: EventListener;
-
-    private init_events() {
+    init_events() {
         this.mousedown_listener = (e: MouseEvent) => this.event_mousedown(e);
         this.mousemove_listener = (e: MouseEvent) => this.event_mousemove(e);
         this.mouseup_listener = (e: MouseEvent) => this.event_mouseup(e);
@@ -45,7 +54,7 @@ export abstract class FullBlock extends Block {
             const x = this.get_x();
             const y = this.get_y();
             if (this.parent !== null) {
-                const tmp = Block.create_empty_block();
+                const tmp = new EmptyBlock();
                 tmp.set_parent(this.parent);
                 this.parent.replaceChild(tmp, this);
                 this.parent.get_root().format();
