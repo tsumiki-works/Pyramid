@@ -1,6 +1,5 @@
 import { Popup } from "../popup.js";
 import { Block } from "./block.js"
-import { EmptyBlock } from "./concrete_block/empty_block.js";
 
 export abstract class FullBlock extends Block {
     constructor(backgroundColor: string, pyramid_type: PyramidType, left: number, top: number, content: string) {
@@ -46,7 +45,7 @@ export abstract class FullBlock extends Block {
             const x = this.get_x();
             const y = this.get_y();
             if (this.parent !== null) {
-                const tmp = new EmptyBlock();
+                const tmp = Block.create_empty_block();
                 tmp.set_parent(this.parent);
                 this.parent.replaceChild(tmp, this);
                 this.parent.get_root().format();
