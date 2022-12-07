@@ -28,7 +28,7 @@ export class FunBlock extends FullBlock {
         this.format();
     }
 
-    eval(env: Map<String, any>): PyramidObject{
+    eval(env: Map<string, any>): PyramidObject{
         const f = env.get(this.get_content());
         if (typeof f !== "function") {
             throw new Error(this.get_content() + " function undefined");
