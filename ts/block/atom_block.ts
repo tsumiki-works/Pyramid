@@ -1,23 +1,17 @@
 import { Popup } from "../popup.js";
-import { Block } from "./block.js";
+import { FullBlock } from "./full_block.js"
 
-export class AtomBlock extends Block {
-    constructor(left: number, top: number, content: string, type_id: PyramidTypeID) {
-        switch (type_id) {
-            case PyramidTypeID.I32:
-            case PyramidTypeID.F32:
-            case PyramidTypeID.Bool:
-            case PyramidTypeID.String:
-                break;
-            default:
-                throw new Error(type_id + " is not atom.");
-        }
-        super({ type_id: type_id, attribute: null });
-        this.style.left = left + "px";
-        this.style.top = top + "px";
-        this.style.backgroundColor = "blue"; //! [TODO]
-        this.innerText = content;
+export abstract class AtomBlock extends FullBlock {
+    constructor(pyramid_type: PyramidType, left: number, top: number, content: string) {
+        super("blue", pyramid_type, left, top, content);
     }
+
+    abstract eval(env: Map<String, any>): PyramidObject;
+
+    /* ============================================================================================================= */
+    /*     Events                                                                                                    */
+    /* ============================================================================================================= */
+
     protected override build_popup_event(): [string, EventListener][] {
         return [
             ["編集", (e: MouseEvent) => this.popup_event_edit(e)],
@@ -48,4 +42,4 @@ export class AtomBlock extends Block {
         input.focus();
     }
 }
-customElements.define('pyramid-block-atom', AtomBlock);
+//customElements.define('pyramid-block-atom', AtomBlock);

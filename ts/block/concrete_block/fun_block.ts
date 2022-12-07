@@ -1,28 +1,62 @@
-import { Popup } from "../popup.js";
-import { Block } from "./block.js";
+import { Popup } from "../../popup.js";
+import { Block } from "../block.js";
+import { FullBlock } from "../full_block.js";
 
-export class FunBlock extends Block {
+export class FunBlock extends FullBlock {
     private is_folding: boolean;
     constructor(left: number, top: number, content: string, fun_attribute: FunctionAttribute) {
-        super({ type_id: PyramidTypeID.Function, attribute: fun_attribute });
-        this.style.left = left + "px";
-        this.style.top = top + "px";
-        this.style.backgroundColor = "green"; //! [TODO]
-        this.innerText = content;
+        super("green", 
+            { type_id: PyramidTypeID.Function,
+                attribute: fun_attribute 
+            },
+            left,
+            top,
+            content);
         this.is_folding = false;
         if (fun_attribute.args_cnt === Infinity) {
-            const child = new Block();
-            child.set_parent(this);
+            const child = Block.create_empty_block();
+            child.set_parent(this); //![ToDo]
             this.appendChild(child);
         } else {
             for (let i = 0; i < fun_attribute.args_cnt; ++i) {
-                const child = new Block();
+                const child = Block.create_empty_block();
                 child.set_parent(this);
                 this.appendChild(child);
             }
         }
         this.format();
     }
+
+    eval(env: Map<String, any>): PyramidObject{
+        const f = env.get(this.get_content());
+        if (typeof f !== "function") {
+            throw new Error(this.get_content() + " function undefined");
+        } else {
+            return {
+                pyramid_type: this.pyramid_type.attribute.return_type,
+                value: f(this.children, env),
+            };
+        }
+    }
+    
+    private static disable_child_blocks(block: Block) {
+        for (const child of block.get_children()) {
+            child.classList.remove("pyramid-block");
+            child.classList.add("pyramid-block-disable");
+            FunBlock.disable_child_blocks(child);
+        }
+    }
+    private static enable_child_blocks(block: Block) {
+        for (const child of block.get_children()) {
+            child.classList.remove("pyramid-block-disable");
+            child.classList.add("pyramid-block");
+            FunBlock.enable_child_blocks(child);
+        }
+    }
+    /* ============================================================================================================= */
+    /*     Events                                                                                                    */
+    /* ============================================================================================================= */
+
     protected override build_popup_event(): [string, EventListener][] {
         let fold_open = null;
         if (this.is_folding) {
@@ -56,7 +90,7 @@ export class FunBlock extends Block {
             const x = child.get_x();
             const y = child.get_y();
             child.set_parent(null);
-            const tmp = new Block();
+            const tmp = Block.create_empty_block();
             tmp.set_parent(this);
             this.replaceChild(tmp, child);
             if (child.is_empty()) {
@@ -68,20 +102,6 @@ export class FunBlock extends Block {
             }
         }
         this.kill();
-    }
-    private static disable_child_blocks(block: Block) {
-        for (const child of block.get_children()) {
-            child.classList.remove("pyramid-block");
-            child.classList.add("pyramid-block-disable");
-            FunBlock.disable_child_blocks(child);
-        }
-    }
-    private static enable_child_blocks(block: Block) {
-        for (const child of block.get_children()) {
-            child.classList.remove("pyramid-block-disable");
-            child.classList.add("pyramid-block");
-            FunBlock.enable_child_blocks(child);
-        }
     }
 }
 customElements.define('pyramid-block-fun', FunBlock);
