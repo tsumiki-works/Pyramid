@@ -12,6 +12,10 @@ export abstract class Block extends HTMLElement {
     protected pyramid_type: PyramidType;
     protected parent: Block | null;
 
+    protected mousedown_listener: EventListener;
+    protected mousemove_listener: EventListener;
+    protected mouseup_listener: EventListener;
+
     constructor(backgroundColor: string, pyramid_type: PyramidType) {
         super();
         // fields
@@ -28,9 +32,13 @@ export abstract class Block extends HTMLElement {
         this.style.minWidth = Block.UNIT_WIDTH + "px";
         this.style.minHeight = Block.UNIT_HEIGHT + "px";
         document.getElementById("blocks").appendChild(this);
+        this.init_events();
     }
 
+    protected abstract init_events(): void;
+
     abstract kill(): void;
+
     connect_with(target: Block): boolean {
         if (this === target) {
             return false;

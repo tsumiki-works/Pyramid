@@ -11,16 +11,23 @@ export class EmptyBlock extends Block {
     kill(): void {
         this.remove();
     }
-    
-    private mousedown_listener: EventListener;
 
-    private init_events() {
+    init_events() {
         this.mousedown_listener = (e: MouseEvent) => this.event_mousedown(e);
+        this.mousemove_listener = (e: MouseEvent) => this.event_mousemove(e);
+        this.mouseup_listener = (e: MouseEvent) => this.event_mouseup(e);
         this.addEventListener("mousedown", this.mousedown_listener);
     }
-
+    
     private event_mousedown(e: MouseEvent){
         e.stopPropagation();
     }
+    private event_mousemove(e: MouseEvent){
+        e.stopPropagation();
+    }
+    private event_mouseup(e: MouseEvent){
+        e.stopPropagation();
+    }
+
 }
 customElements.define('pyramid-block-empty', EmptyBlock);

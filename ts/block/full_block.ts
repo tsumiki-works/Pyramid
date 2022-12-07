@@ -36,11 +36,7 @@ export abstract class FullBlock extends Block {
     /*     Events                                                                                                    */
     /* ============================================================================================================= */
 
-    private mousedown_listener: EventListener;
-    private mousemove_listener: EventListener;
-    private mouseup_listener: EventListener;
-
-    private init_events() {
+    init_events() {
         this.mousedown_listener = (e: MouseEvent) => this.event_mousedown(e);
         this.mousemove_listener = (e: MouseEvent) => this.event_mousemove(e);
         this.mouseup_listener = (e: MouseEvent) => this.event_mouseup(e);
