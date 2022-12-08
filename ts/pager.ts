@@ -6,4 +6,8 @@ export class Pager {
           });
         window.location.href = ""
     }
+    static goto_tutorial(){
+        // debug
+        window.location.href = "./tutorial/index.html";
+    }
 }
