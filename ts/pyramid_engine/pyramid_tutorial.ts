@@ -23,16 +23,18 @@ export class PyramidTutorial extends PyramidEngine {
     private static doc_size = document.body.offsetWidth * 0.3 - MenuManager.getInstance().get_width() * 0.5;
 
     private doc: HTMLDivElement;
-    private title: string;
+    private problem_number: number;
+    private checker: Function[];
     private problems: Map<string, Function>;
     private menu_contents: PyramidMenuContent[];
 
     private previous_problem;
     private next_problem;
 
-    constructor(_title: string, _menu_contents: PyramidMenuContent[]){
+    constructor(_no: number, _checker: Function[], _menu_contents: PyramidMenuContent[]){
         super();
-        this.title = _title;
+        this.problem_number = _no;
+        this.checker = _checker;
         this.menu_contents = _menu_contents;
         this.format_elements();
     }
@@ -61,6 +63,5 @@ export class PyramidTutorial extends PyramidEngine {
         // ![TODO] place tutorial contents
         
         // debug
-        this.doc.innerText = this.title;
     }
 }
