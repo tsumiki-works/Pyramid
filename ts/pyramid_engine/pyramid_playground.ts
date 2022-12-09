@@ -31,15 +31,17 @@ export class PyramidPlayground extends PyramidEngine {
         }
     }
     protected override init_menu(){
-        MenuManager.getInstance().add_menu_content({
+        let menu_contents_basic = new Array<PyramidMenuContent>();
+        menu_contents_basic.push({
             color: "blue",
             text: "0", 
             block_constructor: ((_l: number, _t: number) => new I32Block(_l, _t, "0"))
         });
-        MenuManager.getInstance().add_menu_content({
+        menu_contents_basic.push({
             color: "green",
             text: "+",
             block_constructor: ((_l: number, _t: number) => new FunBlock(_l, _t, "+", {args_cnt: 2, return_type: { type_id: PyramidTypeID.I32, attribute: null }}))
         });
+        MenuManager.getInstance().add_menu_contents("Basic", "black", menu_contents_basic);
     }
 }
