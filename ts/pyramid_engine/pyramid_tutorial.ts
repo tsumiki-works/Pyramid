@@ -42,7 +42,7 @@ export class PyramidTutorial extends PyramidEngine {
 
     protected override init_menu(): void {
         for(const mc of this.menu_contents){
-            MenuManager.getInstance().add_menu_content(mc);
+            //MenuManager.getInstance().add_menu_contents(mc);
         }
     }
     private init_doc(): void {

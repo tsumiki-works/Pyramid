@@ -27,6 +27,16 @@ div#workspace {
     user-select: none;
 }
 
+.pyramid-menutab {
+    position: absolute;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    color: white;
+    font-weight: bold;
+    user-select: none;
+}
+
 .pyramid-block-disable {
     display: none;
 }
@@ -37,10 +47,31 @@ div#workspace {
 
 div#menu {
     position: absolute;
-    background-color: gray;
     left: 0;
     top: 0;
+    border-right: solid 1px;
+    border-color: gray;
     width: 190px;
+    height: 100vh;
+}
+
+div#menu-tab {
+    position: absolute;
+    background-color: lightgray;
+    left: 0;
+    top: 0;
+    width: 70px;
+    height: 100vh;
+    border-right: dashed 1px;
+    border-color: gray;
+}
+
+div#menu-items {
+    position: absolute;
+    background-color: lightgray;
+    left: 71px;
+    top: 0;
+    width: calc(190px - 71px);
     height: 100vh;
 }
 
@@ -80,6 +111,7 @@ div#logo-wrapper {
     left: 0;
     top: 0;
     width: 100vw;
+    border-bottom: solid 1px;
 }
 
 div#popup-menu {

@@ -29,7 +29,6 @@ export class MenuBlock extends HTMLElement {
         this.span.innerText = _text;
         this.appendChild(this.span);
         this.style.backgroundColor = _color;
-        document.getElementById("menu").appendChild(this);
         this.init_event();
     }
 
