@@ -43,5 +43,16 @@ export class PyramidPlayground extends PyramidEngine {
             block_constructor: ((_l: number, _t: number) => new FunBlock(_l, _t, "+", {args_cnt: 2, return_type: { type_id: PyramidTypeID.I32, attribute: null }}))
         });
         MenuManager.getInstance().add_menu_contents("Basic", "black", menu_contents_basic);
+
+        // debug
+        
+        let debug_menu: PyramidMenuContent[] = [
+            {color: "wheat", text: "Hello", block_constructor: ((_l: number, _t: number) => new I32Block(_l, _t, "0"))},
+            {color: "yellow", text: "lemon", block_constructor: ((_l: number, _t: number) => new I32Block(_l, _t, "1"))},
+            {color: "lightblue", text: "ocean", block_constructor: ((_l: number, _t: number) => new I32Block(_l, _t, "2"))}
+        ];
+        MenuManager.getInstance().add_menu_contents("Test", "lightgreen", debug_menu);
+
+        MenuManager.getInstance().enable_tab("Basic");
     }
 }

@@ -56,13 +56,33 @@ export class MenuManager {
         // Constraction Menu-Tab
         let tmp_menu_tab: MenuTab = new MenuTab(
             this.menu_tab.offsetWidth * 0.5 - MenuTab.TAB_WIDTH * 0.5,
-            this.menu_content_tab.keys.length * MenuBlock.UNIT_HEIGHT * 1.2 + MenuBlock.UNIT_HEIGHT * 0.3,
+            this.menu_content_tab.size * MenuBlock.UNIT_HEIGHT * 1.2 + MenuBlock.UNIT_HEIGHT * 0.3,
             color,
-            label
+            label,
         );
+        tmp_menu_tab.addEventListener("mousedown", (e: MouseEvent) => this.enable_tab(label));
         this.menu_tab.appendChild(tmp_menu_tab);
         this.menu_content_tab.set(label, tmp_menu_tab);
         
+
+    }
+
+    enable_tab(_label: string): void {
+        if(!this.menu_contents.has(_label)){
+            alert("Pyramid frontend error: Failed to enable tab of ` "+ _label +" `");
+            return;
+        }
+        this.menu_contents.forEach((menuContents, lbl) => {
+            if(lbl == _label){
+                for(const mc of menuContents){
+                    mc.style.display = "flex";
+                }
+            }else{
+                for(const mc of menuContents){
+                    mc.style.display = "none";
+                }
+            }
+        });
     }
 
     clear(): void {

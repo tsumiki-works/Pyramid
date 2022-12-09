@@ -3,6 +3,9 @@ export class MenuTab extends HTMLElement {
     static TAB_WIDTH = 60;
     static TAB_HEIGHT = 50;
 
+    private enabler: Function;
+    private mousedown_listener: EventListener;
+
     constructor(_left: number, _top: number, _color: string, _label: string){
         super();
         this.classList.add("pyramid-menutab");
@@ -16,7 +19,11 @@ export class MenuTab extends HTMLElement {
         this.style.backgroundColor = _color;
 
         this.style.borderRadius = MenuTab.TAB_HEIGHT + "px";
+
     }
+
+
+
 
 }
 customElements.define("pyramid-menutab", MenuTab);
