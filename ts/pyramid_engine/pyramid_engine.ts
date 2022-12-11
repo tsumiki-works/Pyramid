@@ -14,7 +14,6 @@ export abstract class PyramidEngine {
     }
     protected init(): void {
         this.init_events();
-        this.init_menu();
     };
     protected init_events() {
         this.mousedown_listener = (e: MouseEvent) => this.event_mousedown(e);

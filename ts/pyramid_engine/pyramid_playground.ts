@@ -19,9 +19,13 @@ export class PyramidPlayground extends PyramidEngine {
     constructor(){
         super();
     }
-    protected init(): void {
+    protected override init(): void {
         this.init_events();
         this.init_menu();
+        this.init_dom();
+    }
+    private init_dom(): void {
+        document.getElementById("playground").style.width = "100%";
     }
 
     protected override event_mousedown(e: MouseEvent) {
