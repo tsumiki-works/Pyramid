@@ -1,4 +1,4 @@
-import { Operator } from "./Operator.js";
+import { Operator } from "./operator.js";
 
 let normalExpValues: PyramidObject[] = []
 let normalRealValues: PyramidObject[] = []
