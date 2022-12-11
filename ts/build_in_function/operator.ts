@@ -19,17 +19,18 @@ export class Operator {
         return (-3.402823e+38 < val && val < 3.402823e+38);
     }
     private static isString = (val: any): val is string => typeof val === "string";
-    
+
     //operator
     static add(arg1: PyramidObject, arg2: PyramidObject): PyramidObject {
         if (arg1.pyramid_type.type_id === PyramidTypeID.I32 && arg2.pyramid_type.type_id === PyramidTypeID.I32) {
             let ans: number = arg1.value + arg2.value;
-            //check  isInf, isInt
+            //check isNaN, isInf, isInt
+            if (Number.isNaN(ans)) throw Error("pyramid backend error: int addition return NaN");
+            if (!Number.isInteger(ans)) throw Error("pyramid backend error: int addition return non-integer")
             if (!Operator.is_in_i32(ans)) {
-                if (ans >= 0) {throw Error ("pyramid backend error: int addition overflowed toward positive");}
-                else {throw Error ("pyramid backend error: int addition overflowed toward negative");}
+                if (ans >= 0) throw Error("pyramid backend error: int addition overflowed toward positive");
+                else throw Error("pyramid backend error: int addition overflowed toward negative");
             }
-            if (!Number.isInteger(ans)) throw new Error("pyramid backend error: int addition return non-integer")
             return {
                 pyramid_type: { type_id: PyramidTypeID.I32, attribute: null },
                 value: ans
@@ -39,7 +40,8 @@ export class Operator {
             || arg1.pyramid_type.type_id === PyramidTypeID.F32 && arg2.pyramid_type.type_id === PyramidTypeID.I32
             || arg1.pyramid_type.type_id === PyramidTypeID.I32 && arg2.pyramid_type.type_id === PyramidTypeID.F32) {
             let ans: number = arg1.value + arg2.value;
-            //check isNan isInf
+            //check isNaN isInf
+            if (Number.isNaN(ans)) return Operator.pyramid_f32_nan;
             if (!Operator.is_in_f32(ans)) {
                 if (ans >= 0) return Operator.pyramid_f32_positive_inf;
                 else return Operator.pyramid_f32_negative_inf;
@@ -51,8 +53,9 @@ export class Operator {
         }
         else if (arg1.pyramid_type.type_id === PyramidTypeID.String && arg2.pyramid_type.type_id === PyramidTypeID.String) {
             let ans: string = arg1.value + arg2.value;
-            //check invaild value
-            if (!Operator.isString(ans)) throw new Error("pyramid backend error: string addition return non-string")
+            //check isNaN isString
+            if (Number.isNaN(ans)) throw Error("pyramid backend error: string addition return NaN")
+            if (!Operator.isString(ans)) throw Error("pyramid backend error: string addition return non-string")
             return {
                 pyramid_type: { type_id: PyramidTypeID.String, attribute: null },
                 value: ans
@@ -60,6 +63,40 @@ export class Operator {
         }
         else {
             throw new Error("pyramid backend error: invalid operands are given add oprator")
+        }
+    }
+    static sub(arg1: PyramidObject, arg2: PyramidObject): PyramidObject {
+        if (arg1.pyramid_type.type_id === PyramidTypeID.I32 && arg2.pyramid_type.type_id === PyramidTypeID.I32) {
+            let ans: number = arg1.value - arg2.value;
+            //check isNaN, isInf, isInt
+            if (Number.isNaN(ans)) throw Error("pyramid backend error: int subtraction return NaN");
+            if (!Number.isInteger(ans)) throw Error("pyramid backend error: int subtraction return non-integer")
+            if (!Operator.is_in_i32(ans)) {
+                if (ans >= 0) throw Error("pyramid backend error: int subtraction overflowed toward positive");
+                else throw Error("pyramid backend error: int subtraction overflowed toward negative");
+            }
+            return {
+                pyramid_type: { type_id: PyramidTypeID.I32, attribute: null },
+                value: ans
+            }
+        }
+        else if (arg1.pyramid_type.type_id === PyramidTypeID.F32 && arg2.pyramid_type.type_id === PyramidTypeID.F32
+            || arg1.pyramid_type.type_id === PyramidTypeID.F32 && arg2.pyramid_type.type_id === PyramidTypeID.I32
+            || arg1.pyramid_type.type_id === PyramidTypeID.I32 && arg2.pyramid_type.type_id === PyramidTypeID.F32) {
+            let ans: number = arg1.value - arg2.value;
+            //check isNaN isInf
+            if (Number.isNaN(ans)) return Operator.pyramid_f32_nan;
+            if (!Operator.is_in_f32(ans)) {
+                if (ans >= 0) return Operator.pyramid_f32_positive_inf;
+                else return Operator.pyramid_f32_negative_inf;
+            }
+            return {
+                pyramid_type: { type_id: PyramidTypeID.F32, attribute: null },
+                value: ans
+            }
+        }
+        else {
+            throw new Error("pyramid backend error: invalid operands are given sub oprator")
         }
     }
 }
