@@ -80,8 +80,8 @@ export abstract class FullBlock extends Block {
     }
 
     private event_mousemove(e: MouseEvent) {
-        this.style.left = (e.pageX - this.get_width() * 0.5) + "px";
-        this.style.top = (e.pageY - this.get_height() * 0.5) + "px";
+        this.style.left = (e.pageX - document.getElementById("playground").offsetLeft - this.get_width() * 0.5) + "px";
+        this.style.top = (e.pageY - document.getElementById("pyramid-wrapper").offsetTop - this.get_height() * 0.5) + "px";
         this.get_root().format();
     }
 

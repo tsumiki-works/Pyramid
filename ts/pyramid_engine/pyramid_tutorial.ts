@@ -1,5 +1,4 @@
 import { PyramidEngine } from "./pyramid_engine.js";
-import { Popup } from "../popup.js";
 import { MenuManager } from "../menu/menu.js";
 
 export class PyramidTutorial extends PyramidEngine {
@@ -26,42 +25,24 @@ export class PyramidTutorial extends PyramidEngine {
     private problem_number: number;
     private checker: Function[];
     private problems: Map<string, Function>;
-    private menu_contents: PyramidMenuContent[];
+    private menu_contents: Map<MenuTabContent, MenuContent[]>;
 
     private previous_problem;
     private next_problem;
 
-    constructor(_no: number, _checker: Function[], _menu_contents: PyramidMenuContent[]){
+    constructor(_no: number, _checker: Function[], _menu_contents: Map<MenuTabContent, MenuContent[]>){
         super();
         this.problem_number = _no;
         this.checker = _checker;
         this.menu_contents = _menu_contents;
-        this.format_elements();
-    }
-    protected override init(): void {
-        this.init_doc();
+        this.init_menu();
     }
 
     protected override init_menu(): void {
-        for(const mc of this.menu_contents){
-            //MenuManager.getInstance().add_menu_contents(mc);
+        for(const key of this.menu_contents.keys()){
+            MenuManager.getInstance().add_menu_contents(key, this.menu_contents.get(key));
         }
-    }
-    private init_doc(): void {
-        this.doc = document.createElement("div");
-        document.body.appendChild(this.doc);
-    }
-    private format_elements(): void {
-        // initialize elements
-        this.doc.id = "tutorial-doc";
-        this.doc.style.width = PyramidTutorial.doc_size + "px";
-        this.doc.style.top = document.getElementById("logo-wrapper").offsetHeight + "px";
-        MenuManager.getInstance().set_left(PyramidTutorial.doc_size);
-        document.getElementById("console").style.width = (document.body.offsetWidth - MenuManager.getInstance().get_width() - PyramidTutorial.doc_size) + "px";
-        
-        // Construct tutorial
-        // ![TODO] place tutorial contents
-        
-        // debug
+        let first_tab = this.menu_contents.keys().next().value;
+        MenuManager.getInstance().enable_tab(first_tab.label);
     }
 }

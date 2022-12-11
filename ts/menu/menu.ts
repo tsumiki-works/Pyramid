@@ -18,7 +18,7 @@ export class MenuManager {
         this.menu_tab = document.getElementById("menu-tab") as HTMLDivElement;
         this.menu_items = document.getElementById("menu-items") as HTMLDivElement;
 
-        this.menu.style.top = document.getElementById("logo-wrapper").offsetHeight + "px";
+        //this.menu.style.top = document.getElementById("logo-wrapper").offsetHeight + "px";
         this.menu_contents = new Map<string, MenuBlock[]>();
         this.menu_content_tab = new Map<string, MenuTab>();
     }
@@ -37,7 +37,7 @@ export class MenuManager {
         return this.menu.offsetWidth;
     }    
 
-    add_menu_contents(label: string, color: string, menu_content: PyramidMenuContent[]): void {
+    add_menu_contents(menu_tab: MenuTabContent, menu_content: MenuContent[]): void {
         let tmp_menu_contents: MenuBlock[] = new Array<MenuBlock>();
         // Constraction Menu-Items
         for(const mc of menu_content){
@@ -51,18 +51,18 @@ export class MenuManager {
             this.menu_items.appendChild(tmp_menublock);
             tmp_menu_contents.push(tmp_menublock);
         }
-        this.menu_contents.set(label, tmp_menu_contents);
+        this.menu_contents.set(menu_tab.label, tmp_menu_contents);
 
         // Constraction Menu-Tab
         let tmp_menu_tab: MenuTab = new MenuTab(
             this.menu_tab.offsetWidth * 0.5 - MenuTab.TAB_WIDTH * 0.5,
             this.menu_content_tab.size * MenuBlock.UNIT_HEIGHT * 1.2 + MenuBlock.UNIT_HEIGHT * 0.3,
-            color,
-            label,
+            menu_tab.color,
+            menu_tab.label,
         );
-        tmp_menu_tab.addEventListener("mousedown", (e: MouseEvent) => this.enable_tab(label));
+        tmp_menu_tab.addEventListener("mousedown", (e: MouseEvent) => this.enable_tab(menu_tab.label));
         this.menu_tab.appendChild(tmp_menu_tab);
-        this.menu_content_tab.set(label, tmp_menu_tab);
+        this.menu_content_tab.set(menu_tab.label, tmp_menu_tab);
         
 
     }
