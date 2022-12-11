@@ -24,7 +24,12 @@ export abstract class FullBlock extends Block {
         document.getElementById("trash").appendChild(this);
     }
     get_content(): string {
-        return this.innerText;
+        for (let i = 0; i < this.childNodes.length; ++i) {
+            if (this.childNodes[i].nodeName === "#text") {
+                return this.childNodes[i].nodeValue;
+            }
+        }
+        throw new Error("content is empty");
     }
     get_children(): Array<Block> {
         return Array.from(this.children) as Array<Block>;

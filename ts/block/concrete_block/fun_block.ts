@@ -4,15 +4,19 @@ import { FullBlock } from "../full_block.js";
 import { EmptyBlock } from "./empty-block.js";
 
 export class FunBlock extends FullBlock {
+
     private is_folding: boolean;
+
     constructor(left: number, top: number, content: string, fun_attribute: FunctionAttribute) {
-        super("green", 
-            { type_id: PyramidTypeID.Function,
-                attribute: fun_attribute 
+        super("green",
+            {
+                type_id: PyramidTypeID.Function,
+                attribute: fun_attribute
             },
             left,
             top,
-            content);
+            content
+        );
         this.is_folding = false;
         if (fun_attribute.args_cnt === Infinity) {
             const child = new EmptyBlock();
@@ -28,7 +32,13 @@ export class FunBlock extends FullBlock {
         this.format();
     }
 
-    eval(env: Map<string, any>): PyramidObject{
+    eval(env: Map<string, any>): PyramidObject {
+        //! [TODO] show error that arguments aren't satisfied on console
+        for (const child of this.get_children()) {
+            if (child.is_empty()) {
+                throw new Error("lack of argument found");
+            }
+        }
         const f = env.get(this.get_content());
         if (typeof f !== "function") {
             throw new Error(this.get_content() + " function undefined");
@@ -39,7 +49,7 @@ export class FunBlock extends FullBlock {
             };
         }
     }
-    
+
     private static disable_child_blocks(block: Block) {
         for (const child of block.get_children()) {
             child.classList.remove("pyramid-block");
@@ -66,10 +76,15 @@ export class FunBlock extends FullBlock {
             fold_open = ["畳む", _ => this.popup_event_fold()];
         }
         return [
+            ["実行", _ => this.popup_event_eval()],
             fold_open,
             ["削除", _ => this.popup_event_kill_self()],
             ["子も削除", _ => this.popup_event_kill()],
         ];
+    }
+    private popup_event_eval() {
+        Popup.remove_popup();
+        console.log(this.eval(new Map()).value); //! [TODO]
     }
     private popup_event_fold() {
         Popup.remove_popup();
