@@ -16,7 +16,7 @@ export class MenuBlock extends HTMLElement {
     private span: HTMLElement;
     private text: string;
 
-    constructor(_left: number, _top: number, _color: string, _text: string, _block_constructor: Function){
+    constructor(_left: number, _top: number, _color: string, _text: string, _block_constructor: Function) {
         super();
 
         this.classList.add("pyramid-menublock");
@@ -32,7 +32,7 @@ export class MenuBlock extends HTMLElement {
         this.init_event();
     }
 
-    private init_event(){
+    private init_event() {
         this.mousedown_listener = (e: MouseEvent) => this.event_mousedown(e);
         this.mousemove_listener = (e: MouseEvent) => this.event_mousemove(e);
         this.mouseup_listener = (e: MouseEvent) => this.event_mouseup(e);
@@ -43,8 +43,8 @@ export class MenuBlock extends HTMLElement {
     private mousemove_listener: EventListener;
     private mouseup_listener: EventListener;
 
-    private event_mousedown(e: MouseEvent){
-        if(e.button === 0){
+    private event_mousedown(e: MouseEvent) {
+        if (e.button === 0) {
             this.removeEventListener("mousedown", this.mousedown_listener);
             document.addEventListener("mousemove", this.mousemove_listener);
             document.addEventListener("mouseup", this.mouseup_listener);
@@ -57,14 +57,20 @@ export class MenuBlock extends HTMLElement {
         }
     }
 
-    private event_mousemove(e: MouseEvent){
+    private event_mousemove(e: MouseEvent) {
         this.block.set_left(e.pageX);
         this.block.set_top(e.pageY);
     }
 
-    private event_mouseup(e: MouseEvent){
-        if(e.pageX < MenuManager.getInstance().get_width()){
+    private event_mouseup(e: MouseEvent) {
+        if (e.pageX < MenuManager.getInstance().get_width()) {
             this.block.remove();
+        }
+        const roots = Array.from(document.getElementById("blocks").children) as Array<Block>;
+        for (const root of roots) {
+            if (root.connect_with(this.block)) {
+                break;
+            }
         }
         this.block.style.zIndex = "0";
         this.addEventListener("mousedown", this.mousedown_listener);

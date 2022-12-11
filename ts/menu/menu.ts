@@ -22,9 +22,9 @@ export class MenuManager {
         this.menu_contents = new Map<string, MenuBlock[]>();
         this.menu_content_tab = new Map<string, MenuTab>();
     }
-    
+
     static getInstance(): MenuManager {
-        if(MenuManager.instance == null){
+        if (MenuManager.instance == null) {
             MenuManager.instance = new MenuManager();
         }
         return MenuManager.instance;
@@ -35,16 +35,16 @@ export class MenuManager {
 
     get_width(): number {
         return this.menu.offsetWidth;
-    }    
+    }
 
     add_menu_contents(menu_tab: MenuTabContent, menu_content: MenuContent[]): void {
         let tmp_menu_contents: MenuBlock[] = new Array<MenuBlock>();
         // Constraction Menu-Items
-        for(const mc of menu_content){
+        for (const mc of menu_content) {
             let tmp_menublock: MenuBlock = new MenuBlock(
-                this.menu_items.offsetWidth * 0.5 - MenuBlock.UNIT_WIDTH * 0.5, 
-                tmp_menu_contents.length * MenuBlock.UNIT_HEIGHT * 1.2 + MenuBlock.UNIT_HEIGHT * 0.3, 
-                mc.color, 
+                this.menu_items.offsetWidth * 0.5 - MenuBlock.UNIT_WIDTH * 0.5,
+                tmp_menu_contents.length * MenuBlock.UNIT_HEIGHT * 1.2 + MenuBlock.UNIT_HEIGHT * 0.3,
+                mc.color,
                 mc.text,
                 mc.block_constructor,
             );
@@ -63,22 +63,22 @@ export class MenuManager {
         tmp_menu_tab.addEventListener("mousedown", (e: MouseEvent) => this.enable_tab(menu_tab.label));
         this.menu_tab.appendChild(tmp_menu_tab);
         this.menu_content_tab.set(menu_tab.label, tmp_menu_tab);
-        
+
 
     }
 
     enable_tab(_label: string): void {
-        if(!this.menu_contents.has(_label)){
-            alert("Pyramid frontend error: Failed to enable tab of ` "+ _label +" `");
+        if (!this.menu_contents.has(_label)) {
+            alert("Pyramid frontend error: Failed to enable tab of ` " + _label + " `");
             return;
         }
         this.menu_contents.forEach((menuContents, lbl) => {
-            if(lbl == _label){
-                for(const mc of menuContents){
+            if (lbl == _label) {
+                for (const mc of menuContents) {
                     mc.style.display = "flex";
                 }
-            }else{
-                for(const mc of menuContents){
+            } else {
+                for (const mc of menuContents) {
                     mc.style.display = "none";
                 }
             }
