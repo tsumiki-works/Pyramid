@@ -4,7 +4,10 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "prebuild":"if [ -e js/ ]; then rm -r js/ ;fi",
+    "pretest-op": "if [ -e js_test ]; then rm -r js_test ;fi",
+    "build": "npx tsc",
+    "test-op": "npx tsc ts/build_in_function/operator_test.ts ts/types.ts -outDir js_test -target ES6 -module es2020"
   },
   "author": "",
   "license": "ISC",
