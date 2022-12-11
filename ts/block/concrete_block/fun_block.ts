@@ -32,20 +32,22 @@ export class FunBlock extends FullBlock {
         this.format();
     }
 
-    eval(env: Map<string, any>): PyramidObject {
+    eval(env: Map<string, PyramidObject>): PyramidObject {
         //! [TODO] show error that arguments aren't satisfied on console
         for (const child of this.get_children()) {
             if (child.is_empty()) {
                 throw new Error("lack of argument found");
             }
         }
-        const f = env.get(this.get_content());
-        if (typeof f !== "function") {
-            throw new Error(this.get_content() + " function undefined");
+        const v = env.get(this.get_content());
+        if (v === undefined) {
+            throw new Error(this.get_content() + " function undefined"); //! [TODO] exception
+        } else if (v.pyramid_type != this.pyramid_type) {
+            throw new Error(this.get_content() + " function type is defferent from this"); //! [TODO] exception
         } else {
             return {
                 pyramid_type: this.pyramid_type.attribute.return_type,
-                value: f(this.children, env),
+                value: v.value(this.children, env),
             };
         }
     }

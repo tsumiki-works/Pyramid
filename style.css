@@ -43,6 +43,12 @@ div#workspace {
 
 .pyramid-block-folding {
     border: thick double red;
+    box-sizing: border-box;
+}
+
+.pyramid-block-variable {
+    border: dotted 4px red;
+    box-sizing: border-box;
 }
 
 div#menu {
