@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="ja">
+
+<head>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" href="style.css">
+    <title>Pyramid</title>
+    <link rel="icon" href="images/favicon.ico" />
+    <link rel="apple-touch-icon" href="images/apple-touch-icon-152.png">
+    <meta name="twitter:card" content="summary_large_image" />
+    <!--- Twitterカードは絶対パスで指定 -->
+    <meta name="twitter:image" content="https://watanabemayu.jp/AzaleaWorks/pyramid_twitter_card.png">
+</head>
+
+<body oncontextmenu="return false;">
+    <div id="workspace">
+        <div id="blocks"></div>
+        <div id="trash"></div>
+    </div>
+    <div id="menu">
+        
+    </div>
+    <div id="console">
+        <div id="console-content">
+            <label id="console-log"></label>
+            <label id="console-line-head"># </label><label id="console-line" contentEditable="true"></label>
+        </div>
+    </div>
+    <div id="logo-wrapper">
+        <img id="logo" src="images/logo.svg" width = "12%" alt="ピラミッドのロゴ">
+    </div>
+    <script src="js_test/types.js"></script>
+    <script type="module" src="js_test/build_in_function/operator.js"></script>
+    <script type="module" src="js_test/build_in_function/operator_test.js"></script>
+</body>
+
+</html>
