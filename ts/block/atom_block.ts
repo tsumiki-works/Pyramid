@@ -2,11 +2,16 @@ import { Popup } from "../popup.js";
 import { FullBlock } from "./full_block.js"
 
 export abstract class AtomBlock extends FullBlock {
+
+    protected is_variable;
+
     constructor(pyramid_type: PyramidType, left: number, top: number, content: string) {
         super("blue", pyramid_type, left, top, content);
+        this.is_variable = false;
     }
 
-    abstract eval(env: Map<string, any>): PyramidObject;
+    abstract eval(env: Map<string, PyramidObject>): PyramidObject;
+    abstract check_type(text: string): boolean;
 
     /* ============================================================================================================= */
     /*     Events                                                                                                    */
@@ -31,11 +36,16 @@ export abstract class AtomBlock extends FullBlock {
         input.contentEditable = "true";
         input.addEventListener("keydown", (e => {
             if (e.key == "Enter") {
-                if (!Number.isNaN(Number(input.value))) {
-                    this.innerText = input.value;
-                    this.get_root().format();
-                }
                 Popup.remove_popup();
+                if (input.value.length === 0) {
+                } else if (input.value[0] === "$") {
+                    this.is_variable = true;
+                    this.classList.add("pyramid-block-variable");
+                    this.innerText = input.value.substring(1);
+                } else if (this.check_type(input.value)) {
+                    this.innerText = input.value;
+                } else { }
+                this.get_root().format();
             }
         }));
         popup.appendChild(input);
