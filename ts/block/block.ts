@@ -1,6 +1,4 @@
 import { BlockFormatter } from "./block_formatter.js";
-import { EmptyBlock } from "./concrete_block/empty-block.js";
-import { FullBlock } from "./full_block.js";
 
 export abstract class Block extends HTMLElement {
 
@@ -113,7 +111,7 @@ export abstract class Block extends HTMLElement {
         }
     }
     get_children(): Array<Block>{
-        return Array.from(this.children) as Array<FullBlock>;
+        return Array.from(this.children) as Array<Block>;
     }
     is_hit(target: Block): boolean {
         return Math.abs(this.get_x() - target.get_x()) < this.get_width() * 0.5

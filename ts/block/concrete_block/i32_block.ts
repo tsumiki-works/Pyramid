@@ -12,8 +12,8 @@ export class I32Block extends AtomBlock {
         content)
     }
 
-    eval(env: Map<string, any>): PyramidObject{
-        return { pyramid_type: this.pyramid_type, value: this.get_content() };
+    eval(_: Map<string, any>): PyramidObject{
+        return { pyramid_type: this.pyramid_type, value: parseFloat(this.get_content()) };
     }
 }
 customElements.define('pyramid-block-i32', I32Block);
