@@ -14,7 +14,7 @@ export class ConsoleManager {
         this.console_log = document.getElementById("console-log") as HTMLLabelElement;
         this.click_listener = (e: Event) => this.event_click_console(e);
         this.keydown_listener = (e: KeyboardEvent) => this.event_keydown_console(e);
-        this.prevent_enter_listener = (e: KeyboardEvent) => this.prevent_enter_listener(e);
+        //this.prevent_enter_listener = (e: KeyboardEvent) => this.prevent_enter_listener(e);
         this.pconsole.addEventListener("click", this.click_listener);
         this.pconsole.addEventListener("keydown", this.keydown_listener);
         const line = document.getElementById("console-line");

@@ -1,4 +1,5 @@
 import { Block } from "./block.js";
+import { BlockConst } from "./block_const.js";
 
 type FormatResult = {
     x: number,
@@ -7,18 +8,38 @@ type FormatResult = {
     childrens: FormatResult[],
 };
 
-export class BlockFormatter {
+/* ================================================================================================================= */
+/*     Roots                                                                                                         */
+/*         manages roots                                                                                             */
+/* ================================================================================================================= */
 
-    static format(block: Block) {
-        const res = BlockFormatter.determine_width(block);
-        BlockFormatter.determine_pos(block.get_x(), block.get_y(), block, res);
+export class Roots {
+
+    private static readonly roots = document.getElementById("roots");
+
+    static append(root: Block) {
+        Roots.roots.appendChild(root);
     }
 
-    private static determine_width(block: Block): FormatResult {
+    static remove(root: Block) {
+        Roots.roots.removeChild(root);
+    }
+
+    static connect(target: Block) {
+        const roots_as_blocks = Array.from(Roots.roots.children) as Array<Block>;
+        for (const root of roots_as_blocks) {
+            if (root.connect_with(target)) {
+                break;
+            }
+        }
+    }
+
+    //! TODO: move this to Block as abstract method
+    static determine_width(block: Block): FormatResult {
         //! [ToDo]
         const children = block.get_children();
         if (block.is_empty() || children.length == 0 || block.classList.contains("pyramid-block-folding")) {
-            block.style.minWidth = Block.UNIT_WIDTH + "px";
+            block.style.minWidth = BlockConst.UNIT_WIDTH + "px";
             return {
                 x: 0,
                 leftmost: -block.get_width() * 0.5,
@@ -27,8 +48,8 @@ export class BlockFormatter {
             };
         }
         if (children.length == 1) {
-            const res = BlockFormatter.determine_width(children[0]);
-            block.style.minWidth = Block.UNIT_WIDTH + "px";
+            const res = Roots.determine_width(children[0]);
+            block.style.minWidth = BlockConst.UNIT_WIDTH + "px";
             return {
                 x: res.x,
                 leftmost: res.leftmost,
@@ -36,13 +57,13 @@ export class BlockFormatter {
                 childrens: [res],
             };
         }
-        let width = Block.UNIT_WIDTH;
+        let width = BlockConst.UNIT_WIDTH;
         let leftmost = 0.0;
         let rightmost = 0.0;
         let childrens: FormatResult[] = [];
         let i = 0;
         for (const child of children) {
-            const res = BlockFormatter.determine_width(child);
+            const res = Roots.determine_width(child);
             leftmost += res.leftmost;
             rightmost += res.rightmost;
             if (i == 0) {
@@ -58,7 +79,7 @@ export class BlockFormatter {
         block.style.minWidth = width + "px";
         const x = leftmost
             + (childrens[0].x - childrens[0].leftmost)
-            + (children[0].get_width() * 0.5 - Block.UNIT_HALF_WIDTH)
+            + (children[0].get_width() * 0.5 - BlockConst.UNIT_HALF_WIDTH)
             + block.get_width() * 0.5;
         return {
             x: x,
@@ -68,14 +89,15 @@ export class BlockFormatter {
         };
     }
 
-    private static determine_pos(x: number, y: number, block: Block, res: FormatResult) {
+    //! TODO: move this to Block as abstract method
+    static determine_pos(x: number, y: number, block: Block, res: FormatResult) {
         const center: number = x - res.x;
         block.set_left(x);
         block.set_top(y);
         let offset: number = center + res.leftmost;
         for (let i = 0; i < res.childrens.length; ++i) {
             const child_area = (res.childrens[i].rightmost - res.childrens[i].leftmost);
-            BlockFormatter.determine_pos(
+            Roots.determine_pos(
                 offset + child_area * 0.5 + res.childrens[i].x,
                 y + block.get_height(),
                 block.get_children()[i],
