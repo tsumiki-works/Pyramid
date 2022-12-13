@@ -3,6 +3,8 @@ import { Popup } from "../popup.js";
 import { MenuManager } from "../menu/menu.js";
 import { LiteralBlock } from "../block/concrete_block/literal_block.js";
 import { BlockConst } from "../block/block_const.js";
+import { SymbolBlock } from "../block/concrete_block/symbol_block.js";
+import { I32 } from "../evaluation/i32.js";
 
 /**
  * This class is PyramidEngine for Playgorund.
@@ -31,8 +33,8 @@ export class PyramidPlayground extends PyramidEngine {
         }
     }
     protected override init_menu(){
-        let menu_contents_basic = new Array<PyramidMenuContent>();
-        menu_contents_basic.push({
+        const menu_contents_literal = new Array<PyramidMenuContent>();
+        menu_contents_literal.push({
             color: "blue",
             text: "0", 
             block_constructor: ((_l: number, _t: number) => new LiteralBlock({
@@ -42,11 +44,26 @@ export class PyramidPlayground extends PyramidEngine {
                 [_l, _t],
                 [0, 0, 255, 1],
                 "0",
-                BlockConst.I32.check_type,
-                BlockConst.I32.eval_inner
+                I32.check_type,
+                I32.eval
             )),
         });
-        MenuManager.getInstance().add_menu_contents("Basic", "black", menu_contents_basic);
+        MenuManager.getInstance().add_menu_contents("Literal", "black", menu_contents_literal);
+
+        const menu_contents_symbol = new Array<PyramidMenuContent>();
+        menu_contents_symbol.push({
+            color: "blue",
+            text: "+", 
+            block_constructor: ((_l: number, _t: number) => new SymbolBlock({
+                    type_id: PyramidTypeID.I32,
+                    attribute: null,
+                },
+                [_l, _t],
+                [0, 0, 255, 1],
+                "+"
+            )),
+        });
+        MenuManager.getInstance().add_menu_contents("Symbol", "lightgreen", menu_contents_symbol);
 
         // debug
         
@@ -58,6 +75,7 @@ export class PyramidPlayground extends PyramidEngine {
         MenuManager.getInstance().add_menu_contents("Test", "lightgreen", debug_menu);
         */
 
-        MenuManager.getInstance().enable_tab("Basic");
+        MenuManager.getInstance().enable_tab("Literal");
+        MenuManager.getInstance().enable_tab("Symbol");
     }
 }

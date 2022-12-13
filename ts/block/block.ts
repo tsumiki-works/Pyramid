@@ -75,6 +75,9 @@ export abstract class Block extends HTMLElement {
             return this.parent.get_root();
         }
     }
+    get_parent(): Block {
+        return this.parent;
+    }
     get_children(): Array<Block> {
         let res = new Array();
         for (const child of Array.from(this.children)) {

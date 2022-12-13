@@ -30,5 +30,6 @@ type PyramidMenuContent = {
 }
 
 type Environment = Map<string, PyramidObject>;
+type Keyword = [string, PyramidObject];
 
 type PopupEvent = [string, EventListener];
