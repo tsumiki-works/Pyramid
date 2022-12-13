@@ -28,3 +28,7 @@ type PyramidMenuContent = {
     text: string;
     block_constructor: Function;
 }
+
+type Environment = Map<string, PyramidObject>;
+
+type PopupEvent = [string, EventListener];

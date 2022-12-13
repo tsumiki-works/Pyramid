@@ -1,8 +1,8 @@
 import { PyramidEngine } from "./pyramid_engine.js";
 import { Popup } from "../popup.js";
 import { MenuManager } from "../menu/menu.js";
-import { I32Block } from "../block/concrete_block/i32_block.js";
-import { FunBlock } from "../block/concrete_block/fun_block.js";
+import { LiteralBlock } from "../block/concrete_block/literal_block.js";
+import { BlockConst } from "../block/block_const.js";
 
 /**
  * This class is PyramidEngine for Playgorund.
@@ -35,23 +35,28 @@ export class PyramidPlayground extends PyramidEngine {
         menu_contents_basic.push({
             color: "blue",
             text: "0", 
-            block_constructor: ((_l: number, _t: number) => new I32Block(_l, _t, "0"))
-        });
-        menu_contents_basic.push({
-            color: "green",
-            text: "+",
-            block_constructor: ((_l: number, _t: number) => new FunBlock(_l, _t, "+", {args_cnt: 2, return_type: { type_id: PyramidTypeID.I32, attribute: null }}))
+            block_constructor: ((_l: number, _t: number) => new LiteralBlock({
+                    type_id: PyramidTypeID.I32,
+                    attribute: null,
+                },
+                [_l, _t],
+                [0, 0, 255, 1],
+                "0",
+                BlockConst.I32.check_type,
+                BlockConst.I32.eval_inner
+            )),
         });
         MenuManager.getInstance().add_menu_contents("Basic", "black", menu_contents_basic);
 
         // debug
         
-        let debug_menu: PyramidMenuContent[] = [
+        /*let debug_menu: PyramidMenuContent[] = [
             {color: "wheat", text: "Hello", block_constructor: ((_l: number, _t: number) => new I32Block(_l, _t, "0"))},
             {color: "yellow", text: "lemon", block_constructor: ((_l: number, _t: number) => new I32Block(_l, _t, "1"))},
             {color: "lightblue", text: "ocean", block_constructor: ((_l: number, _t: number) => new I32Block(_l, _t, "2"))}
         ];
         MenuManager.getInstance().add_menu_contents("Test", "lightgreen", debug_menu);
+        */
 
         MenuManager.getInstance().enable_tab("Basic");
     }

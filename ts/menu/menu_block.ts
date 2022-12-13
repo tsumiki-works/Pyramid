@@ -1,5 +1,5 @@
 import { Block } from "../block/block.js";
-import { BlockFormatter } from "../block/block_formatter.js";
+import { Roots } from "../block/roots.js";
 import { MenuManager } from "./menu.js";
 
 export class MenuBlock extends HTMLElement {
@@ -53,14 +53,13 @@ export class MenuBlock extends HTMLElement {
             this.block.set_left(e.pageX);
             this.block.set_top(e.pageY);
             this.block.style.zIndex = "1";
-            document.getElementById("blocks").appendChild(this.block);
+            Roots.append(this.block);
         }
     }
 
     private event_mousemove(e: MouseEvent){
         this.block.set_left(e.pageX);
         this.block.set_top(e.pageY);
-        BlockFormatter.format(this.block);
     }
 
     private event_mouseup(e: MouseEvent){

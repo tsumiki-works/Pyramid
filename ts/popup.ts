@@ -1,5 +1,5 @@
 export class Popup {
-    constructor(event_page_x: number, event_page_y: number, events: [string, EventListener][]) {
+    constructor(event_page_x: number, event_page_y: number, events: PopupEvent[]) {
         Popup.remove_popup();
         const popup = document.createElement("div");
         popup.id = "popup-menu";

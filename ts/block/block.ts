@@ -1,65 +1,32 @@
-import { BlockFormatter } from "./block_formatter.js";
+import { BlockConst } from "./block_const.js";
+import { Roots } from "./roots.js";
+
+/* ================================================================================================================= */
+/*     Block                                                                                                         */
+/*         is a kind of HTMLElement                                                                                  */
+/*         has pyramid_type                                                                                          */
+/*         has parent                                                                                                */
+/*         has "pyramid-block" class                                                                                 */
+/*         can format itself                                                                                         */
+/*         can connect a block by replacing its empty block block                                                    */
+/* ================================================================================================================= */
 
 export abstract class Block extends HTMLElement {
-
-    static readonly UNIT_WIDTH = 100.0;
-    static readonly UNIT_HALF_WIDTH = 50.0;
-    static readonly UNIT_HEIGHT = 50.0;
-    static readonly UNIT_HALF_HEIGHT = 25.0;
 
     protected pyramid_type: PyramidType;
     protected parent: Block | null;
 
-    protected mousedown_listener: EventListener;
-    protected mousemove_listener: EventListener;
-    protected mouseup_listener: EventListener;
-
-    constructor(backgroundColor: string, pyramid_type: PyramidType) {
+    constructor(pyramid_type: PyramidType, lr: Vec2, rgba: Vec4) {
         super();
-        // fields
         this.pyramid_type = pyramid_type;
         this.parent = null;
-        // html div element
         this.classList.add("pyramid-block");
-        this.style.left = "-10px";
-        this.style.top = "-10px";
-        //! [TODO] invaild literal check
-        // Now, the way to set colors are dangerous.
-        //ex) "blue", "rgba(0, 0, 0, 0.2)"...
-        this.style.backgroundColor = backgroundColor;
-        this.style.minWidth = Block.UNIT_WIDTH + "px";
-        this.style.minHeight = Block.UNIT_HEIGHT + "px";
-        document.getElementById("blocks").appendChild(this);
-        this.init_events();
-    }
-
-    protected abstract init_events(): void;
-
-    abstract kill(): void;
-
-    connect_with(target: Block): boolean {
-        if (this === target) {
-            return false;
-        }
-        for (const child of this.get_children()) {
-            if (child.is_empty() && child.is_hit(target)) {
-                this.replaceChild(target, child);
-                target.parent = this;
-                this.get_root().format();
-                child.parent = null;
-                child.kill();
-                return true;
-            }
-            const res = child.connect_with(target);
-            if (res) {
-                return true;
-            }
-        }
-        return false;
-    }
-    copy_with(block: Block): void {
-        this.pyramid_type = block.pyramid_type;
-        this.parent = block.parent;
+        this.style.left = lr[0] + "px";
+        this.style.top = lr[1] + "px";
+        this.style.minWidth = BlockConst.UNIT_WIDTH + "px";
+        this.style.minHeight = BlockConst.UNIT_HEIGHT + "px";
+        this.style.backgroundColor = "rgba(" + rgba[0] + "," + rgba[1] + "," + rgba[2] + "," + rgba[3] + ")";
+        Roots.append(this);
     }
 
     set_left(x: number): void {
@@ -82,11 +49,9 @@ export abstract class Block extends HTMLElement {
         }
         this.style.top = -(parent.getBoundingClientRect().top - top) + "px";
     }
-    //! [ToDo]
     set_parent(parent: Block): void {
         this.parent = parent;
     }
-
 
     get_x(): number {
         return this.getBoundingClientRect().left + this.get_width() * 0.5;
@@ -110,17 +75,47 @@ export abstract class Block extends HTMLElement {
             return this.parent.get_root();
         }
     }
-    get_children(): Array<Block>{
-        return Array.from(this.children) as Array<Block>;
+    get_children(): Array<Block> {
+        let res = new Array();
+        for (const child of Array.from(this.children)) {
+            if (child.classList.contains("pyramid-block")) {
+                res.push(child);
+            }
+        }
+        return res;
     }
-    is_hit(target: Block): boolean {
-        return Math.abs(this.get_x() - target.get_x()) < this.get_width() * 0.5
-            && Math.abs(this.get_y() - target.get_y()) < Block.UNIT_HEIGHT * 0.5;
-    }
+
     is_empty(): boolean {
         return this.pyramid_type.type_id === PyramidTypeID.Empty;
     }
-    format() {
-        BlockFormatter.format(this);
+
+    connect_with(target: Block): boolean {
+        if (this === target) {
+            return false;
+        }
+        for (const child of this.get_children()) {
+            if (child.is_empty()
+                && Math.abs(child.get_x() - target.get_x()) < child.get_width() * 0.5
+                && Math.abs(child.get_y() - target.get_y()) < child.get_height() * 0.5
+            ) {
+                this.replaceChild(target, child);
+                target.parent = this;
+                child.parent = null;
+                child.kill();
+                this.get_root().format();
+                return true;
+            }
+            if (child.connect_with(target)) {
+                return true;
+            }
+        }
+        return false;
     }
+
+    format() {
+        Roots.determine_pos(this.get_x(), this.get_y(), this, Roots.determine_width(this));
+    }
+
+    abstract kill(): void;
+    abstract eval(env: Environment): PyramidObject;
 }
