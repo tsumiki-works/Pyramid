@@ -15,6 +15,11 @@ div#workspace {
     vertical-align: bottom;
 }
 
+pyramid-symbol-block {
+    border: solid 3px red;
+    box-sizing: border-box;
+}
+
 .pyramid-block,
 .pyramid-menublock {
     position: absolute;

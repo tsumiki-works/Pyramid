@@ -1,3 +1,4 @@
+import { Keywords } from "../keywords.js";
 import { Popup } from "../popup.js";
 import { EmptyBlock } from "./concrete_block/empty_block.js";
 import { EventBlock } from "./event_block.js";
@@ -48,7 +49,7 @@ export abstract class BasicBlock extends EventBlock {
 
     protected popup_event_eval() {
         Popup.remove_popup();
-        console.log(this.eval(new Map())); //! TODO: 
+        console.log(this.eval(Keywords.get_first_env()));
     }
 
     protected popup_event_kill() {

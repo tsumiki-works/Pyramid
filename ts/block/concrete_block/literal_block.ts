@@ -40,4 +40,4 @@ export class LiteralBlock extends BasicBlock {
         return this.eval_inner(this.get_content(), env);
     }
 }
-customElements.define('pyramid-block-literal', LiteralBlock);
+customElements.define('pyramid-literal-block', LiteralBlock);

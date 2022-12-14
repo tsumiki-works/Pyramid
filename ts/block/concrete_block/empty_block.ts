@@ -30,4 +30,4 @@ export class EmptyBlock extends EventBlock {
         throw new Error("empty block evaluated");
     }
 }
-customElements.define('pyramid-block-empty', EmptyBlock);
+customElements.define('pyramid-empty-block', EmptyBlock);
