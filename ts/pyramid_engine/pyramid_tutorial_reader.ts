@@ -19,7 +19,7 @@ export class PyramidTutorialReader {
 
     read_all(): void {
         // debug
-        let texts = "## This is the title.\n[] CheckTitle 1\n- aaa\n- aab\n[] CheckTitle 2\n- bbb\n[] CheckTitle 3\n";
+        let texts = "## Q-1 Pyramidの基本\n[] ブロックを置こう\n- 左側のメニュー欄からドラッグ\n[] 編集しよう\n- ブロックを右クリックでメニューが出ます";
         let text_array = texts.split("\n");
         let tmp_head: string = "";
         let tmp_caption: string[] = new Array<string>();
@@ -27,6 +27,7 @@ export class PyramidTutorialReader {
             let formed_line = this.delete_head_space(line);
             switch (formed_line.slice(0, 2)) {
                 case "":
+                case "//":
                     break;
                 case "##":
                     this.title = formed_line.slice(2, formed_line.length);

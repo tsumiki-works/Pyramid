@@ -3,7 +3,7 @@ import { MenuManager } from "../menu/menu.js";
 import { PyramidTutorialReader } from "./pyramid_tutorial_reader.js";
 
 export class PyramidTutorial extends PyramidEngine {
-    // ![TODO]
+    //! TODO: Tutorial-Image
 
     /* Contents Images
 
@@ -70,6 +70,7 @@ export class PyramidTutorial extends PyramidEngine {
     }
 
     private get_checkmark_svg(): HTMLElement {
+        //! TODO: Form this Elem or Use CheckBox(disabled)
         let elem = document.createElement("svg");
         elem.setAttribute("xmlns", "http://www.w3.org/2000/svg");
         elem.setAttribute("fill", "#EF454A");
@@ -82,6 +83,7 @@ export class PyramidTutorial extends PyramidEngine {
         return elem;
     }
     private get_check_elem(check_text: string, check_disp: string[]): HTMLElement {
+        //! TODO: Form this Elem for tutorial check contents
         let elem = document.createElement("section");
         elem.classList.add("mt-3", "ml-1");
         let h3 = document.createElement("h3");
