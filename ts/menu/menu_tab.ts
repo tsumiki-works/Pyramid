@@ -4,7 +4,6 @@ export class MenuTab extends HTMLElement {
 
     private label: string;
     private color: string;
-
     private span: HTMLSpanElement;
 
     private enabler: Function;
@@ -27,10 +26,11 @@ export class MenuTab extends HTMLElement {
         this.style.borderRadius = MenuTab.TAB_HEIGHT + "px";
 
     }
-
+    
     get_label(): string {
         return this.label;
     }
+
     get_color(): string {
         return this.color;
     }

@@ -64,7 +64,6 @@ export class MenuManager {
         this.menu_tab.appendChild(tmp_menu_tab);
         this.menu_content_tab.set(menu_tab.label, tmp_menu_tab);
 
-
     }
 
     enable_tab(_label: string): void {
