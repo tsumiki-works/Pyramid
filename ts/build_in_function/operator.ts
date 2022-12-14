@@ -1,3 +1,5 @@
+import { PyramidMath } from "./pyramid_math.js";
+
 export class Operator {
     private static pyramid_f32_nan: PyramidObject = {
         pyramid_type: { type_id: PyramidTypeID.F32, attribute: null },
@@ -234,5 +236,8 @@ export class Operator {
         else {
             throw new Error("pyramid backend error: invalid operands are given mod oprator")
         }
+    }
+    static pow(arg1: PyramidObject, arg2: PyramidObject): PyramidObject{
+        return PyramidMath.pow(arg1, arg2);
     }
 }

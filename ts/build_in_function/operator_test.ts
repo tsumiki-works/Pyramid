@@ -386,6 +386,63 @@ normalExpValues.push({
     value: 1
 })
 
+
+
+////////// pow Function //////////
+//// Normal Cases Test
+normalRealValues.push(Operator.pow({
+    pyramid_type: { type_id: PyramidTypeID.I32, attribute: null },
+    value: 6
+},
+    {
+        pyramid_type: { type_id: PyramidTypeID.I32, attribute: null },
+        value: 3
+    }))
+normalExpValues.push({
+    pyramid_type: { type_id: PyramidTypeID.I32, attribute: null },
+    value: 216
+})
+
+normalRealValues.push(Operator.pow({
+    pyramid_type: { type_id: PyramidTypeID.F32, attribute: null },
+    value: 2.7
+},
+    {
+        pyramid_type: { type_id: PyramidTypeID.I32, attribute: null },
+        value: 3
+    }))
+normalExpValues.push({
+    pyramid_type: { type_id: PyramidTypeID.F32, attribute: null },
+    value: 19.683000000000003 
+})
+
+normalRealValues.push(Operator.pow({
+    pyramid_type: { type_id: PyramidTypeID.I32, attribute: null },
+    value: 4
+},
+    {
+        pyramid_type: { type_id: PyramidTypeID.F32, attribute: null },
+        value: 0.5
+    }))
+normalExpValues.push({
+    pyramid_type: { type_id: PyramidTypeID.F32, attribute: null },
+    value: 2 
+})
+
+//// Special Cases Test
+specialRealValues.push(Operator.pow({
+    pyramid_type: { type_id: PyramidTypeID.I32, attribute: null },
+    value: -2
+},
+    {
+        pyramid_type: { type_id: PyramidTypeID.F32, attribute: null },
+        value: 0.5
+    }))
+specialExpValues.push({
+    pyramid_type: { type_id: PyramidTypeID.F32, attribute: null },
+    value: Number.NaN
+})
+
 // Display Part
 
 console.log("--- Normal Cases Tests ---");
