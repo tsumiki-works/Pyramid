@@ -9,7 +9,16 @@ export class Keywords {
                 pyramid_type: {
                     type_id: PyramidTypeID.Function,
                     attribute: {
-                        args_cnt: 2,
+                        args: [
+                            {
+                                type_id: PyramidTypeID.I32,
+                                attribute: null,
+                            },
+                            {
+                                type_id: PyramidTypeID.I32,
+                                attribute: null,
+                            },
+                        ],
                         return_type: {
                             type_id: PyramidTypeID.I32,
                             attribute: null,

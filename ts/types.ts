@@ -16,7 +16,7 @@ type PyramidType = {
     attribute: any,
 };
 type FunctionAttribute = {
-    args_cnt: number;
+    args: PyramidType[];
     return_type: PyramidType;
 };
 type PyramidObject = {

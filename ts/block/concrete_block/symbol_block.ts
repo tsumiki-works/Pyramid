@@ -40,7 +40,7 @@ export class SymbolBlock extends BasicBlock {
             if (v.pyramid_type.attribute.return_type.type_id !== this.pyramid_type.type_id) {
                 throw new Error(this.get_content() + " return type is wrong"); // TODO: show error better
             }
-            if (v.pyramid_type.attribute.args_cnt !== this.get_children().length) {
+            if (v.pyramid_type.attribute.args.length !== this.get_children().length) {
                 throw new Error(this.get_content() + " has too many arguments");
             }
             const evaled = this.get_children().map(child => child.eval(env));
@@ -72,7 +72,7 @@ export class SymbolBlock extends BasicBlock {
             }
             const t = parent.get_type();
             if (check(t, this) && (parent as BasicBlock).get_content() === content) {
-                return t.attribute.args_cnt;
+                return t.attribute.args.length;
             }
             return inner(parent.get_parent());
         }
@@ -86,7 +86,7 @@ export class SymbolBlock extends BasicBlock {
         
         for (const keyword of Keywords.keywords) {
             if (keyword[0] === content && check(keyword[1].pyramid_type, this)) {
-                this.set_args_cnt(keyword[1].pyramid_type.attribute.args_cnt);
+                this.set_args_cnt(keyword[1].pyramid_type.attribute.args.length);
                 return true;
             }
         }
