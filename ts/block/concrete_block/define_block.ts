@@ -1,7 +1,7 @@
-import { BasicBlock } from "../basic_block.js";
+import { ParentBlock } from "../parent_block.js";
 import { EmptyBlock } from "./empty_block.js";
 
-export class DefineBlock extends BasicBlock {
+export class DefineBlock extends ParentBlock {
 
     constructor(pyramid_type: PyramidType, lr: Vec2, content: string) {
         super(
@@ -31,7 +31,8 @@ export class DefineBlock extends BasicBlock {
                     }
                 })],
                 ["実行", _ => this.popup_event_eval()],
-                ["削除", _ => this.popup_event_kill()],
+                ["削除", _ => this.popup_event_kill_self()],
+                ["子も削除", _ => this.popup_event_kill()],
             ]
         );
         this.innerText = content;
@@ -66,14 +67,6 @@ export class DefineBlock extends BasicBlock {
             }
         })
         return this.get_children()[1].eval(env);
-    }
-
-    private set_content(content: string) {
-        const tmp = this.get_children();
-        this.innerText = content;
-        for (const child of tmp) {
-            this.appendChild(child);
-        }
     }
 
     private get_args(): string[] {

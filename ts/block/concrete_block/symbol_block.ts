@@ -1,9 +1,9 @@
 import { Popup } from "../../popup.js";
-import { BasicBlock } from "../basic_block.js";
+import { ParentBlock } from "../parent_block.js";
 import { Roots } from "../roots.js";
 import { EmptyBlock } from "./empty_block.js";
 
-export class SymbolBlock extends BasicBlock {
+export class SymbolBlock extends ParentBlock {
 
     constructor(pyramid_type: PyramidType, lr: Vec2, content: string, args_cnt: number) {
         super(
@@ -17,7 +17,7 @@ export class SymbolBlock extends BasicBlock {
                 })],
                 ["引数の数を変更", (e: MouseEvent) => this.popup_event_edit(e, (value: string) => {
                     if (value.length !== 0 && !isNaN(parseInt(value))) {
-                        this.set_args_cnt(parseInt(value));
+                        this.set_children_cnt(parseInt(value));
                     }
                 })],
                 ["実行", _ => this.popup_event_eval()],
@@ -26,7 +26,7 @@ export class SymbolBlock extends BasicBlock {
             ]
         );
         this.set_content(content);
-        this.set_args_cnt(args_cnt);
+        this.set_children_cnt(args_cnt);
         this.format();
     }
 
@@ -53,58 +53,6 @@ export class SymbolBlock extends BasicBlock {
             }
             return v;
         }
-    }
-
-    private popup_event_kill_self() {
-        Popup.remove_popup();
-        const children = this.get_children();
-        for (const child of children) {
-            if (child.is_empty()) {
-                child.remove();
-            } else {
-                const x = child.get_x();
-                const y = child.get_y();
-                child.set_parent(null);
-                Roots.append(child);
-                child.set_left(x);
-                child.set_top(y);
-                this.appendChild(new EmptyBlock(this));
-            }
-        }
-        this.kill();
-    }
-
-    private set_content(content: string) {
-        const tmp = this.get_children();
-        this.innerText = content;
-        for (const child of tmp) {
-            this.appendChild(child);
-        }
-    }
-
-    private set_args_cnt(args_cnt: number) {
-        const children = this.get_children();
-        for (const child of this.get_children()) {
-            if (child.is_empty()) {
-                child.remove();
-                continue;
-            }
-            const x = child.get_x();
-            const y = child.get_y();
-            child.set_parent(null);
-            Roots.append(child);
-            child.set_left(x);
-            child.set_top(y);
-        }
-        for (let i = 0; i < args_cnt; ++i) {
-            if (i < children.length) {
-                children[i].set_parent(this);
-                this.appendChild(children[i]);
-            } else {
-                this.appendChild(new EmptyBlock(this));
-            }
-        }
-        this.format();
     }
 }
 customElements.define('pyramid-symbol-block', SymbolBlock);
