@@ -15,7 +15,6 @@ export class EmptyBlock extends EventBlock {
                 attribute: null
             },
             [-100, -100],
-            [0, 0, 0, 0.2],
             _ => { },
             _ => { },
             _ => { },

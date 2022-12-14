@@ -46,7 +46,6 @@ export class PyramidPlayground extends PyramidEngine {
                     attribute: null,
                 },
                 [_l, _t],
-                [0, 0, 255, 1],
                 "0",
                 I32.check_type,
                 I32.eval
@@ -63,7 +62,6 @@ export class PyramidPlayground extends PyramidEngine {
                     attribute: null,
                 },
                 [_l, _t],
-                [0, 0, 255, 1],
                 "+",
                 2
             )),
@@ -85,7 +83,6 @@ export class PyramidPlayground extends PyramidEngine {
                     },
                 },
                 [_l, _t],
-                [0, 0, 255, 1],
                 "f"
             )),
         });

@@ -16,7 +16,7 @@ export abstract class Block extends HTMLElement {
     protected pyramid_type: PyramidType;
     protected parent: Block | null;
 
-    constructor(pyramid_type: PyramidType, lr: Vec2, rgba: Vec4) {
+    constructor(pyramid_type: PyramidType, lr: Vec2) {
         super();
         this.pyramid_type = pyramid_type;
         this.parent = null;
@@ -25,7 +25,6 @@ export abstract class Block extends HTMLElement {
         this.style.top = lr[1] + "px";
         this.style.minWidth = BlockConst.UNIT_WIDTH + "px";
         this.style.minHeight = BlockConst.UNIT_HEIGHT + "px";
-        this.style.backgroundColor = "rgba(" + rgba[0] + "," + rgba[1] + "," + rgba[2] + "," + rgba[3] + ")";
         Roots.append(this);
     }
 

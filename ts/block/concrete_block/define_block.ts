@@ -3,15 +3,31 @@ import { EmptyBlock } from "./empty_block.js";
 
 export class DefineBlock extends BasicBlock {
 
-    constructor(pyramid_type: PyramidType, lr: Vec2, rgba: Vec4, content: string) {
+    constructor(pyramid_type: PyramidType, lr: Vec2, content: string) {
         super(
             pyramid_type,
             lr,
-            [255, 255, 255, 1],
             [
                 ["編集", (e: MouseEvent) => this.popup_event_edit(e, (value: string) => {
                     if (value.length !== 0) {
-                        this.innerText = value;
+                        this.set_content(value);
+                    }
+                })],
+                ["仮引数を編集", (e: MouseEvent) => this.popup_event_edit(e, (value: string) => {
+                    if (value.length !== 0) {
+                        for (const child of Array.from(this.children)) {
+                            if (child.classList.contains("pyramid-argument")) {
+                                child.remove();
+                            }
+                        }
+                        const args = value.split(" ");
+                        for (const arg of args) {
+                            const span = document.createElement("span");
+                            span.innerText = arg;
+                            span.classList.add("pyramid-argument");
+                            this.appendChild(span);
+                        }
+                        this.pyramid_type.attribute.args = args.map(_ => { return { type_id: PyramidTypeID.I32, attribute: null }; }); // TODO:
                     }
                 })],
                 ["実行", _ => this.popup_event_eval()],
@@ -19,8 +35,6 @@ export class DefineBlock extends BasicBlock {
             ]
         );
         this.innerText = content;
-        this.style.backgroundColor = "white";
-        this.style.border = "solid 3px rgba(" + rgba[0]  + "," + rgba[1]  + "," + rgba[2]  + "," + rgba[3]  + ")";
         this.appendChild(new EmptyBlock(this));
         this.appendChild(new EmptyBlock(this));
         this.format();
@@ -52,6 +66,14 @@ export class DefineBlock extends BasicBlock {
             }
         })
         return this.get_children()[1].eval(env);
+    }
+
+    private set_content(content: string) {
+        const tmp = this.get_children();
+        this.innerText = content;
+        for (const child of tmp) {
+            this.appendChild(child);
+        }
     }
 
     private get_args(): string[] {
