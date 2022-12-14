@@ -1,5 +1,7 @@
 import { Keywords } from "../keywords.js";
-import { Popup } from "../popup.js";
+import { Popup } from "../popup/popup.js";
+import { PopupInput } from "../popup/popup_input.js";
+import { PopupListMenu } from "../popup/popup_listmenu.js";
 import { EmptyBlock } from "./concrete_block/empty_block.js";
 import { EventBlock } from "./event_block.js";
 import { Roots } from "./roots.js";
@@ -50,18 +52,34 @@ export abstract class BasicBlock extends EventBlock {
     }
 
     protected popup_event_eval() {
-        Popup.remove_popup();
+        Popup.remove_all_popup();
+
         console.log(this.eval(Keywords.get_first_env()));
     }
 
     protected popup_event_kill() {
-        Popup.remove_popup();
+        Popup.remove_all_popup();
         this.kill();
     }
 
     protected popup_event_edit(e: MouseEvent, edit_event: Function) {
-        Popup.remove_popup();
+        Popup.remove_all_popup();
         //! TODO: move them Popup
+        Popup.create_popup(new PopupInput(
+            e.pageX, 
+            e.pageY, 
+            "popup-block-input", 
+            ((ke: KeyboardEvent) => {
+                if (ke.key == "Enter") {
+                    edit_event(PopupInput.get_value()); 
+                    Popup.remove_all_popup();
+                    this.get_root().format();
+                }
+            }),
+        ));
+        PopupInput.focus();
+
+        /*
         const popup = document.createElement("div");
         popup.id = "popup-menu";
         popup.style.display = "block";
@@ -73,13 +91,14 @@ export abstract class BasicBlock extends EventBlock {
         input.contentEditable = "true";
         input.addEventListener("keydown", (e => {
             if (e.key == "Enter") {
-                Popup.remove_popup();
+                Popup.remove_all_popup();
                 edit_event(input.value);
                 this.get_root().format();
             }
         }));
         popup.appendChild(input);
         input.focus();
+        */
     }
 
     private event_mouse_leftdown() {
@@ -100,7 +119,7 @@ export abstract class BasicBlock extends EventBlock {
     }
     
     private event_mouse_rightdown(e: MouseEvent, popup_events: PopupEvent[]) {
-        new Popup(e.pageX, e.pageY, popup_events);
+        Popup.create_popup(new PopupListMenu(e.pageX, e.pageY, "", popup_events));
     }
 
     private event_mousemove(e: MouseEvent) {

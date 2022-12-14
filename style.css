@@ -155,7 +155,7 @@ div#console-content label {
         monospace;
 }
 
-div#popup-menu {
+div.popup {
     display: none;
     position: fixed;
     width: auto;
@@ -164,7 +164,7 @@ div#popup-menu {
     text-align: center;
 }
 
-div#popup-menu ul {
+div.popup ul {
     margin: 5px;
     padding: 0;
 }

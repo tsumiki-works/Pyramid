@@ -1,5 +1,5 @@
 import { PyramidEngine } from "./pyramid_engine.js";
-import { Popup } from "../popup.js";
+import { Popup } from "../popup/popup.js";
 import { MenuManager } from "../menu/menu.js";
 import { LiteralBlock } from "../block/concrete_block/literal_block.js";
 import { SymbolBlock } from "../block/concrete_block/symbol_block.js";
@@ -28,7 +28,7 @@ export class PyramidPlayground extends PyramidEngine {
     }
 
     protected override event_mousedown(e: MouseEvent) {
-        Popup.remove_popup();
+        Popup.remove_all_popup();
         if (e.button === 2) {
             this.workspace.removeEventListener("mousedown", this.mousedown_listener);
             document.addEventListener("mousemove", this.mousemove_listener);
