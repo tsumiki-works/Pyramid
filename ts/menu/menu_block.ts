@@ -5,6 +5,8 @@ import { MenuManager } from "./menu.js";
 export class MenuBlock extends HTMLElement {
     static readonly UNIT_WIDTH = 100.;
     static readonly UNIT_HEIGHT = 50.;
+    private static readonly playground: HTMLDivElement = document.getElementById("playground") as HTMLDivElement;
+
     private block_constructor: Function;
     private block: Block;
 
@@ -65,12 +67,6 @@ export class MenuBlock extends HTMLElement {
     private event_mouseup(e: MouseEvent) {
         if (e.pageX < MenuManager.getInstance().get_width()) {
             this.block.remove();
-        }
-        const roots = Array.from(document.getElementById("blocks").children) as Array<Block>;
-        for (const root of roots) {
-            if (root.connect_with(this.block)) {
-                break;
-            }
         }
         this.block.style.zIndex = "0";
         this.addEventListener("mousedown", this.mousedown_listener);

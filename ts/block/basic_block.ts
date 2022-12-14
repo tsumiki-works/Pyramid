@@ -15,6 +15,8 @@ import { Trash } from "./trash.js";
 
 export abstract class BasicBlock extends EventBlock {
 
+    private readonly playground: HTMLDivElement = document.getElementById("playground") as HTMLDivElement;
+
     constructor(pyramid_type: PyramidType, lr: Vec2, rgba: Vec4, popup_events: PopupEvent[]) {
         super(
             pyramid_type,
@@ -102,8 +104,8 @@ export abstract class BasicBlock extends EventBlock {
     }
 
     private event_mousemove(e: MouseEvent) {
-        this.style.left = (e.pageX - this.get_width() * 0.5) + "px";
-        this.style.top = (e.pageY - this.get_height() * 0.5) + "px";
+        this.style.left = (e.pageX - this.get_width() * 0.5 - this.playground.getBoundingClientRect().left) + "px";
+        this.style.top = (e.pageY - this.get_height() * 0.5 - this.playground.getBoundingClientRect().top) + "px";
         this.get_root().format();
     }
 

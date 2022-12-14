@@ -30,6 +30,11 @@ type MenuContent = {
     block_constructor: Function;
 }
 
+type MenuTabContent = {
+    label: string;
+    color: string;
+}
+
 type Environment = Map<string, PyramidObject>;
 type Keyword = [string, PyramidObject];
 
