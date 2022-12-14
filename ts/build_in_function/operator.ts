@@ -186,7 +186,7 @@ export class Operator {
         if (arg1.pyramid_type.type_id === PyramidTypeID.I32 && arg2.pyramid_type.type_id === PyramidTypeID.I32) {
             let ans: number = arg1.value % arg2.value;
             //check isNaN, isInt, isInf
-            //The div operator allows taking an Int type and returning a Float type.
+            //The mod operator forbit taking an Int type and returning a Float type.
             if (Number.isNaN(ans)) throw new Error("pyramid backend error: int modulo operation return NaN");
             if (!Number.isInteger(ans)) throw new Error("pyramid backend error: int modulo operation return non-integer")
             if (!Operator.is_in_i32(ans)) {
@@ -202,9 +202,9 @@ export class Operator {
         //Whether modulo operation for float type should be allowed or not
         //At TypeScript, 5.2 % 3 returns 2.2 
         //(Note: Number.isInterger(5.2 % 3) returns false and Number.isInteger(5.0 % 3.0) returns true)
-        
+
         //Because of this unreasonable specification, forbit module operation for float type
-        
+        /*
         else if (arg1.pyramid_type.type_id === PyramidTypeID.F32 && arg2.pyramid_type.type_id === PyramidTypeID.F32
             || arg1.pyramid_type.type_id === PyramidTypeID.F32 && arg2.pyramid_type.type_id === PyramidTypeID.I32
             || arg1.pyramid_type.type_id === PyramidTypeID.I32 && arg2.pyramid_type.type_id === PyramidTypeID.F32) {
@@ -237,7 +237,42 @@ export class Operator {
             throw new Error("pyramid backend error: invalid operands are given mod oprator")
         }
     }
-    static pow(arg1: PyramidObject, arg2: PyramidObject): PyramidObject{
+    static pow(arg1: PyramidObject, arg2: PyramidObject): PyramidObject {
         return PyramidMath.pow(arg1, arg2);
+    }
+    static not(arg: PyramidObject): PyramidObject {
+        if (arg.pyramid_type.type_id === PyramidTypeID.Bool) {
+            return {
+                pyramid_type: { type_id: PyramidTypeID.Bool, attribute: null },
+                value: !arg.value
+            }
+        }
+        else {
+            throw new Error("pyramid backend error: invalid operands are given \"not\" operator")
+        }
+    }
+    static and(arg1: PyramidObject, arg2: PyramidObject): PyramidObject {
+        if (arg1.pyramid_type.type_id === PyramidTypeID.Bool && arg2.pyramid_type.type_id === PyramidTypeID.Bool) {
+            let ans: number = arg1.value && arg2.value;
+            return {
+                pyramid_type: { type_id: PyramidTypeID.Bool, attribute: null },
+                value: ans
+            }
+        }
+        else {
+            throw new Error("pyramid backend error: invalid operands are given \"and\" oprator")
+        }
+    }
+    static or(arg1: PyramidObject, arg2: PyramidObject): PyramidObject {
+        if (arg1.pyramid_type.type_id === PyramidTypeID.Bool && arg2.pyramid_type.type_id === PyramidTypeID.Bool) {
+            let ans: number = arg1.value || arg2.value;
+            return {
+                pyramid_type: { type_id: PyramidTypeID.Bool, attribute: null },
+                value: ans
+            }
+        }
+        else {
+            throw new Error("pyramid backend error: invalid operands are given \"or\" oprator")
+        }
     }
 }

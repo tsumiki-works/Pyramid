@@ -360,6 +360,7 @@ normalExpValues.push({
     value: 1
 })
 
+/*
 normalRealValues.push(Operator.mod({
     pyramid_type: { type_id: PyramidTypeID.F32, attribute: null },
     value: 5.2
@@ -385,6 +386,7 @@ normalExpValues.push({
     pyramid_type: { type_id: PyramidTypeID.F32, attribute: null },
     value: 1
 })
+//*/
 
 
 
@@ -413,7 +415,7 @@ normalRealValues.push(Operator.pow({
     }))
 normalExpValues.push({
     pyramid_type: { type_id: PyramidTypeID.F32, attribute: null },
-    value: 19.683000000000003 
+    value: 19.683000000000003
 })
 
 normalRealValues.push(Operator.pow({
@@ -426,7 +428,7 @@ normalRealValues.push(Operator.pow({
     }))
 normalExpValues.push({
     pyramid_type: { type_id: PyramidTypeID.F32, attribute: null },
-    value: 2 
+    value: 2
 })
 
 //// Special Cases Test
@@ -441,6 +443,45 @@ specialRealValues.push(Operator.pow({
 specialExpValues.push({
     pyramid_type: { type_id: PyramidTypeID.F32, attribute: null },
     value: Number.NaN
+})
+
+
+
+////////// bool Function //////////
+//// Normal Cases Test
+normalRealValues.push(Operator.not({
+    pyramid_type: { type_id: PyramidTypeID.Bool, attribute: null },
+    value: false
+}))
+normalExpValues.push({
+    pyramid_type: { type_id: PyramidTypeID.Bool, attribute: null },
+    value: true
+})
+
+normalRealValues.push(Operator.and({
+    pyramid_type: { type_id: PyramidTypeID.Bool, attribute: null },
+    value: true
+},
+    {
+        pyramid_type: { type_id: PyramidTypeID.Bool, attribute: null },
+        value: true
+    }))
+normalExpValues.push({
+    pyramid_type: { type_id: PyramidTypeID.Bool, attribute: null },
+    value: true
+})
+
+normalRealValues.push(Operator.or({
+    pyramid_type: { type_id: PyramidTypeID.Bool, attribute: null },
+    value: true
+},
+    {
+        pyramid_type: { type_id: PyramidTypeID.Bool, attribute: null },
+        value: true
+    }))
+normalExpValues.push({
+    pyramid_type: { type_id: PyramidTypeID.Bool, attribute: null },
+    value: true
 })
 
 // Display Part
