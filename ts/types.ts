@@ -35,7 +35,38 @@ type MenuTabContent = {
     color: string;
 }
 
-type Environment = Map<string, PyramidObject>;
 type Keyword = [string, PyramidObject];
 
 type PopupEvent = [string, EventListener];
+
+class Environment {
+    private env: Keyword[];
+    constructor() {
+        this.env = [];
+    }
+    get(key: string): PyramidObject | null {
+        for (let i = this.env.length - 1; i >= 0; --i) {
+            if (this.env[i][0] === key) {
+                return this.env[i][1];
+            }
+        }
+        return null;
+    }
+    set(key: string, value: PyramidObject) {
+        this.env.push([key, value]);
+    }
+    set_all(keywords: Keyword[]) {
+        for (const keyword of keywords) {
+            this.env.push(keyword);
+        }
+    }
+    remove(key: string) {
+        for (let i = this.env.length - 1; i >= 0; --i) {
+            if (this.env[i][0] === key) {
+                this.env[i] = ["", null];
+                return;
+            }
+        }
+        throw new Error(key + " isn't in enviroment");
+    }
+}

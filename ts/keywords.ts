@@ -36,10 +36,8 @@ export class Keywords {
         ],
     ];
     static get_first_env(): Environment {
-        const env = new Map<string, PyramidObject>();
-        for (const keyword of Keywords.keywords) {
-            env.set(keyword[0], keyword[1]);
-        }
+        const env = new Environment();
+        env.set_all(this.keywords);
         return env;
     }
 }

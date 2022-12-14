@@ -55,11 +55,6 @@ div#workspace {
     vertical-align: bottom;
 }
 
-pyramid-symbol-block {
-    border: solid 3px red;
-    box-sizing: border-box;
-}
-
 .pyramid-block,
 .pyramid-menublock {
     position: absolute;
@@ -67,9 +62,20 @@ pyramid-symbol-block {
     display: flex;
     justify-content: center;
     align-items: center;
-    color: white;
     font-weight: bold;
     user-select: none;
+}
+
+pyramid-literal-block,
+pyramid-symbol-block,
+.pyramid-menublock {
+    color: white;
+}
+
+
+pyramid-symbol-block {
+    border: solid 3px red;
+    box-sizing: border-box;
 }
 
 .pyramid-menutab {
