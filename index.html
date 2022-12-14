@@ -11,25 +11,27 @@
     <!--- Twitterカードは絶対パスで指定 -->
     <meta name="twitter:image" content="https://watanabemayu.jp/AzaleaWorks/pyramid_twitter_card.png">
 </head>
-
+<header>
+    <img id="logo" src="../../images/logo.svg" height = "30.3px" alt="ピラミッドのロゴ">
+</header>
 <body oncontextmenu="return false;">
-    <div id="workspace">
-        <div id="roots"></div>
-        <div id="trash"></div>
-    </div>
-    <div id="menu">
-        <div id="menu-tab"></div>
-        <div id="menu-items"></div>
-        
-    </div>
-    <div id="console">
-        <div id="console-content">
-            <label id="console-log"></label>
-            <label id="console-line-head"># </label><label id="console-line" contentEditable="true"></label>
+    <div id="pyramid-wrapper">
+        <div id="playground">
+            <div id="workspace">
+                <div id="roots"></div>
+                <div id="trash"></div>
+            </div>
+            <div id="menu">
+                <div id="menu-tab"></div>
+                <div id="menu-items"></div>    
+            </div>
+            <div id="console">
+                <div id="console-content">
+                    <label id="console-log"></label>
+                    <label id="console-line-head"># </label><label id="console-line" contentEditable="true"></label>
+                </div>
+            </div>
         </div>
-    </div>
-    <div id="logo-wrapper">
-        <img id="logo" src="images/logo.svg" height = "30.3px" alt="ピラミッドのロゴ">
     </div>
     <script src="js/types.js"></script>
     <script type="module" src="js/main.js"></script>

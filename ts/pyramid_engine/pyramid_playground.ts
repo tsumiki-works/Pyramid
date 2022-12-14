@@ -2,7 +2,6 @@ import { PyramidEngine } from "./pyramid_engine.js";
 import { Popup } from "../popup.js";
 import { MenuManager } from "../menu/menu.js";
 import { LiteralBlock } from "../block/concrete_block/literal_block.js";
-import { BlockConst } from "../block/block_const.js";
 import { SymbolBlock } from "../block/concrete_block/symbol_block.js";
 import { I32 } from "../evaluation/i32.js";
 
@@ -19,9 +18,13 @@ export class PyramidPlayground extends PyramidEngine {
     constructor(){
         super();
     }
-    protected init(): void {
+    protected override init(): void {
         this.init_events();
         this.init_menu();
+        this.init_dom();
+    }
+    private init_dom(): void {
+        document.getElementById("playground").style.width = "100%";
     }
 
     protected override event_mousedown(e: MouseEvent) {
@@ -33,7 +36,7 @@ export class PyramidPlayground extends PyramidEngine {
         }
     }
     protected override init_menu(){
-        const menu_contents_literal = new Array<PyramidMenuContent>();
+        const menu_contents_literal = new Array<MenuContent>();
         menu_contents_literal.push({
             color: "blue",
             text: "0", 
@@ -48,9 +51,9 @@ export class PyramidPlayground extends PyramidEngine {
                 I32.eval
             )),
         });
-        MenuManager.getInstance().add_menu_contents("Literal", "black", menu_contents_literal);
+        MenuManager.getInstance().add_menu_contents({label: "Literal", color: "black"}, menu_contents_literal);
 
-        const menu_contents_symbol = new Array<PyramidMenuContent>();
+        const menu_contents_symbol = new Array<MenuContent>();
         menu_contents_symbol.push({
             color: "blue",
             text: "+", 
@@ -63,7 +66,7 @@ export class PyramidPlayground extends PyramidEngine {
                 "+"
             )),
         });
-        MenuManager.getInstance().add_menu_contents("Symbol", "lightgreen", menu_contents_symbol);
+        MenuManager.getInstance().add_menu_contents({label: "Symbol", color: "lightgreen"}, menu_contents_symbol);
 
         // debug
         

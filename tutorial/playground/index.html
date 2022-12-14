@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="ja">
+
+<head>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" href="../../style.css">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>チュートリアル問題1-1 | ピラミッド</title>
+    <link rel="icon" href="../../images/favicon.ico">
+    <link rel="apple-touch-icon" href="../../images/apple-touch-icon-152.png">
+    <!-- OGP -->
+    <meta property="og:type" content="article">
+    <meta property="og:description" content="関数型ビジュアルプログラミング言語、ピラミッドのチュートリアルページ。問題を解きながらプログラミングを楽しもう。">
+    <meta property="og:title" content="チュートリアル問題1-1 | ピラミッド">
+    <meta property="og:url" content="https://pyramid.224.works/tutorial/q1-1">
+    <meta property="og:image" content="https://watanabemayu.jp/AzaleaWorks/azaleaworks-card.jpg">
+    <meta property="og:site_name" content="チュートリアル問題1-1 | ピラミッド">
+    <meta property="og:locale" content="ja_JP">
+    <!-- /OGP -->
+    <!-- Twitter Card -->
+    <meta name="twitter:card" content="summary_large_image">
+    <meta property="twitter:description" content="関数型ビジュアルプログラミング言語、ピラミッドのチュートリアルページ。問題を解きながらプログラミングを楽しもう。">
+    <meta property="twitter:title" content="チュートリアル問題1-1 | ピラミッド">
+    <meta property="twitter:url" content="https://pyramid.224.works/tutorial/q1-1">
+    <meta name="twitter:image" content="https://watanabemayu.jp/AzaleaWorks/azaleaworks-card.jpg">
+    <meta name="twitter:domain" content="224.works">
+    <!-- /Twitter Card -->
+    <!-- CSS のちのち軽量化のためインストール版に変更 -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!--
+    Copyright (c) Tailwind Labs, Inc.
+    Released under the MIT license
+    https://github.com/tailwindlabs/tailwindcss/blob/master/LICENSE
+    -->
+    <!-- /CSS -->
+</head>
+<header>
+  <img id="logo" src="../../images/logo.svg" height = "30.3px" alt="ピラミッドのロゴ">
+</header>
+<body oncontextmenu="return false;">
+    <div id="pyramid-wrapper">
+        <div id="tutorial">
+            <body class="container mx-auto flex flex-col min-h-screen">
+                <!-- deleted: max-w-screen-lg  --> 
+                <main class="flex-grow">
+                  <div id="tutorial-div" class="text-slate-800 mt-4 mb-2">
+                    <h2 id ="tutorial-index" class="inline-flex items-center text-xl mt-2">問題1-1
+                      <svg xmlns="http://www.w3.org/2000/svg" fill="#EF454A" viewBox="0 0 512 512" class="h-8 m-1">
+                        <!--! Font Awesome Pro 6.2.1 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license (Commercial License) Copyright 2022 Fonticons, Inc. -->
+                        <path
+                          d="M470.6 105.4c12.5 12.5 12.5 32.8 0 45.3l-256 256c-12.5 12.5-32.8 12.5-45.3 0l-128-128c-12.5-12.5-12.5-32.8 0-45.3s32.8-12.5 45.3 0L192 338.7 425.4 105.4c12.5-12.5 32.8-12.5 45.3 0z" />
+                      </svg>
+                    </h2>
+                  </div>
+                  <dev class="flex justify-center items-center">
+                    <div class="mx-1 my-2"><button
+                        class="bg-sky-600 py-1 px-2 text-white text-lg hover:bg-sky-500 rounded invisible">←前の問題</button></a>
+                      <!--最初の問題のときは見えなくする-->
+                      <a href="" class="mx-1 my-2"><button
+                          class="bg-cyan-600 py-1 px-2 text-white hover:bg-cyan-500 rounded">解きなおす</button></a>
+                      <a href="../q1-2" class="mx-1 my-2"><button
+                          class="bg-sky-600 py-1 px-2 text-white text-lg hover:bg-sky-500 rounded">次の問題→</button></a>
+                  </dev>
+                  </div>
+                </main>
+              </body>
+              <footer class="container max-w-screen-lg p-2 text-slate-600">
+                <!--Released under the MIT license-->
+                <a href="https://github.com/tsumiki-works/Pyramid/blob/main/LICENSE" class="hover:text-slate-500">Copyright (c) 2022
+                  TsumikiWorks</a>
+              </footer>
+        </div>
+        <div id="playground">
+            <div id="workspace">
+                <div id="roots"></div>
+                <div id="trash"></div>
+            </div>
+            <div id="menu">
+                <div id="menu-tab"></div>
+                <div id="menu-items"></div>
+                
+            </div>
+            <div id="console">
+                <div id="console-content">
+                    <label id="console-log"></label>
+                    <label id="console-line-head"># </label><label id="console-line" contentEditable="true"></label>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script src="../../js/types.js"></script>
+    <script type="module" src="../../js/main.js"></script>
+    <script type="module">
+        import { Pyramid } from "../../js/main.js"
+        window.onload = () => {
+            new Pyramid("tutorial");
+        }
+    </script>
+</body>
+
+</html>
