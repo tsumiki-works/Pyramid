@@ -1,6 +1,7 @@
 import { Keywords } from "../keywords.js";
 import { Popup } from "../popup/popup.js";
 import { PopupInput } from "../popup/popup_input.js";
+import { PopupLabel } from "../popup/popup_label.js";
 import { PopupListMenu } from "../popup/popup_listmenu.js";
 import { EmptyBlock } from "./concrete_block/empty_block.js";
 import { EventBlock } from "./event_block.js";
@@ -53,7 +54,13 @@ export abstract class BasicBlock extends EventBlock {
 
     protected popup_event_eval() {
         Popup.remove_all_popup();
-
+        // TODO: Make Popup from result
+        Popup.create_popup(new PopupLabel(
+            this.getBoundingClientRect().left + this.get_width(),
+            this.getBoundingClientRect().top,
+            "",
+            this.eval(Keywords.get_first_env()).value,
+        ));
         console.log(this.eval(Keywords.get_first_env()));
     }
 
@@ -64,41 +71,19 @@ export abstract class BasicBlock extends EventBlock {
 
     protected popup_event_edit(e: MouseEvent, edit_event: Function) {
         Popup.remove_all_popup();
-        //! TODO: move them Popup
         Popup.create_popup(new PopupInput(
-            e.pageX, 
-            e.pageY, 
-            "popup-block-input", 
+            e.pageX,
+            e.pageY,
+            "popup-block-input",
             ((ke: KeyboardEvent) => {
                 if (ke.key == "Enter") {
-                    edit_event(PopupInput.get_value()); 
+                    edit_event(PopupInput.get_value());
                     Popup.remove_all_popup();
                     this.get_root().format();
                 }
             }),
         ));
         PopupInput.focus();
-
-        /*
-        const popup = document.createElement("div");
-        popup.id = "popup-menu";
-        popup.style.display = "block";
-        popup.style.left = e.pageX + "px";
-        popup.style.top = e.pageY + "px";
-        document.body.appendChild(popup);
-        const input = document.createElement("input");
-        input.id = "popup-menu-edit";
-        input.contentEditable = "true";
-        input.addEventListener("keydown", (e => {
-            if (e.key == "Enter") {
-                Popup.remove_all_popup();
-                edit_event(input.value);
-                this.get_root().format();
-            }
-        }));
-        popup.appendChild(input);
-        input.focus();
-        */
     }
 
     private event_mouse_leftdown() {
@@ -117,7 +102,7 @@ export abstract class BasicBlock extends EventBlock {
         this.set_left(x);
         this.set_top(y);
     }
-    
+
     private event_mouse_rightdown(e: MouseEvent, popup_events: PopupEvent[]) {
         Popup.create_popup(new PopupListMenu(e.pageX, e.pageY, "", popup_events));
     }

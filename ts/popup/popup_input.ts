@@ -12,14 +12,14 @@ export class PopupInput extends PopupItem {
 
     static focus(): void {
         const elem = document.getElementById("popup-menu-edit") as HTMLInputElement;
-        if(elem !== null){
+        if (elem !== null) {
             elem.focus();
         }
     }
 
     static get_value(): string {
         const elem = document.getElementById("popup-menu-edit") as HTMLInputElement;
-        if(elem !== null){
+        if (elem !== null) {
             return elem.value;
         }
         return "";
