@@ -55,11 +55,6 @@ div#workspace {
     vertical-align: bottom;
 }
 
-pyramid-symbol-block {
-    border: solid 3px red;
-    box-sizing: border-box;
-}
-
 .pyramid-block,
 .pyramid-menublock {
     position: absolute;
@@ -67,9 +62,22 @@ pyramid-symbol-block {
     display: flex;
     justify-content: center;
     align-items: center;
-    color: white;
     font-weight: bold;
     user-select: none;
+    color: white;
+}
+
+pyramid-empty-block {
+    background-color: rgba(0, 0, 0, 0.2);
+}
+pyramid-literal-block {
+    background-color: blue;
+}
+pyramid-symbol-block {
+    background-color: green;
+}
+pyramid-define-block {
+    background-color: black;
 }
 
 .pyramid-menutab {
@@ -94,6 +102,10 @@ pyramid-symbol-block {
 .pyramid-block-variable {
     border: dotted 4px red;
     box-sizing: border-box;
+}
+
+span.pyramid-argument {
+    margin-left: 16px;
 }
 
 div#menu {

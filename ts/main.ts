@@ -34,7 +34,6 @@ export class Pyramid {
                                             attribute: null
                                         },
                                         [_l, _t],
-                                        [0, 0, 255, 1],
                                         "0",
                                         I32.check_type,
                                         I32.eval
@@ -49,8 +48,8 @@ export class Pyramid {
                                             attribute: null
                                         },
                                         [_l, _t],
-                                        [0, 0, 255, 1],
-                                        "+"
+                                        "+",
+                                        2
                                     ))
                                 }
                             ];

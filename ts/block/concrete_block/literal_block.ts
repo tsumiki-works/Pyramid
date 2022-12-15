@@ -13,7 +13,6 @@ export class LiteralBlock extends BasicBlock {
     constructor(
         pyramid_type: PyramidType,
         lr: Vec2,
-        rgba: Vec4,
         content: string,
         check_type: Function,
         eval_inner: Function
@@ -21,7 +20,6 @@ export class LiteralBlock extends BasicBlock {
         super(
             pyramid_type,
             lr,
-            rgba,
             [
                 ["編集", (e: MouseEvent) => this.popup_event_edit(e, (value: string) => {
                     if (value.length !== 0 && check_type(value)) {
