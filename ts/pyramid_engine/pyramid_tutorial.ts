@@ -85,9 +85,9 @@ export class PyramidTutorial extends PyramidEngine {
     private get_check_elem(check_text: string, check_disp: string[]): HTMLElement {
         //! TODO: Form this Elem for tutorial check contents
         let elem = document.createElement("section");
-        elem.classList.add("mt-3", "ml-1");
+        elem.classList.add("mt-3");
         let h3 = document.createElement("h3");
-        h3.classList.add("inline-flex", "items-center", "text-lg");
+        h3.classList.add("text-slate-800", "inline-flex", "items-center", "text-lg");
         h3.innerText = check_text;
         h3.appendChild(this.get_checkmark_svg());
         elem.appendChild(h3);
