@@ -62,6 +62,6 @@ export abstract class PyramidEngine {
             MenuManager.getInstance().add_menu_contents(key, this.menu_contents.get(key));
         }
         let first_tab = this.menu_contents.keys().next().value;
-        MenuManager.getInstance().enable_tab(first_tab.label);
+        MenuManager.getInstance().set_top_priority_tab(first_tab.label);
     }
 }

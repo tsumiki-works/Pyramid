@@ -57,13 +57,13 @@ export class MenuManager {
             menu_tab.color,
             menu_tab.label,
         );
-        tmp_menu_tab.addEventListener("mousedown", (e: MouseEvent) => this.enable_tab(menu_tab.label));
+        tmp_menu_tab.addEventListener("mousedown", (e: MouseEvent) => this.set_top_priority_tab(menu_tab.label));
         this.menu_tab.appendChild(tmp_menu_tab);
         this.menu_content_tab.set(menu_tab.label, tmp_menu_tab);
 
     }
 
-    enable_tab(_label: string): void {
+    set_top_priority_tab(_label: string): void {
         if (!this.menu_contents.has(_label)) {
             alert("Pyramid frontend error: Failed to enable tab of ` " + _label + " `");
             return;
