@@ -68,7 +68,7 @@ export class PyramidTutorial extends PyramidEngine {
         document.getElementById("tutorial-body").innerHTML = tutorial_reader.get_body();
         */
     }
-
+/*
     private get_checkmark_svg(): HTMLElement {
         //! TODO: Form this Elem or Use CheckBox(disabled)
         let elem = document.createElement("svg");
@@ -80,6 +80,13 @@ export class PyramidTutorial extends PyramidEngine {
         let path = document.createElement("path");
         path.setAttribute("d", "M470.6 105.4c12.5 12.5 12.5 32.8 0 45.3l-256 256c-12.5 12.5-32.8 12.5-45.3 0l-128-128c-12.5-12.5-12.5-32.8 0-45.3s32.8-12.5 45.3 0L192 338.7 425.4 105.4c12.5-12.5 32.8-12.5 45.3 0z");
         elem.appendChild(path);
+        return elem;
+    }
+*/    
+    private get_checkmark_svg(): HTMLElement {
+        //! TODO: Form this Elem or Use CheckBox(disabled)
+        let elem = document.createElement("i");
+        elem.setAttribute("class", "fa-solid fa-check");
         return elem;
     }
     private get_check_elem(check_text: string, check_disp: string[]): HTMLElement {
