@@ -53,13 +53,8 @@ export abstract class BasicBlock extends EventBlock {
 
     protected popup_event_eval() {
         Popup.remove_all_popup();
-        // TODO: Make Popup from result
-        Popup.create_popup(new PopupLabel(
-            this.getBoundingClientRect().left + this.get_width(),
-            this.getBoundingClientRect().top,
-            "",
-            this.eval(Keywords.get_first_env()).value,
-        ));
+        // TODO: Make Output Block from result
+        
         console.log(this.eval(Keywords.get_first_env()));
     }
 
