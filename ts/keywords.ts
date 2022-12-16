@@ -26,7 +26,13 @@ export class Keywords {
                     if (args.length !== 2) {
                         throw new Error("+ must have 2 arguments but get " + args.length + " arguments");
                     }
-                    return args[0].value + args[1].value;
+                    return {
+                        pyramid_type: {
+                            type_id: PyramidTypeID.Number,
+                            attribute: null,
+                        },
+                        value: args[0].value + args[1].value,
+                    };
                 },
             },
         ],

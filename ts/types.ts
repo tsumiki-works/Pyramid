@@ -24,7 +24,7 @@ function typeid_to_string(id: PyramidTypeID): string {
 
 type PyramidType = {
     type_id: PyramidTypeID;
-    attribute: any,
+    attribute: FunctionAttribute | null,
 };
 type FunctionAttribute = {
     args: PyramidType[];
