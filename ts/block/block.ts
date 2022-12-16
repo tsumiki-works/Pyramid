@@ -1,3 +1,4 @@
+import { Keywords } from "../keywords.js";
 import { BlockConst } from "./block_const.js";
 import { Roots } from "./roots.js";
 
@@ -13,12 +14,10 @@ import { Roots } from "./roots.js";
 
 export abstract class Block extends HTMLElement {
 
-    protected pyramid_type: PyramidType;
     protected parent: Block | null;
 
-    constructor(pyramid_type: PyramidType, lr: Vec2) {
+    constructor(lr: Vec2) {
         super();
-        this.pyramid_type = pyramid_type;
         this.parent = null;
         this.classList.add("pyramid-block");
         this.style.left = lr[0] + "px";
@@ -64,9 +63,6 @@ export abstract class Block extends HTMLElement {
     get_height(): number {
         return this.offsetHeight;
     }
-    get_type(): PyramidType {
-        return this.pyramid_type;
-    }
     get_root(): Block {
         if (this.parent === null) {
             return this;
@@ -85,10 +81,6 @@ export abstract class Block extends HTMLElement {
             }
         }
         return res;
-    }
-
-    is_empty(): boolean {
-        return this.pyramid_type.type_id === PyramidTypeID.Empty;
     }
 
     connect_with(target: Block): boolean {
@@ -115,9 +107,12 @@ export abstract class Block extends HTMLElement {
     }
 
     format() {
+        this.inference_type(Keywords.get_first_env());
         Roots.determine_pos(this.get_x(), this.get_y(), this, Roots.determine_width(this));
     }
 
+    abstract is_empty(): boolean;
     abstract kill(): void;
     abstract eval(env: Environment): PyramidObject;
+    abstract inference_type(env: Environment);
 }

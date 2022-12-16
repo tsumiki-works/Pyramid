@@ -63,11 +63,9 @@ div#workspace {
     position: absolute;
     width: auto;
     display: flex;
-    justify-content: center;
+    flex-flow: column;
     align-items: center;
-    font-weight: bold;
     user-select: none;
-    color: white;
 }
 
 pyramid-empty-block {
@@ -81,6 +79,21 @@ pyramid-symbol-block {
 }
 pyramid-define-block {
     background-color: black;
+}
+
+span.content {
+    color: white;
+    font-weight: bold;
+}
+
+.pyramid-invalid-block>span.content {
+    color: red;
+}
+
+span.type {
+    color: rgba(255, 255, 255, 0.5);
+    font-size: 12px;
+    box-sizing: border-box;
 }
 
 .pyramid-menutab {
