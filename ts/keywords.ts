@@ -1,4 +1,4 @@
-import { Operator } from "./build_in_function/operator.js";
+import { Operator } from "./evaluation/operator.js";
 
 export class Keywords {
     static readonly keywords: Keyword[] = [
