@@ -1,3 +1,4 @@
+import { Evaluator } from "../../evaluation/evaluator.js";
 import { BasicBlock } from "../basic_block.js";
 
 /* ================================================================================================================= */
@@ -8,34 +9,32 @@ import { BasicBlock } from "../basic_block.js";
 
 export class LiteralBlock extends BasicBlock {
 
-    private eval_inner: Function;
-
     constructor(
-        pyramid_type: PyramidType,
         lr: Vec2,
-        content: string,
-        check_type: Function,
-        eval_inner: Function
+        content: string
     ) {
         super(
-            pyramid_type,
+            Evaluator.get_literal_type(content),
             lr,
             [
                 ["編集", (e: MouseEvent) => this.popup_event_edit(e, (value: string) => {
-                    if (value.length !== 0 && check_type(value)) {
-                        this.innerText = value;
+                    if (value.length !== 0) {
+                        this.set_content(value);
                     }
                 })],
-                ["実行", _ => this.popup_event_eval()],
+                ["評価", _ => this.popup_event_eval()],
                 ["削除", _ => this.popup_event_kill()],
             ]
         );
-        this.innerText = content;
-        this.eval_inner = eval_inner;
+        this.set_content(content);
     }
 
-    override eval(env: Environment): PyramidObject {
-        return this.eval_inner(this.get_content(), env);
+    override eval(_: Environment): PyramidObject {
+        return Evaluator.eval_literal(this.get_content(), this.pyramid_type);
+    }
+
+    override inference_type(_: Environment) {
+        this.set_type(Evaluator.get_literal_type(this.get_content()));
     }
 }
 customElements.define('pyramid-literal-block', LiteralBlock);

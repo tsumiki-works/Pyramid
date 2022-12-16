@@ -14,14 +14,9 @@ export class TutorialDatabase {
                 menu_contents_literal.push({
                     color: "blue",
                     text: "0",
-                    block_constructor: ((_l: number, _t: number) => new LiteralBlock({
-                        type_id: PyramidTypeID.Number,
-                        attribute: null,
-                    },
+                    block_constructor: ((_l: number, _t: number) => new LiteralBlock(
                         [_l, _t],
                         "0",
-                        PyramidNumber.check_type,
-                        PyramidNumber.eval
                     )),
                 });
                 menu_contents.set({ label: "Literal", color: "black" }, menu_contents_literal);
@@ -30,10 +25,7 @@ export class TutorialDatabase {
                 menu_contents_symbol.push({
                     color: "blue",
                     text: "+",
-                    block_constructor: ((_l: number, _t: number) => new SymbolBlock({
-                        type_id: PyramidTypeID.Number,
-                        attribute: null,
-                    },
+                    block_constructor: ((_l: number, _t: number) => new SymbolBlock(
                         [_l, _t],
                         "+",
                         2
@@ -45,16 +37,7 @@ export class TutorialDatabase {
                 menu_contents_define.push({
                     color: "blue",
                     text: "f",
-                    block_constructor: ((_l: number, _t: number) => new DefineBlock({
-                        type_id: PyramidTypeID.Function,
-                        attribute: {
-                            args: [],
-                            return_type: {
-                                type_id: PyramidTypeID.Number,
-                                attribute: null,
-                            },
-                        },
-                    },
+                    block_constructor: ((_l: number, _t: number) => new DefineBlock(
                         [_l, _t],
                         "f"
                     )),
@@ -67,24 +50,14 @@ export class TutorialDatabase {
                         text: "0",
                         color: "blue",
                         block_constructor: ((_l: number, _t: number) => new LiteralBlock(
-                            {
-                                type_id: PyramidTypeID.Number,
-                                attribute: null
-                            },
                             [_l, _t],
-                            "0",
-                            PyramidNumber.check_type,
-                            PyramidNumber.eval
+                            "0"
                         ))
                     },
                     {
                         color: "green",
                         text: "+",
                         block_constructor: ((_l: number, _t: number) => new SymbolBlock(
-                            {
-                                type_id: PyramidTypeID.Number,
-                                attribute: null
-                            },
                             [_l, _t],
                             "+",
                             2

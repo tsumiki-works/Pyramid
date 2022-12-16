@@ -3,16 +3,28 @@ type Vec3 = [number, number, number];
 type Vec4 = [number, number, number, number];
 
 enum PyramidTypeID {
-    Empty,
+    Invalid,
     String,
     Number,
     Bool,
     Function,
     List,
 }
+function typeid_to_string(id: PyramidTypeID): string {
+    switch (id) {
+        case PyramidTypeID.Invalid: return "INVALID";
+        case PyramidTypeID.String: return "string";
+        case PyramidTypeID.Number: return "num";
+        case PyramidTypeID.Bool: return "bool";
+        case PyramidTypeID.Function: return "function";
+        case PyramidTypeID.List: return "list";
+        default: throw new Error(id + " th type is not defined");
+    }
+}
+
 type PyramidType = {
     type_id: PyramidTypeID;
-    attribute: any,
+    attribute: FunctionAttribute | null,
 };
 type FunctionAttribute = {
     args: PyramidType[];

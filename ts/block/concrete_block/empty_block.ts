@@ -10,10 +10,6 @@ import { EventBlock } from "../event_block.js";
 export class EmptyBlock extends EventBlock {
     constructor(parent?: Block) {
         super(
-            {
-                type_id: PyramidTypeID.Empty,
-                attribute: null
-            },
             [-100, -100],
             _ => { },
             _ => { },
@@ -25,6 +21,10 @@ export class EmptyBlock extends EventBlock {
         }
     }
 
+    override is_empty(): boolean {
+        return true;
+    }
+
     override kill(): void {
         this.remove();
     }
@@ -32,5 +32,7 @@ export class EmptyBlock extends EventBlock {
     override eval(_: Environment): PyramidObject {
         throw new Error("empty block evaluated");
     }
+
+    override inference_type(_: Environment) { }
 }
 customElements.define('pyramid-empty-block', EmptyBlock);

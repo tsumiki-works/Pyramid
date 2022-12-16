@@ -13,14 +13,13 @@ export abstract class EventBlock extends Block {
     private mouse_up_listener: EventListener;
 
     constructor(
-        pyramid_type: PyramidType,
         lr: Vec2,
         mouse_leftdown_event: Function,
         mouse_rightdown_event: Function,
         mouse_move_event: Function,
         mouse_up_event: Function,
     ) {
-        super(pyramid_type, lr);
+        super(lr);
         this.mouse_down_listener = (e: MouseEvent) => 
             this.mouse_down_event_wrapper(e, mouse_leftdown_event, mouse_rightdown_event);
         this.mouse_move_listener = (e: MouseEvent) => this.mouse_move_event_wrapper(e, mouse_move_event);

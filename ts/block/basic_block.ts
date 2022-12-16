@@ -5,8 +5,7 @@ import { Block } from "./block.js";
 import { DefineBlock } from "./concrete_block/define_block.js";
 import { EmptyBlock } from "./concrete_block/empty_block.js";
 import { LiteralBlock } from "./concrete_block/literal_block.js";
-import { SymbolBlock } from "./concrete_block/symbol_block.js";
-import { EventBlock } from "./event_block.js";
+import { TypedBlock } from "./typed_block.js";
 import { Roots } from "./roots.js";
 import { Trash } from "./trash.js";
 
@@ -18,9 +17,10 @@ import { Trash } from "./trash.js";
 /*         has some popup event preset                                                                               */
 /* ================================================================================================================= */
 
-export abstract class BasicBlock extends EventBlock {
+export abstract class BasicBlock extends TypedBlock {
 
     private readonly playground: HTMLDivElement = document.getElementById("playground") as HTMLDivElement;
+    private readonly content_span: HTMLSpanElement;
 
     constructor(pyramid_type: PyramidType, lr: Vec2, popup_events: PopupEvent[]) {
         super(
@@ -31,15 +31,17 @@ export abstract class BasicBlock extends EventBlock {
             (e: MouseEvent) => this.event_mousemove(e),
             _ => this.event_mouseup(),
         );
+        this.content_span = document.createElement("span");
+        this.content_span.classList.add("content");
+        this.appendChild(this.content_span);
+    }
+
+    protected set_content(content: string) {
+        this.content_span.innerText = content;
     }
 
     get_content(): string {
-        for (let i = 0; i < this.childNodes.length; ++i) {
-            if (this.childNodes[i].nodeName === "#text") {
-                return this.childNodes[i].nodeValue;
-            }
-        }
-        throw new Error("content is empty");
+        return this.content_span.innerText;
     }
 
     override kill(): void {
@@ -65,17 +67,11 @@ export abstract class BasicBlock extends EventBlock {
         switch (result.pyramid_type.type_id) {
             case PyramidTypeID.Number:
                 result_block = new LiteralBlock(
-                    {
-                        type_id: PyramidTypeID.Number,
-                        attribute: []
-                    },
                     [
                         this.get_x() + this.get_width(),
                         this.get_y() - this.get_height() * 2
                     ],
                     result.value,
-                    PyramidNumber.check_type,
-                    PyramidNumber.eval
                 );
                 break;
             case PyramidTypeID.Function:

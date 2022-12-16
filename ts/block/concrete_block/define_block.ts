@@ -3,9 +3,9 @@ import { EmptyBlock } from "./empty_block.js";
 
 export class DefineBlock extends ParentBlock {
 
-    constructor(pyramid_type: PyramidType, lr: Vec2, content: string) {
+    constructor(lr: Vec2, content: string) {
         super(
-            pyramid_type,
+            { type_id: PyramidTypeID.Invalid, attribute: null }, // TODO:
             lr,
             [
                 ["編集", (e: MouseEvent) => this.popup_event_edit(e, (value: string) => {
@@ -30,12 +30,12 @@ export class DefineBlock extends ParentBlock {
                         this.pyramid_type.attribute.args = args.map(_ => { return { type_id: PyramidTypeID.Number, attribute: null }; }); // TODO:
                     }
                 })],
-                ["実行", _ => this.popup_event_eval()],
+                ["評価", _ => this.popup_event_eval()],
                 ["削除", _ => this.popup_event_kill_self()],
                 ["子も削除", _ => this.popup_event_kill()],
             ]
         );
-        this.innerText = content;
+        this.set_content(content);
         this.appendChild(new EmptyBlock(this));
         this.appendChild(new EmptyBlock(this));
         this.format();
@@ -67,6 +67,10 @@ export class DefineBlock extends ParentBlock {
             }
         })
         return this.get_children()[1].eval(env);
+    }
+
+    override inference_type(env: Environment) {
+        // TODO:
     }
 
     private get_args(): string[] {
