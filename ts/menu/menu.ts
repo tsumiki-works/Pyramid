@@ -11,14 +11,11 @@ export class MenuManager {
     private menu_content_tab: Map<string, MenuTab>;
     private menu_contents: Map<string, MenuBlock[]>;
 
-    private mousedown_listener: EventListener;
-
     private constructor() {
         this.menu = document.getElementById("menu") as HTMLDivElement;
         this.menu_tab = document.getElementById("menu-tab") as HTMLDivElement;
         this.menu_items = document.getElementById("menu-items") as HTMLDivElement;
 
-        //this.menu.style.top = document.getElementById("logo-wrapper").offsetHeight + "px";
         this.menu_contents = new Map<string, MenuBlock[]>();
         this.menu_content_tab = new Map<string, MenuTab>();
     }
@@ -60,13 +57,13 @@ export class MenuManager {
             menu_tab.color,
             menu_tab.label,
         );
-        tmp_menu_tab.addEventListener("mousedown", (e: MouseEvent) => this.enable_tab(menu_tab.label));
+        tmp_menu_tab.addEventListener("mousedown", (e: MouseEvent) => this.set_top_priority_tab(menu_tab.label));
         this.menu_tab.appendChild(tmp_menu_tab);
         this.menu_content_tab.set(menu_tab.label, tmp_menu_tab);
 
     }
 
-    enable_tab(_label: string): void {
+    set_top_priority_tab(_label: string): void {
         if (!this.menu_contents.has(_label)) {
             alert("Pyramid frontend error: Failed to enable tab of ` " + _label + " `");
             return;

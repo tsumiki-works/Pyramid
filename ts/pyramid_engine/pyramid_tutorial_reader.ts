@@ -42,9 +42,9 @@ export class PyramidTutorialReader {
                     }
                     break;
                 case "- ":
-                    if(tmp_head.length != 0){
+                    if (tmp_head.length != 0) {
                         tmp_caption.push(formed_line.slice(2, formed_line.length));
-                    }else{
+                    } else {
                         alert("Tutorial Reader Error: Not Found Check Title.")
                     }
                     break;
@@ -52,8 +52,8 @@ export class PyramidTutorialReader {
                     alert("Tutorial Reader Error: Failed to load Tutorial doc.");
             }
         }
-        if(tmp_head.length != 0){
-            this.check_texts.push({head: tmp_head, captions: tmp_caption});
+        if (tmp_head.length != 0) {
+            this.check_texts.push({ head: tmp_head, captions: tmp_caption });
         }
     }
 
