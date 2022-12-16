@@ -1,5 +1,10 @@
 import { PyramidEngine } from "./pyramid_engine.js";
 import { Popup } from "../popup.js";
+import { MenuManager } from "../menu/menu.js";
+import { LiteralBlock } from "../block/concrete_block/literal_block.js";
+import { SymbolBlock } from "../block/concrete_block/symbol_block.js";
+import { DefineBlock } from "../block/concrete_block/define_block.js";
+import { PyramidNumber } from "../evaluation/pyramid_number.js";
 
 /**
  * This class is PyramidEngine for Playgorund.
