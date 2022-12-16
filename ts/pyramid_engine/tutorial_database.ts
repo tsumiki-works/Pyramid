@@ -2,6 +2,7 @@ import { LiteralBlock } from "../block/concrete_block/literal_block.js";
 import { SymbolBlock } from "../block/concrete_block/symbol_block.js";
 import { DefineBlock } from "../block/concrete_block/define_block.js";
 import { PyramidNumber } from "../evaluation/pyramid_number.js";
+import { ListBlock } from "../block/concrete_block/list_block.js";
 
 export class TutorialDatabase {
     constructor() { }
@@ -19,11 +20,23 @@ export class TutorialDatabase {
                         "0",
                     )),
                 });
+                menu_contents_literal.push({
+                    color: "lightseagreen",
+                    text: "LIST(2)",
+                    block_constructor: ((_l: number, _t: number) => new ListBlock({
+                        type_id: PyramidTypeID.List,
+                        attribute: null,
+                    },
+                        [_l, _t],
+                        "LIST(2)",
+                        2
+                    )),
+                })
                 menu_contents.set({ label: "Literal", color: "black" }, menu_contents_literal);
 
                 const menu_contents_symbol = new Array<MenuContent>();
                 menu_contents_symbol.push({
-                    color: "blue",
+                    color: "green",
                     text: "+",
                     block_constructor: ((_l: number, _t: number) => new SymbolBlock(
                         [_l, _t],
@@ -35,7 +48,7 @@ export class TutorialDatabase {
 
                 const menu_contents_define = new Array<MenuContent>();
                 menu_contents_define.push({
-                    color: "blue",
+                    color: "black",
                     text: "f",
                     block_constructor: ((_l: number, _t: number) => new DefineBlock(
                         [_l, _t],

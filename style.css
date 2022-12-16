@@ -80,6 +80,9 @@ pyramid-symbol-block {
 pyramid-define-block {
     background-color: black;
 }
+pyramid-list-block {
+    background-color: lightseagreen;
+}
 
 span.content {
     color: white;
