@@ -1,19 +1,23 @@
 import { Block } from "../block/block.js";
+import { TutorialDatabase } from "./tutorial_database.js";
+import { MenuManager } from "../menu/menu.js";
 
 export abstract class PyramidEngine {
 
     protected workspace: HTMLDivElement;
+    protected menu_contents: Map<MenuTabContent, MenuContent[]>;
 
     protected mousedown_listener: EventListener;
     protected mousemove_listener: EventListener;
     protected mouseup_listener: EventListener;
 
-    constructor(){
+    constructor(menu_num: number){
         this.workspace = document.getElementById("workspace") as HTMLDivElement;
-        this.init();
+        this.init(menu_num);
     }
-    protected init(): void {
+    protected init(menu_num: number): void {
         this.init_events();
+        this.init_menu(menu_num);
     };
     protected init_events() {
         this.mousedown_listener = (e: MouseEvent) => this.event_mousedown(e);
@@ -52,7 +56,12 @@ export abstract class PyramidEngine {
 
     protected event_mousemove(_: MouseEvent) { }
 
-    protected init_menu(){
-        
+    protected init_menu(menu_num: number){
+        this.menu_contents = TutorialDatabase.get_menu_contents(menu_num);
+        for (const key of this.menu_contents.keys()) {
+            MenuManager.getInstance().add_menu_contents(key, this.menu_contents.get(key));
+        }
+        let first_tab = this.menu_contents.keys().next().value;
+        MenuManager.getInstance().enable_tab(first_tab.label);
     }
 }

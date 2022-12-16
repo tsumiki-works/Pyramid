@@ -4,7 +4,10 @@ export class Pager {
             e.preventDefault();
             e.returnValue = "ページ移動すると作業内容が失われます。";
           });
-        window.location.href = ""
+        window.location.href = "";
+    }
+    static goto_top_from_tutorial(){
+        window.location.href = "../../../";
     }
     static goto_tutorial_top(){
         // debug

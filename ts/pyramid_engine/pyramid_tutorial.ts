@@ -1,6 +1,7 @@
 import { PyramidEngine } from "./pyramid_engine.js";
 import { MenuManager } from "../menu/menu.js";
 import { PyramidTutorialReader } from "./pyramid_tutorial_reader.js";
+import { TutorialDatabase } from "./tutorial_database.js";
 
 export class PyramidTutorial extends PyramidEngine {
     //! TODO: Tutorial-Image
@@ -24,23 +25,20 @@ export class PyramidTutorial extends PyramidEngine {
     private problem_number: number;
     private checker: Function[];
     private problems: Map<string, Function>;
-    private menu_contents: Map<MenuTabContent, MenuContent[]>;
 
     private previous_problem;
     private next_problem;
 
-    constructor(_no: number, _checker: Function[], _menu_contents: Map<MenuTabContent, MenuContent[]>) {
-        super();
+    constructor(_no: number, _checker: Function[]) {
+        super(_no);
         this.problem_number = _no;
         this.checker = _checker;
-        this.menu_contents = _menu_contents;
 
         this.doc = document.getElementById("tutorial-div");
 
-        this.init_menu();
         this.init_tutorial_doc();
     }
-
+    /*
     protected override init_menu(): void {
         for (const key of this.menu_contents.keys()) {
             MenuManager.getInstance().add_menu_contents(key, this.menu_contents.get(key));
@@ -48,6 +46,7 @@ export class PyramidTutorial extends PyramidEngine {
         let first_tab = this.menu_contents.keys().next().value;
         MenuManager.getInstance().enable_tab(first_tab.label);
     }
+    */
 
     private init_tutorial_doc(): void {
         let tutorial_reader = new PyramidTutorialReader(this.problem_number);
