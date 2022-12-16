@@ -45,10 +45,11 @@ export class Popup {
         return (document.getElementById("popup-menu-edit") as HTMLInputElement).value;
     }
 
+    
+
     static show_popup(popup_item: HTMLElement) {
         document.body.appendChild(popup_item);
     }
-
 
     static remove_popup(f: Function): void {
         const popups = document.getElementsByClassName("popup");
