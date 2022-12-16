@@ -1,13 +1,12 @@
-import { Popup } from "../../popup.js";
+import { Keywords } from "../../keywords.js";
 import { ParentBlock } from "../parent_block.js";
-import { Roots } from "../roots.js";
-import { EmptyBlock } from "./empty_block.js";
+import { TypedBlock } from "../typed_block.js";
 
 export class SymbolBlock extends ParentBlock {
 
-    constructor(pyramid_type: PyramidType, lr: Vec2, content: string, args_cnt: number) {
+    constructor(lr: Vec2, content: string, args_cnt: number) {
         super(
-            pyramid_type,
+            { type_id: PyramidTypeID.Invalid, attribute: null },
             lr,
             [
                 ["編集", (e: MouseEvent) => this.popup_event_edit(e, (value: string) => {
@@ -27,6 +26,7 @@ export class SymbolBlock extends ParentBlock {
         );
         this.set_content(content);
         this.set_children_cnt(args_cnt);
+        this.inference_type(Keywords.get_first_env());
         this.format();
     }
 
@@ -52,6 +52,21 @@ export class SymbolBlock extends ParentBlock {
                 throw new Error(this.get_content() + " type is wrong"); // TODO: show error better
             }
             return v;
+        }
+    }
+    
+    override inference_type(env: Environment) {
+        const v = env.get(this.get_content());
+        if (v === null) {
+            this.pyramid_type = { type_id: PyramidTypeID.Invalid, attribute: null };
+            return;
+        }
+        this.set_type(v.pyramid_type);
+        for (const child of this.get_children()) {
+            if (child.is_empty()) {
+                continue;
+            }
+            (child as TypedBlock).inference_type(env);
         }
     }
 }

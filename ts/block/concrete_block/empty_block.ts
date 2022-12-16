@@ -10,10 +10,6 @@ import { EventBlock } from "../event_block.js";
 export class EmptyBlock extends EventBlock {
     constructor(parent?: Block) {
         super(
-            {
-                type_id: PyramidTypeID.Empty,
-                attribute: null
-            },
             [-100, -100],
             _ => { },
             _ => { },
@@ -23,6 +19,10 @@ export class EmptyBlock extends EventBlock {
         if (typeof parent !== "undefined") {
             this.set_parent(parent);
         }
+    }
+
+    override is_empty(): boolean {
+        return true;
     }
 
     override kill(): void {

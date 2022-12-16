@@ -9,14 +9,6 @@ export abstract class ParentBlock extends BasicBlock {
         super(pyramid_type, lr, popup_events);
     }
 
-    protected set_content(content: string) {
-        const tmp = this.get_children();
-        this.innerText = content;
-        for (const child of tmp) {
-            this.appendChild(child);
-        }
-    }
-
     protected set_children_cnt(args_cnt: number) {
         const children = this.get_children();
         this.disconnect_all_children();
