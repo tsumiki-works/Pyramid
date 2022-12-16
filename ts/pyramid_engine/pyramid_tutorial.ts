@@ -1,7 +1,5 @@
 import { PyramidEngine } from "./pyramid_engine.js";
-import { MenuManager } from "../menu/menu.js";
 import { PyramidTutorialReader } from "./pyramid_tutorial_reader.js";
-import { TutorialDatabase } from "./tutorial_database.js";
 
 export class PyramidTutorial extends PyramidEngine {
     //! TODO: Tutorial-Image
@@ -38,27 +36,18 @@ export class PyramidTutorial extends PyramidEngine {
 
         this.init_tutorial_doc();
     }
-    /*
-    protected override init_menu(): void {
-        for (const key of this.menu_contents.keys()) {
-            MenuManager.getInstance().add_menu_contents(key, this.menu_contents.get(key));
-        }
-        let first_tab = this.menu_contents.keys().next().value;
-        MenuManager.getInstance().enable_tab(first_tab.label);
-    }
-    */
 
     private init_tutorial_doc(): void {
         let tutorial_reader = new PyramidTutorialReader(this.problem_number);
         tutorial_reader.debug();
-        
+
         // Title
         document.getElementById("tutorial-index").innerText = tutorial_reader.get_title();
 
-        
+
         // Checks
-        let checks: {head: string, captions: string[]}[] = tutorial_reader.get_check_texts();
-        for(const check of checks){
+        let checks: { head: string, captions: string[] }[] = tutorial_reader.get_check_texts();
+        for (const check of checks) {
             this.doc.appendChild(this.get_check_elem(check.head, check.captions));
         }
 
@@ -66,7 +55,7 @@ export class PyramidTutorial extends PyramidEngine {
         // Body
         document.getElementById("tutorial-body").innerHTML = tutorial_reader.get_body();
         */
-    } 
+    }
     private get_checkmark_icon(): HTMLElement {
         //! TODO: Form this Elem or Use CheckBox(disabled)
         let elem = document.createElement("i");

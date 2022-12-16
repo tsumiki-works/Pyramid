@@ -11,7 +11,7 @@ export abstract class PyramidEngine {
     protected mousemove_listener: EventListener;
     protected mouseup_listener: EventListener;
 
-    constructor(menu_num: number){
+    constructor(menu_num: number) {
         this.workspace = document.getElementById("workspace") as HTMLDivElement;
         this.init(menu_num);
     }
@@ -56,7 +56,7 @@ export abstract class PyramidEngine {
 
     protected event_mousemove(_: MouseEvent) { }
 
-    protected init_menu(menu_num: number){
+    protected init_menu(menu_num: number) {
         this.menu_contents = TutorialDatabase.get_menu_contents(menu_num);
         for (const key of this.menu_contents.keys()) {
             MenuManager.getInstance().add_menu_contents(key, this.menu_contents.get(key));

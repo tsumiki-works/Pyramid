@@ -3,9 +3,6 @@ import { ConsoleManager } from "./console_manager.js";
 import { Pager } from "./pager.js";
 import { PyramidPlayground } from "./pyramid_engine/pyramid_playground.js";
 import { PyramidTutorial } from "./pyramid_engine/pyramid_tutorial.js";
-import { SymbolBlock } from "./block/concrete_block/symbol_block.js";
-import { LiteralBlock } from "./block/concrete_block/literal_block.js";
-import { I32 } from "./evaluation/i32.js";
 
 export class Pyramid {
 
@@ -23,7 +20,7 @@ export class Pyramid {
                     let param_q = searchParams.get("q");
                     if (!isNaN(Number(param_q))) {
                         this.engine = new PyramidTutorial(parseInt(param_q), []);
-                    }else{
+                    } else {
                         alert("Invalid Query of `q`: param `q` must be number.");
                         Pager.goto_top_from_tutorial();
                     }

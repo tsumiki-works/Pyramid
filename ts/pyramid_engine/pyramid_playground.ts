@@ -1,10 +1,5 @@
 import { PyramidEngine } from "./pyramid_engine.js";
 import { Popup } from "../popup.js";
-import { MenuManager } from "../menu/menu.js";
-import { LiteralBlock } from "../block/concrete_block/literal_block.js";
-import { SymbolBlock } from "../block/concrete_block/symbol_block.js";
-import { I32 } from "../evaluation/i32.js";
-import { DefineBlock } from "../block/concrete_block/define_block.js";
 
 /**
  * This class is PyramidEngine for Playgorund.
@@ -16,7 +11,7 @@ export class PyramidPlayground extends PyramidEngine {
     protected mousemove_listener: EventListener;
     protected mouseup_listener: EventListener;
 
-    constructor(){
+    constructor() {
         super(0);
     }
     protected override init(): void {
