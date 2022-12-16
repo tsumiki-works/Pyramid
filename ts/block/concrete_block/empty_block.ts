@@ -32,5 +32,7 @@ export class EmptyBlock extends EventBlock {
     override eval(_: Environment): PyramidObject {
         throw new Error("empty block evaluated");
     }
+
+    override inference_type(_: Environment) { }
 }
 customElements.define('pyramid-empty-block', EmptyBlock);

@@ -19,7 +19,7 @@ export class SymbolBlock extends ParentBlock {
                         this.set_children_cnt(parseInt(value));
                     }
                 })],
-                ["実行", _ => this.popup_event_eval()],
+                ["評価", _ => this.popup_event_eval()],
                 ["削除", _ => this.popup_event_kill_self()],
                 ["子も削除", _ => this.popup_event_kill()],
             ]
@@ -39,12 +39,6 @@ export class SymbolBlock extends ParentBlock {
             if (typeof v.value !== "function") {
                 throw new Error("unexpected error: " + this.get_content() + " is not function but expected");
             }
-            if (JSON.stringify(v.pyramid_type.attribute.return_type) !== JSON.stringify(this.pyramid_type)) {
-                throw new Error(this.get_content() + " return type is wrong"); // TODO: show error better
-            }
-            if (v.pyramid_type.attribute.args.length !== this.get_children().length) {
-                throw new Error(this.get_content() + " has too many arguments");
-            }
             const evaled = this.get_children().map(child => child.eval(env));
             return v.value(evaled, env);
         } else {
@@ -54,19 +48,49 @@ export class SymbolBlock extends ParentBlock {
             return v;
         }
     }
-    
+
     override inference_type(env: Environment) {
         const v = env.get(this.get_content());
         if (v === null) {
-            this.pyramid_type = { type_id: PyramidTypeID.Invalid, attribute: null };
+            this.set_type({ type_id: PyramidTypeID.Invalid, attribute: null }, false);
             return;
         }
-        this.set_type(v.pyramid_type);
+        if (v.pyramid_type.attribute === null && this.get_children().length === 0) {
+            this.set_type(v.pyramid_type);
+            return;
+        }
+        if (v.pyramid_type.attribute.args.length !== this.get_children().length) {
+            this.set_type(v.pyramid_type, false);
+            return;
+        }
+        let args = [];
         for (const child of this.get_children()) {
             if (child.is_empty()) {
-                continue;
+                args.push(null);
+            } else {
+                (child as TypedBlock).inference_type(env);
+                args.push((child as TypedBlock).get_type());
             }
-            (child as TypedBlock).inference_type(env);
+        }
+        let args_ = [];
+        for (let i = 0; i < args.length; ++i) {
+            if (args[i] === null) {
+                args_.push(v.pyramid_type.attribute.args[i]);
+            } else if (JSON.stringify(args[i]) !== JSON.stringify(v.pyramid_type.attribute.args[i])) {
+                this.set_type(v.pyramid_type, false);
+                return;
+            }
+        }
+        if (args_.length === 0) {
+            this.set_type(v.pyramid_type.attribute.return_type);
+        } else {
+            this.set_type({
+                type_id: PyramidTypeID.Function,
+                attribute: {
+                    args: args_,
+                    return_type: v.pyramid_type.attribute.return_type,
+                },
+            });
         }
     }
 }

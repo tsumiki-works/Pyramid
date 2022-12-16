@@ -77,7 +77,6 @@ export abstract class BasicBlock extends TypedBlock {
             if (e.key == "Enter") {
                 Popup.remove_popup();
                 edit_event(input.value);
-                (this.get_root() as TypedBlock).inference_type(Keywords.get_first_env());
                 this.get_root().format();
             }
         }));

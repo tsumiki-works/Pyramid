@@ -22,7 +22,7 @@ export class LiteralBlock extends BasicBlock {
                         this.set_content(value);
                     }
                 })],
-                ["実行", _ => this.popup_event_eval()],
+                ["評価", _ => this.popup_event_eval()],
                 ["削除", _ => this.popup_event_kill()],
             ]
         );

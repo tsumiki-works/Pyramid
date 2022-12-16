@@ -86,9 +86,14 @@ span.content {
     font-weight: bold;
 }
 
+.pyramid-invalid-block>span.content {
+    color: red;
+}
+
 span.type {
     color: rgba(255, 255, 255, 0.5);
     font-size: 12px;
+    box-sizing: border-box;
 }
 
 .pyramid-menutab {

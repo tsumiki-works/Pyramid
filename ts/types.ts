@@ -14,8 +14,7 @@ function typeid_to_string(id: PyramidTypeID): string {
     switch (id) {
         case PyramidTypeID.Invalid: return "INVALID";
         case PyramidTypeID.String: return "string";
-        case PyramidTypeID.I32: return "i32";
-        case PyramidTypeID.F32: return "f32";
+        case PyramidTypeID.Number: return "num";
         case PyramidTypeID.Bool: return "bool";
         case PyramidTypeID.Function: return "function";
         case PyramidTypeID.List: return "list";

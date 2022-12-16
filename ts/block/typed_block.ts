@@ -30,7 +30,7 @@ export abstract class TypedBlock extends EventBlock {
         return false;
     }
 
-    protected set_type(pyramid_type: PyramidType) {
+    protected set_type(pyramid_type: PyramidType, is_invalid?: boolean) {
         this.pyramid_type = pyramid_type;
         let buf = "";
         const inner = (t: PyramidType) => {
@@ -48,11 +48,14 @@ export abstract class TypedBlock extends EventBlock {
         };
         inner(this.pyramid_type);
         this.type_span.innerText = buf;
+        if (typeof is_invalid !== "boolean" || is_invalid) {
+            this.classList.remove("pyramid-invalid-block");
+        } else {
+            this.classList.add("pyramid-invalid-block");
+        }
     }
 
-    protected get_type(): PyramidType {
+    get_type(): PyramidType {
         return this.pyramid_type;
     }
-
-    abstract inference_type(env: Environment);
 }

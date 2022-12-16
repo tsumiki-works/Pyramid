@@ -1,3 +1,4 @@
+import { Keywords } from "../keywords.js";
 import { BlockConst } from "./block_const.js";
 import { Roots } from "./roots.js";
 
@@ -106,10 +107,12 @@ export abstract class Block extends HTMLElement {
     }
 
     format() {
+        this.inference_type(Keywords.get_first_env());
         Roots.determine_pos(this.get_x(), this.get_y(), this, Roots.determine_width(this));
     }
 
     abstract is_empty(): boolean;
     abstract kill(): void;
     abstract eval(env: Environment): PyramidObject;
+    abstract inference_type(env: Environment);
 }
