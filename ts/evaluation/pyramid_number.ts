@@ -12,15 +12,15 @@ export class PyramidNumber {
     // Number(null) = 0
     // Number("") = 0
     // Number(undefined) = NaN
-    static check_type(value: string): boolean{
+    static check_type(value: string): boolean {
         if (value === "0") return true
         const temp = Number(value);
-        if (temp === Number.NaN || temp === 0) return false
+        if (Number.isNaN(temp) || temp === 0) return false
         return true;
     }
 
-    static eval(content: string, _: Environment): PyramidObject{
-        if(!PyramidNumber.check_type(content)) {
+    static eval(content: string, _: Environment): PyramidObject {
+        if (!PyramidNumber.check_type(content)) {
             throw new Error("unexpected error: " + content + " is not Number");
         }
         const v = Number(content);
