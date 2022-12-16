@@ -20,11 +20,10 @@ export abstract class BasicBlock extends EventBlock {
 
     private readonly playground: HTMLDivElement = document.getElementById("playground") as HTMLDivElement;
 
-    constructor(pyramid_type: PyramidType, lr: Vec2, rgba: Vec4, popup_events: PopupEvent[]) {
+    constructor(pyramid_type: PyramidType, lr: Vec2, popup_events: PopupEvent[]) {
         super(
             pyramid_type,
             lr,
-            rgba,
             _ => this.event_mouse_leftdown(),
             (e: MouseEvent) => this.event_mouse_rightdown(e, popup_events),
             (e: MouseEvent) => this.event_mousemove(e),

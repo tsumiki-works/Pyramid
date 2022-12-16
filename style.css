@@ -23,6 +23,7 @@ body {
     margin: 0;
     padding: 0;
     overflow: hidden;
+    font-family: ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans", sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
 }
 
 div#pyramid-wrapper {
@@ -37,6 +38,8 @@ div#tutorial {
     position: relative;
     width: 40%;
     height: 100vh;
+    border-right: solid 2px;
+    border-color: lightgray;
 }
 
 div#playground {
@@ -55,11 +58,6 @@ div#workspace {
     vertical-align: bottom;
 }
 
-pyramid-symbol-block {
-    border: solid 3px red;
-    box-sizing: border-box;
-}
-
 .pyramid-block,
 .pyramid-menublock {
     position: absolute;
@@ -67,9 +65,22 @@ pyramid-symbol-block {
     display: flex;
     justify-content: center;
     align-items: center;
-    color: white;
     font-weight: bold;
     user-select: none;
+    color: white;
+}
+
+pyramid-empty-block {
+    background-color: rgba(0, 0, 0, 0.1);
+}
+pyramid-literal-block {
+    background-color: blue;
+}
+pyramid-symbol-block {
+    background-color: green;
+}
+pyramid-define-block {
+    background-color: black;
 }
 
 .pyramid-menutab {
@@ -80,6 +91,13 @@ pyramid-symbol-block {
     color: white;
     font-weight: bold;
     user-select: none;
+}
+.pyramid-menutab:hover {
+    opacity: 0.9;
+    outline: solid;
+    outline-color: #fcfefe;
+    translate: 2px;
+    transition-duration: 0.2s;
 }
 
 .pyramid-block-disable {
@@ -96,18 +114,19 @@ pyramid-symbol-block {
     box-sizing: border-box;
 }
 
+span.pyramid-argument {
+    margin-left: 16px;
+}
+
 div#menu {
     position: absolute;
-    border-right: solid 1px;
-    border-left: solid 1px;
-    border-color: gray;
     width: 190px;
     height: 100vh;
 }
 
 div#menu-tab {
     position: absolute;
-    background-color: lightgray;
+    background-color: rgb(232, 236, 236);
     left: 0;
     top: 0;
     width: 70px;
@@ -116,13 +135,12 @@ div#menu-tab {
 
 div#menu-items {
     position: absolute;
-    background-color: lightgray;
+    background-color: rgb(226, 230, 230);
     left: 70px;
     top: 0;
     width: calc(190px - 70px);
     height: 100vh;
-    border-left: dashed 1px;
-    border-color: gray;
+    box-shadow: inset 1px 0 2px rgba(0, 0, 0, 0.1);
 }
 
 div#console {

@@ -1,4 +1,4 @@
-import { Operator } from "./build_in_function/operator.js";
+import { Operator } from "./evaluation/operator.js";
 
 export class Keywords {
     static readonly keywords: Keyword[] = [
@@ -9,7 +9,16 @@ export class Keywords {
                 pyramid_type: {
                     type_id: PyramidTypeID.Function,
                     attribute: {
-                        args_cnt: 2,
+                        args: [
+                            {
+                                type_id: PyramidTypeID.I32,
+                                attribute: null,
+                            },
+                            {
+                                type_id: PyramidTypeID.I32,
+                                attribute: null,
+                            },
+                        ],
                         return_type: {
                             type_id: PyramidTypeID.I32,
                             attribute: null,
@@ -27,10 +36,8 @@ export class Keywords {
         ],
     ];
     static get_first_env(): Environment {
-        const env = new Map<string, PyramidObject>();
-        for (const keyword of Keywords.keywords) {
-            env.set(keyword[0], keyword[1]);
-        }
+        const env = new Environment();
+        env.set_all(this.keywords);
         return env;
     }
 }

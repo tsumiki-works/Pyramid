@@ -4,6 +4,7 @@ import { MenuManager } from "../menu/menu.js";
 import { LiteralBlock } from "../block/concrete_block/literal_block.js";
 import { SymbolBlock } from "../block/concrete_block/symbol_block.js";
 import { I32 } from "../evaluation/i32.js";
+import { DefineBlock } from "../block/concrete_block/define_block.js";
 
 /**
  * This class is PyramidEngine for Playgorund.
@@ -45,7 +46,6 @@ export class PyramidPlayground extends PyramidEngine {
                     attribute: null,
                 },
                 [_l, _t],
-                [0, 0, 255, 1],
                 "0",
                 I32.check_type,
                 I32.eval
@@ -62,11 +62,31 @@ export class PyramidPlayground extends PyramidEngine {
                     attribute: null,
                 },
                 [_l, _t],
-                [0, 0, 255, 1],
-                "+"
+                "+",
+                2
             )),
         });
         MenuManager.getInstance().add_menu_contents({label: "Symbol", color: "lightgreen"}, menu_contents_symbol);
+
+        const menu_contents_define = new Array<MenuContent>();
+        menu_contents_define.push({
+            color: "blue",
+            text: "f", 
+            block_constructor: ((_l: number, _t: number) => new DefineBlock({
+                    type_id: PyramidTypeID.Function,
+                    attribute: {
+                        args: [],
+                        return_type: {
+                            type_id: PyramidTypeID.I32,
+                            attribute: null,
+                        },
+                    },
+                },
+                [_l, _t],
+                "f"
+            )),
+        });
+        MenuManager.getInstance().add_menu_contents({label: "Define", color: "green"}, menu_contents_define);
 
         // debug
         
@@ -80,5 +100,6 @@ export class PyramidPlayground extends PyramidEngine {
 
         MenuManager.getInstance().enable_tab("Literal");
         MenuManager.getInstance().enable_tab("Symbol");
+        MenuManager.getInstance().enable_tab("Define");
     }
 }
