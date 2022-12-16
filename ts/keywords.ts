@@ -1,8 +1,5 @@
-import { Operator } from "./evaluation/operator.js";
-
 export class Keywords {
     static readonly keywords: Keyword[] = [
-        // TODO: move this to Operator
         [
             "+",
             {
@@ -11,26 +8,25 @@ export class Keywords {
                     attribute: {
                         args: [
                             {
-                                type_id: PyramidTypeID.I32,
+                                type_id: PyramidTypeID.Number,
                                 attribute: null,
                             },
                             {
-                                type_id: PyramidTypeID.I32,
+                                type_id: PyramidTypeID.Number,
                                 attribute: null,
                             },
                         ],
                         return_type: {
-                            type_id: PyramidTypeID.I32,
+                            type_id: PyramidTypeID.Number,
                             attribute: null,
                         },
                     },
                 },
                 value: (args: PyramidObject[], env: Environment): PyramidObject => {
-                    // TODO: merge this with Operator.add
                     if (args.length !== 2) {
                         throw new Error("+ must have 2 arguments but get " + args.length + " arguments");
                     }
-                    return Operator.add(args[0], args[1]);
+                    return args[0].value + args[1].value;
                 },
             },
         ],
