@@ -3,9 +3,6 @@ import { ConsoleManager } from "./console_manager.js";
 import { Pager } from "./pager.js";
 import { PyramidPlayground } from "./pyramid_engine/pyramid_playground.js";
 import { PyramidTutorial } from "./pyramid_engine/pyramid_tutorial.js";
-import { SymbolBlock } from "./block/concrete_block/symbol_block.js";
-import { LiteralBlock } from "./block/concrete_block/literal_block.js";
-import { I32 } from "./evaluation/i32.js";
 
 export class Pyramid {
 
@@ -20,47 +17,15 @@ export class Pyramid {
             case "tutorial":
                 let searchParams = new URLSearchParams(document.location.search);
                 if (searchParams.has("q")) {
-                    switch (searchParams.get("q")) {
-                        case "1":
-                            // these code will be shorter. <= Defined Block can be easily to call from `PyramidEngine`
-                            let menu_contents = new Map<MenuTabContent, MenuContent[]>();
-                            let only_basics: MenuContent[] = [
-                                {
-                                    text: "0",
-                                    color: "blue",
-                                    block_constructor: ((_l: number, _t: number) => new LiteralBlock(
-                                        {
-                                            type_id: PyramidTypeID.I32,
-                                            attribute: null
-                                        },
-                                        [_l, _t],
-                                        "0",
-                                        I32.check_type,
-                                        I32.eval
-                                    ))
-                                },
-                                {
-                                    color: "green",
-                                    text: "+",
-                                    block_constructor: ((_l: number, _t: number) => new SymbolBlock(
-                                        {
-                                            type_id: PyramidTypeID.I32,
-                                            attribute: null
-                                        },
-                                        [_l, _t],
-                                        "+",
-                                        2
-                                    ))
-                                }
-                            ];
-                            menu_contents.set({label: "basic", color: "blue"}, only_basics);
-                            this.engine = new PyramidTutorial(1, [], menu_contents);
-                            break;
-                        default:
-                            alert("Pyramid frontend error: invalid query parameter.");
+                    let param_q = searchParams.get("q");
+                    if (!isNaN(Number(param_q))) {
+                        this.engine = new PyramidTutorial(parseInt(param_q), []);
+                    } else {
+                        alert("Invalid Query of `q`: param `q` must be number.");
+                        Pager.goto_top_from_tutorial();
                     }
                 } else {
-                    Pager.goto_toppage();
+                    Pager.goto_top_from_tutorial();
                 }
                 break;
             case "goto-tutorial":
