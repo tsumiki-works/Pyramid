@@ -41,6 +41,9 @@ export class Popup {
 
         return base;
     }
+    static input_get_value(){
+        return (document.getElementById("popup-menu-edit") as HTMLInputElement).value;
+    }
 
     static show_popup(popup_item: HTMLElement) {
         document.body.appendChild(popup_item);

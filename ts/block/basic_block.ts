@@ -62,18 +62,19 @@ export abstract class BasicBlock extends EventBlock {
 
     protected popup_event_edit(e: MouseEvent, edit_event: Function) {
         Popup.remove_all_popup();
-        Popup.create_input(
+        let elem = Popup.create_input(
             e.pageX,
             e.pageY,
             "popup-block-input",
             ((ke: KeyboardEvent) => {
                 if (ke.key == "Enter") {
-                    edit_event(Popup.get_value());
+                    edit_event(Popup.input_get_value());
                     Popup.remove_all_popup();
                     this.get_root().format();
                 }
             })
         );
+        Popup.show_popup(elem);
     }
 
     private event_mouse_leftdown() {
@@ -94,7 +95,7 @@ export abstract class BasicBlock extends EventBlock {
     }
 
     private event_mouse_rightdown(e: MouseEvent, popup_events: PopupEvent[]) {
-        Popup.create_popup(new PopupListMenu(e.pageX, e.pageY, "", popup_events));
+        Popup.show_popup(Popup.create_listmenu(e.pageX, e.pageY, "", popup_events));
     }
 
     private event_mousemove(e: MouseEvent) {
