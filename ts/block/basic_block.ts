@@ -2,8 +2,10 @@ import { PyramidNumber } from "../evaluation/pyramid_number.js";
 import { Keywords } from "../keywords.js";
 import { Popup } from "../popup.js";
 import { Block } from "./block.js";
+import { DefineBlock } from "./concrete_block/define_block.js";
 import { EmptyBlock } from "./concrete_block/empty_block.js";
 import { LiteralBlock } from "./concrete_block/literal_block.js";
+import { SymbolBlock } from "./concrete_block/symbol_block.js";
 import { EventBlock } from "./event_block.js";
 import { Roots } from "./roots.js";
 import { Trash } from "./trash.js";
@@ -53,23 +55,36 @@ export abstract class BasicBlock extends EventBlock {
 
     protected popup_event_eval() {
         Popup.remove_all_popup();
-        // TODO: Make Output Block from result
+        let block_eval_result = document.getElementById("block-eval-result"); 
+        if (block_eval_result !== null) {
+            document.getElementById("roots").removeChild(block_eval_result);
+        }
         let result = this.eval(Keywords.get_first_env());
+        console.log(result);
         let result_block: Block;
-        switch(result.pyramid_type.type_id){
+        switch (result.pyramid_type.type_id) {
             case PyramidTypeID.Number:
                 result_block = new LiteralBlock(
-                    {type_id: PyramidTypeID.Number, attribute: []},
-                    [this.get_x() + this.get_width(), this.get_y() - this.get_height() * 2],
+                    {
+                        type_id: PyramidTypeID.Number,
+                        attribute: []
+                    },
+                    [
+                        this.get_x() + this.get_width(),
+                        this.get_y() - this.get_height() * 2
+                    ],
                     result.value,
                     PyramidNumber.check_type,
                     PyramidNumber.eval
                 );
-                Roots.append(result_block);
                 break;
+            case PyramidTypeID.Function:
+            // TODO: Function
             default:
-                throw Error("Not implemented")
+                throw Error("Not implemented");
         }
+        result_block.id = "block-eval-result";
+        Roots.append(result_block);
         console.log(this.eval(Keywords.get_first_env()));
     }
 

@@ -30,6 +30,9 @@ export abstract class EventBlock extends Block {
 
     private mouse_down_event_wrapper(e: MouseEvent, mouse_leftdown_event: Function, mouse_rightdown_event: Function) {
         Popup.remove_all_popup();
+        if(this.id === "block-eval-result"){
+            this. id = this.id.slice(0, 0);
+        }
         if (e.button === 0) {
             mouse_leftdown_event(e);
             this.removeEventListener("mousedown", this.mouse_down_listener);
