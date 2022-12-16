@@ -1,5 +1,5 @@
 import { PyramidEngine } from "./pyramid_engine.js";
-import { Popup } from "../popup/popup.js";
+import { Popup } from "../popup.js";
 
 /**
  * This class is PyramidEngine for Playgorund.

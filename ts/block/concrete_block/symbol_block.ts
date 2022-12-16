@@ -1,4 +1,4 @@
-import { Popup } from "../../popup/popup.js";
+import { Popup } from "../../popup.js";
 import { ParentBlock } from "../parent_block.js";
 import { Roots } from "../roots.js";
 import { EmptyBlock } from "./empty_block.js";

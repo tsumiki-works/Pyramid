@@ -1,8 +1,5 @@
 import { Keywords } from "../keywords.js";
-import { Popup } from "../popup/popup.js";
-import { PopupInput } from "../popup/popup_input.js";
-import { PopupLabel } from "../popup/popup_label.js";
-import { PopupListMenu } from "../popup/popup_listmenu.js";
+import { Popup } from "../popup.js";
 import { EmptyBlock } from "./concrete_block/empty_block.js";
 import { EventBlock } from "./event_block.js";
 import { Roots } from "./roots.js";
@@ -65,19 +62,18 @@ export abstract class BasicBlock extends EventBlock {
 
     protected popup_event_edit(e: MouseEvent, edit_event: Function) {
         Popup.remove_all_popup();
-        Popup.create_popup(new PopupInput(
+        Popup.create_input(
             e.pageX,
             e.pageY,
             "popup-block-input",
             ((ke: KeyboardEvent) => {
                 if (ke.key == "Enter") {
-                    edit_event(PopupInput.get_value());
+                    edit_event(Popup.get_value());
                     Popup.remove_all_popup();
                     this.get_root().format();
                 }
-            }),
-        ));
-        PopupInput.focus();
+            })
+        );
     }
 
     private event_mouse_leftdown() {

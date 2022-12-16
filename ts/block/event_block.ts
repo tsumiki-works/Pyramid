@@ -1,4 +1,4 @@
-import { Popup } from "../popup/popup.js";
+import { Popup } from "../popup.js";
 import { Block } from "./block.js";
 
 /* ================================================================================================================= */

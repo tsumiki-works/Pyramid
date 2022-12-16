@@ -1,4 +1,4 @@
-import { Popup } from "../popup/popup.js";
+import { Popup } from "../popup.js";
 import { BasicBlock } from "./basic_block.js";
 import { EmptyBlock } from "./concrete_block/empty_block.js";
 import { Roots } from "./roots.js";
