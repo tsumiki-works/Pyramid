@@ -12,7 +12,7 @@ export class Popup {
         return item;
     }
 
-    static create_listmenu(x: number, y: number, id: string, events: PopupEvent[]): HTMLDivElement {
+    static create_listmenu(x: number, y: number, id: string, events: PopupEvent[]): void {
         let base = Popup.create_base(x, y, id);
         Popup.remove_all_popup();
         const ul = document.createElement("ul");
@@ -27,11 +27,10 @@ export class Popup {
             ul.appendChild(li);
         }
         base.appendChild(ul);
-
-        return base;
+        Popup.show_popup(base);
     }
 
-    static create_input(event_page_x: number, event_page_y: number, id: string, keydown_event: Function): HTMLDivElement {
+    static create_input(event_page_x: number, event_page_y: number, id: string, keydown_event: Function): void {
         let base = Popup.create_base(event_page_x, event_page_y, id);
         const input = document.createElement("input");
         input.id = "popup-menu-edit";
@@ -39,7 +38,8 @@ export class Popup {
         input.addEventListener("keydown", e => keydown_event(e));
         base.appendChild(input);
 
-        return base;
+        Popup.show_popup(base);
+        input.focus();        
     }
     static input_get_value(){
         return (document.getElementById("popup-menu-edit") as HTMLInputElement).value;
