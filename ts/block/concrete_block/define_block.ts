@@ -27,7 +27,7 @@ export class DefineBlock extends ParentBlock {
                             span.classList.add("pyramid-argument");
                             this.appendChild(span);
                         }
-                        this.pyramid_type.attribute.args = args.map(_ => { return { type_id: PyramidTypeID.I32, attribute: null }; }); // TODO:
+                        this.pyramid_type.attribute.args = args.map(_ => { return { type_id: PyramidTypeID.Number, attribute: null }; }); // TODO:
                     }
                 })],
                 ["実行", _ => this.popup_event_eval()],

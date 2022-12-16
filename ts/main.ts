@@ -3,6 +3,9 @@ import { ConsoleManager } from "./console_manager.js";
 import { Pager } from "./pager.js";
 import { PyramidPlayground } from "./pyramid_engine/pyramid_playground.js";
 import { PyramidTutorial } from "./pyramid_engine/pyramid_tutorial.js";
+import { SymbolBlock } from "./block/concrete_block/symbol_block.js";
+import { LiteralBlock } from "./block/concrete_block/literal_block.js";
+import { PyramidNumber } from "./evaluation/pyramid_number.js";
 
 export class Pyramid {
 

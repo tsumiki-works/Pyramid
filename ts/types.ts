@@ -5,8 +5,7 @@ type Vec4 = [number, number, number, number];
 enum PyramidTypeID {
     Empty,
     String,
-    I32,
-    F32,
+    Number,
     Bool,
     Function,
     List,
