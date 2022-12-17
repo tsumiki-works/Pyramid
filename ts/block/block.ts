@@ -1,20 +1,18 @@
-import { Keywords } from "../keywords.js";
 import { BlockConst } from "./block_const.js";
+import { Inference } from "./inference/inference.js";
 import { Roots } from "./roots.js";
 
 /* ================================================================================================================= */
 /*     Block                                                                                                         */
 /*         is a kind of HTMLElement                                                                                  */
-/*         has pyramid_type                                                                                          */
 /*         has parent                                                                                                */
 /*         has "pyramid-block" class                                                                                 */
-/*         can format itself                                                                                         */
 /*         can connect a block by replacing its empty block block                                                    */
 /* ================================================================================================================= */
 
 export abstract class Block extends HTMLElement {
 
-    protected parent: Block | null;
+    private parent: Block | null;
 
     constructor(lr: Vec2) {
         super();
@@ -107,12 +105,11 @@ export abstract class Block extends HTMLElement {
     }
 
     format() {
-        this.inference_type(Keywords.get_first_env());
+        Inference.infer(this);
         Roots.determine_pos(this.get_x(), this.get_y(), this, Roots.determine_width(this));
     }
 
     abstract is_empty(): boolean;
     abstract kill(): void;
     abstract eval(env: Environment): PyramidObject;
-    abstract inference_type(env: Environment);
 }

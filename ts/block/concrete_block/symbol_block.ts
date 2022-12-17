@@ -1,4 +1,4 @@
-import { Keywords } from "../../keywords.js";
+import { TempPyramidTypeTree, TypeEnv, unify } from "../inference/typeenv.js";
 import { ParentBlock } from "../parent_block.js";
 import { TypedBlock } from "../typed_block.js";
 
@@ -6,7 +6,6 @@ export class SymbolBlock extends ParentBlock {
 
     constructor(lr: Vec2, content: string, args_cnt: number) {
         super(
-            { type_id: PyramidTypeID.Invalid, attribute: null },
             lr,
             [
                 ["編集", (e: MouseEvent) => this.popup_event_edit(e, (value: string) => {
@@ -26,7 +25,6 @@ export class SymbolBlock extends ParentBlock {
         );
         this.set_content(content);
         this.set_children_cnt(args_cnt);
-        this.inference_type(Keywords.get_first_env());
         this.format();
     }
 
@@ -42,55 +40,50 @@ export class SymbolBlock extends ParentBlock {
             const evaled = this.get_children().map(child => child.eval(env));
             return v.value(evaled, env);
         } else {
-            if (JSON.stringify(v.pyramid_type) !== JSON.stringify(this.pyramid_type)) {
+            if (JSON.stringify(v.pyramid_type) !== JSON.stringify(this.get_type())) {
                 throw new Error(this.get_content() + " type is wrong"); // TODO: show error better
             }
             return v;
         }
     }
 
-    override inference_type(env: Environment) {
+    override infer_type(env: TypeEnv): TempPyramidTypeTree {
         const v = env.get(this.get_content());
+        const this_children = this.get_children();
         if (v === null) {
-            this.set_type({ type_id: PyramidTypeID.Invalid, attribute: null }, false);
-            return;
-        }
-        if (v.pyramid_type.attribute === null && this.get_children().length === 0) {
-            this.set_type(v.pyramid_type);
-            return;
-        }
-        if (v.pyramid_type.attribute.args.length !== this.get_children().length) {
-            this.set_type(v.pyramid_type, false);
-            return;
-        }
-        let args = [];
-        for (const child of this.get_children()) {
-            if (child.is_empty()) {
-                args.push(null);
-            } else {
-                (child as TypedBlock).inference_type(env);
-                args.push((child as TypedBlock).get_type());
+            const args: TempPyramidTypeTree[] = [];
+            for (const child of this_children) {
+                if (!child.is_empty()) {
+                    args.push((child as TypedBlock).infer_type(env));
+                }
             }
-        }
-        let args_ = [];
-        for (let i = 0; i < args.length; ++i) {
-            if (args[i] === null) {
-                args_.push(v.pyramid_type.attribute.args[i]);
-            } else if (JSON.stringify(args[i]) !== JSON.stringify(v.pyramid_type.attribute.args[i])) {
-                this.set_type(v.pyramid_type, false);
-                return;
-            }
-        }
-        if (args_.length === 0) {
-            this.set_type(v.pyramid_type.attribute.return_type);
+            return {
+                node: { id: PyramidTypeID.Invalid, var: null, attribute: null },
+                children: args,
+            };
+        } else if (this_children.length === 0) {
+            return { node: v, children: [] };
         } else {
-            this.set_type({
-                type_id: PyramidTypeID.Function,
-                attribute: {
-                    args: args_,
-                    return_type: v.pyramid_type.attribute.return_type,
-                },
-            });
+            const args_tree: TempPyramidTypeTree[] = [];
+            for (const child of this_children) {
+                if (!child.is_empty()) {
+                    args_tree.push((child as TypedBlock).infer_type(env));
+                }
+            }
+            // TODO: currying
+            if (args_tree.length !== this_children.length) {
+                return {
+                    node: { id: PyramidTypeID.Invalid, var: null, attribute: null },
+                    children: args_tree,
+                };
+            }
+            const t = { id: null, var: null, attribute: null };
+            const args = args_tree.map(arg => arg.node);
+            if (!unify(v, { id: PyramidTypeID.Function, var: null, attribute: { args: args, return: t } })) {
+                return { node: { id: PyramidTypeID.Invalid, var: null, attribute: null }, children: args_tree };
+            } else {
+                return { node: t, children: args_tree };
+            }
         }
     }
 }

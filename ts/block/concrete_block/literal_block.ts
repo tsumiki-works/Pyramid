@@ -1,5 +1,6 @@
 import { Evaluator } from "../../evaluation/evaluator.js";
-import { BasicBlock } from "../basic_block.js";
+import { TempPyramidTypeTree, TypeEnv } from "../inference/typeenv.js";
+import { TypedBlock } from "../typed_block.js";
 
 /* ================================================================================================================= */
 /*     LiteralBlock                                                                                                  */
@@ -7,14 +8,9 @@ import { BasicBlock } from "../basic_block.js";
 /*         has no child                                                                                              */
 /* ================================================================================================================= */
 
-export class LiteralBlock extends BasicBlock {
-
-    constructor(
-        lr: Vec2,
-        content: string
-    ) {
+export class LiteralBlock extends TypedBlock {
+    constructor(lr: Vec2, content: string) {
         super(
-            Evaluator.get_literal_type(content),
             lr,
             [
                 ["編集", (e: MouseEvent) => this.popup_event_edit(e, (value: string) => {
@@ -27,14 +23,20 @@ export class LiteralBlock extends BasicBlock {
             ]
         );
         this.set_content(content);
+        this.format();
     }
-
     override eval(_: Environment): PyramidObject {
-        return Evaluator.eval_literal(this.get_content(), this.pyramid_type);
+        return Evaluator.eval_literal(this.get_content(), this.get_type());
     }
-
-    override inference_type(_: Environment) {
-        this.set_type(Evaluator.get_literal_type(this.get_content()));
+    override infer_type(_: TypeEnv): TempPyramidTypeTree {
+        return {
+            node: {
+                id: Evaluator.get_literal_type(this.get_content()).type_id,
+                var: null,
+                attribute: null,
+            },
+            children: null,
+        };
     }
 }
 customElements.define('pyramid-literal-block', LiteralBlock);

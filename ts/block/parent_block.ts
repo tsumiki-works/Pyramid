@@ -1,12 +1,12 @@
 import { Popup } from "../popup.js";
-import { BasicBlock } from "./basic_block.js";
 import { EmptyBlock } from "./concrete_block/empty_block.js";
 import { Roots } from "./roots.js";
+import { TypedBlock } from "./typed_block.js";
 
-export abstract class ParentBlock extends BasicBlock {
+export abstract class ParentBlock extends TypedBlock {
 
-    constructor(pyramid_type: PyramidType, lr: Vec2, popup_events: PopupEvent[]) {
-        super(pyramid_type, lr, popup_events);
+    constructor(lr: Vec2, popup_events: PopupEvent[]) {
+        super(lr, popup_events);
     }
 
     protected set_children_cnt(args_cnt: number) {

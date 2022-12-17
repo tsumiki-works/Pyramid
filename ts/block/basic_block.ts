@@ -1,9 +1,9 @@
 import { Keywords } from "../keywords.js";
 import { Popup } from "../popup.js";
 import { EmptyBlock } from "./concrete_block/empty_block.js";
-import { TypedBlock } from "./typed_block.js";
 import { Roots } from "./roots.js";
 import { Trash } from "./trash.js";
+import { EventBlock } from "./event_block.js";
 
 /* ================================================================================================================= */
 /*     BasicBlock                                                                                                    */
@@ -13,23 +13,25 @@ import { Trash } from "./trash.js";
 /*         has some popup event preset                                                                               */
 /* ================================================================================================================= */
 
-export abstract class BasicBlock extends TypedBlock {
+export abstract class BasicBlock extends EventBlock {
 
     private readonly playground: HTMLDivElement = document.getElementById("playground") as HTMLDivElement;
     private readonly content_span: HTMLSpanElement;
 
-    constructor(pyramid_type: PyramidType, lr: Vec2, popup_events: PopupEvent[]) {
+    constructor(lr: Vec2, popup_events: PopupEvent[]) {
         super(
-            pyramid_type,
             lr,
             _ => this.event_mouse_leftdown(),
             (e: MouseEvent) => this.event_mouse_rightdown(e, popup_events),
             (e: MouseEvent) => this.event_mousemove(e),
             _ => this.event_mouseup(),
         );
+        const div = document.createElement("div");
+        div.classList.add("content-wrapper");
+        this.appendChild(div);
         this.content_span = document.createElement("span");
         this.content_span.classList.add("content");
-        this.appendChild(this.content_span);
+        div.appendChild(this.content_span);
     }
 
     protected set_content(content: string) {
@@ -40,14 +42,18 @@ export abstract class BasicBlock extends TypedBlock {
         return this.content_span.innerText;
     }
 
+    override is_empty(): boolean {
+        return false;
+    }
+
     override kill(): void {
-        if (this.parent !== null) {
+        if (this.get_parent() !== null) {
             const tmp = new EmptyBlock();
-            tmp.set_parent(this.parent);
-            this.parent.replaceChild(tmp, this);
-            this.parent.get_root().format();
+            tmp.set_parent(this.get_parent());
+            this.get_parent().replaceChild(tmp, this);
+            this.get_parent().get_root().format();
         }
-        this.parent = null;
+        this.set_parent(null);
         Trash.append(this);
     }
 
@@ -87,16 +93,16 @@ export abstract class BasicBlock extends TypedBlock {
     private event_mouse_leftdown() {
         const x = this.get_x();
         const y = this.get_y();
-        if (this.parent !== null) {
+        if (this.get_parent() !== null) {
             const tmp = new EmptyBlock();
-            tmp.set_parent(this.parent);
-            this.parent.replaceChild(tmp, this);
-            this.parent.get_root().format();
+            tmp.set_parent(this.get_parent());
+            this.get_parent().replaceChild(tmp, this);
+            this.get_parent().get_root().format();
         } else {
             Roots.remove(this);
         }
         Roots.append(this);
-        this.parent = null;
+        this.set_parent(null);
         this.set_left(x);
         this.set_top(y);
     }
