@@ -1,26 +1,19 @@
 export class String {
+    // value != null
+    // this conditional check "null" and "undefined"
     static check_type(value: string): boolean {
-        if (value === "true" || value === "false") return true;
+        if (value != null) return true;
         else return false;
     }
 
     static eval(content: string, _: Environment): PyramidObject {
-        if (content === "true") {
+        if (content != null) {
             return {
                 pyramid_type: {
-                    type_id: PyramidTypeID.Bool,
+                    type_id: PyramidTypeID.String,
                     attribute: null,
                 },
-                value: true
-            }
-        }
-        else if (content === "false") {
-            return {
-                pyramid_type: {
-                    type_id: PyramidTypeID.Bool,
-                    attribute: null,
-                },
-                value: false
+                value: content
             }
         }
         else new Error("unexpected error: null or undefined is detected")

@@ -44,7 +44,7 @@ export class TutorialDatabase {
                 // arithmetic operator 
                 const menu_contents_symbol = new Array<MenuContent>();
                 menu_contents_symbol.push({
-                    color: "blue",
+                    color: "green",
                     text: "+",
                     block_constructor: ((_l: number, _t: number) => new SymbolBlock(
                         [_l, _t],
@@ -53,7 +53,7 @@ export class TutorialDatabase {
                     )),
                 });
                 menu_contents_symbol.push({
-                    color: "blue",
+                    color: "green",
                     text: "-",
                     block_constructor: ((_l: number, _t: number) => new SymbolBlock(
                         [_l, _t],
@@ -64,7 +64,7 @@ export class TutorialDatabase {
 
                 // logic operator
                 menu_contents_symbol.push({
-                    color: "blue",
+                    color: "green",
                     text: "!",
                     block_constructor: ((_l: number, _t: number) => new SymbolBlock(
                         [_l, _t],
@@ -73,7 +73,7 @@ export class TutorialDatabase {
                     )),
                 });
                 menu_contents_symbol.push({
-                    color: "blue",
+                    color: "green",
                     text: "&&",
                     block_constructor: ((_l: number, _t: number) => new SymbolBlock(
                         [_l, _t],
@@ -84,7 +84,7 @@ export class TutorialDatabase {
 
                 // build in math fanction
                 menu_contents_symbol.push({
-                    color: "blue",
+                    color: "green",
                     text: "exp",
                     block_constructor: ((_l: number, _t: number) => new SymbolBlock(
                         [_l, _t],
@@ -93,7 +93,7 @@ export class TutorialDatabase {
                     )),
                 });
                 menu_contents_symbol.push({
-                    color: "blue",
+                    color: "green",
                     text: "tan",
                     block_constructor: ((_l: number, _t: number) => new SymbolBlock(
                         [_l, _t],
@@ -105,7 +105,7 @@ export class TutorialDatabase {
 
                 const menu_contents_define = new Array<MenuContent>();
                 menu_contents_define.push({
-                    color: "blue",
+                    color: "gray",
                     text: "f",
                     block_constructor: ((_l: number, _t: number) => new DefineBlock(
                         [_l, _t],
