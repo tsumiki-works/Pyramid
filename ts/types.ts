@@ -40,7 +40,6 @@ type MenuContent = {
     color: string;
     block_constructor: Function;
 }
-
 type MenuTabContent = {
     label: string;
     color: string;

@@ -22,14 +22,14 @@ export class TutorialDatabase {
                 });
                 menu_contents_literal.push({
                     color: "lightseagreen",
-                    text: "LIST(2)",
+                    text: "LIST(0)",
                     block_constructor: ((_l: number, _t: number) => new ListBlock({
                         type_id: PyramidTypeID.List,
                         attribute: null,
                     },
                         [_l, _t],
-                        "LIST(2)",
-                        2
+                        "LIST(0)",
+                        0
                     )),
                 })
                 menu_contents.set({ label: "Literal", color: "black" }, menu_contents_literal);
