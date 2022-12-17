@@ -19,7 +19,6 @@ import { Trash } from "./trash.js";
 
 export abstract class BasicBlock extends TypedBlock {
 
-    private readonly playground: HTMLDivElement = document.getElementById("playground") as HTMLDivElement;
     private readonly content_span: HTMLSpanElement;
 
     constructor(pyramid_type: PyramidType, lr: Vec2, popup_events: PopupEvent[]) {
@@ -68,8 +67,8 @@ export abstract class BasicBlock extends TypedBlock {
             case PyramidTypeID.Number:
                 result_block = new LiteralBlock(
                     [
-                        this.get_x() + this.get_width(),
-                        this.get_y() - this.get_height() * 2
+                        this.get_x() - this.get_width() * 0.5 - this.playground.getBoundingClientRect().left,
+                        this.get_y() - this.get_height() * 0.5 - this.playground.getBoundingClientRect().top,
                     ],
                     result.value,
                 );
@@ -81,6 +80,7 @@ export abstract class BasicBlock extends TypedBlock {
         }
         result_block.id = "block-eval-result";
         Roots.append(result_block);
+        result_block.format();
         console.log(this.eval(Keywords.get_first_env()));
     }
 

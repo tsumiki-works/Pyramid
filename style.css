@@ -68,6 +68,18 @@ div#workspace {
     user-select: none;
 }
 
+#block-eval-result {
+    border: 2px solid;
+    border-color: white;
+    box-shadow: 3px 3px 10px darkblue;
+    /*
+    TODO: Make Animation to emphasaize
+
+    transform:translateX(10px) translateY(-10px);
+    transition: 1.5s;
+    */
+}
+
 pyramid-empty-block {
     background-color: rgba(0, 0, 0, 0.1);
 }
