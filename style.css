@@ -69,15 +69,20 @@ div#workspace {
 }
 
 #block-eval-result {
-    border: 2px solid;
-    border-color: white;
-    box-shadow: 3px 3px 10px darkblue;
-    /*
-    TODO: Make Animation to emphasaize
-
-    transform:translateX(10px) translateY(-10px);
-    transition: 1.5s;
-    */
+    outline: 8px skyblue;
+    outline-style: double;
+    width: 160px;
+    animation: moveresult 0.3s ease-out;
+}
+@keyframes moveresult{
+    0% {
+        opacity: 0;
+        transform: translateY(100%) rotateX(90deg);
+    }
+    100% {
+        opacity: 1;
+        transform: translateY(0%) rotateX(0deg);
+    }
 }
 
 pyramid-empty-block {

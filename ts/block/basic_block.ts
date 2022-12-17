@@ -67,8 +67,8 @@ export abstract class BasicBlock extends TypedBlock {
             case PyramidTypeID.Number:
                 result_block = new LiteralBlock(
                     [
-                        this.get_x() - this.get_width() * 0.5 - this.playground.getBoundingClientRect().left,
-                        this.get_y() - this.get_height() * 0.5 - this.playground.getBoundingClientRect().top,
+                        document.documentElement.clientWidth - this.playground.getBoundingClientRect().left -210,
+                        document.documentElement.clientHeight -210,
                     ],
                     result.value,
                 );
