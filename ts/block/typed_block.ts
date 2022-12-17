@@ -47,6 +47,9 @@ export abstract class TypedBlock extends EventBlock {
             }
         };
         inner(this.pyramid_type);
+        if (this.pyramid_type.type_id === PyramidTypeID.Function) {
+            buf = buf.substring(1, buf.length - 1);
+        }
         this.type_span.innerText = buf;
         if (typeof is_invalid !== "boolean" || is_invalid) {
             this.classList.remove("pyramid-invalid-block");
