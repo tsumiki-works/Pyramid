@@ -73,7 +73,6 @@ export class ListBlock extends ParentBlock {
                 if (first_child === child && !first_child.is_empty()) {
                     first_child_type = first_child.infer_type(env);
                     unify_result = unify(t, first_child_type.node);
-                    console.log(unify_result);
                     children_type.push(first_child_type);
                 } else {
                     if (child.is_empty()) {
@@ -94,7 +93,6 @@ export class ListBlock extends ParentBlock {
                 }
             }
             // There're no empty child
-            console.log(unify_result, is_invalid);
             if (unify_result && !is_invalid) {
                 return ({
                     node: {
