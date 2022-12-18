@@ -25,5 +25,6 @@ export class Inference {
         }
         const tree = (block as TypedBlock).infer_type(env);
         (block as TypedBlock).set_type(tree);
+        //console.log(tree);
     }
 }
