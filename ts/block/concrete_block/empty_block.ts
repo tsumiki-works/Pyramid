@@ -1,3 +1,4 @@
+import { Environment } from "../../evaluation/environment.js";
 import { Block } from "../block.js";
 import { EventBlock } from "../event_block.js";
 

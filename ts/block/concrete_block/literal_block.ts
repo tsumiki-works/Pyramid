@@ -1,3 +1,4 @@
+import { Environment } from "../../evaluation/environment.js";
 import { Evaluator } from "../../evaluation/evaluator.js";
 import { TempPyramidTypeTree, TypeEnv } from "../inference/typeenv.js";
 import { TypedBlock } from "../typed_block.js";

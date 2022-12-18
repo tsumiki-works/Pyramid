@@ -1,3 +1,4 @@
+import { Environment } from "../evaluation/environment.js";
 import { BlockConst } from "./block_const.js";
 import { Inference } from "./inference/inference.js";
 import { Roots } from "./roots.js";
