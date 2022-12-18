@@ -60,7 +60,7 @@ export class ListBlock extends ParentBlock {
         } else {
             let is_invalid: boolean = false;
             let children_type = new Array<TempPyramidTypeTree>();
-            let first_child = this.get_children()[0] as TypedBlock;
+            let first_child = this.get_children()[0];
             let first_child_type: TempPyramidTypeTree;
             let unify_result = false;
             let t = {
@@ -71,27 +71,28 @@ export class ListBlock extends ParentBlock {
 
             for (const child of this.get_children()) {
                 if (first_child === child && !first_child.is_empty()) {
-                    first_child_type = first_child.infer_type(env);
+                    first_child_type = (first_child as TypedBlock).infer_type(env);
                     unify_result = unify(t, first_child_type.node);
                     children_type.push(first_child_type);
                 } else {
                     if (child.is_empty()) {
+                        // FIXME: This is 'POWER' codeing. Remove Error from 'not' adding empty_block's TempPyramidTypeTree
+                        /** ex) (List [empty, List<num>]) ==> 
+                         * node: List
+                         * children: [
+                         *      node: List,
+                         *      children: [num]
+                         * ]
+                         */
                         is_invalid = true;
-                        children_type.push({
-                            node: {
-                                id: null,
-                                var: null,
-                                attribute: null
-                            },
-                            children: null,
-                        })
                     } else {
                         let c_type = (child as TypedBlock).infer_type(env);
-                        children_type.push(c_type);
                         unify_result = unify(t, c_type.node) && unify_result;
+                        children_type.push(c_type);
                     }
                 }
             }
+
             // There're no empty child
             if (unify_result && !is_invalid) {
                 return ({
