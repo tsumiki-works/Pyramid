@@ -24,9 +24,8 @@ function occur(r: TempPyramidType, t: TempPyramidType): boolean {
     let res = true;
     switch (t.id) {
         case null:
-            res = r === t.var;
-            res = res || t.var !== null;
-            res = res || occur(r, t.var);
+            res = (r !== null && t.var !== null && r === t.var);
+            res = res || (t.var !== null && occur(r, t.var));
             return res;
         case PyramidTypeID.Function:
             res = false;
