@@ -1,11 +1,11 @@
-export type TempPyramidFunctionAttribute = {
+export type TempFunctionAttribute = {
     args: TempPyramidType[],
     return: TempPyramidType,
 };
 export type TempPyramidType = {
     id: PyramidTypeID | null,
     var: TempPyramidType | null,
-    attribute: TempPyramidFunctionAttribute | null,
+    attribute: TempFunctionAttribute | null,
 };
 export type TempPyramidTypeTree = {
     node: TempPyramidType,
@@ -18,6 +18,13 @@ export function decode_temptype(temptype: TempPyramidType): PyramidType {
     if (temptype.attribute === null) return { type_id: temptype.id, attribute: null };
     const args = temptype.attribute.args.map(arg => decode_temptype(arg));
     return { type_id: temptype.id, attribute: { args: args, return_type: decode_temptype(temptype.attribute.return) } };
+}
+
+export function encode_type(type: PyramidType): TempPyramidType | null {
+    if (type.type_id === PyramidTypeID.Generic) return null;
+    if (type.attribute === null) return {id: type.type_id, var: null, attribute: null}
+    const args = type.attribute.args.map(arg => encode_type(arg))
+    return { id: type.type_id, var: null, attribute: { args: args, return: encode_type(type.attribute.return_type) } }
 }
 
 function occur(r: TempPyramidType, t: TempPyramidType): boolean {
