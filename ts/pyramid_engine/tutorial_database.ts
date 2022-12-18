@@ -44,10 +44,7 @@ export class TutorialDatabase {
                 menu_contents_literal.push({
                     color: "lightseagreen",
                     text: "LIST(0)",
-                    block_constructor: ((_l: number, _t: number) => new ListBlock({
-                        type_id: PyramidTypeID.List,
-                        attribute: null,
-                    },
+                    block_constructor: ((_l: number, _t: number) => new ListBlock(
                         [_l, _t],
                         "LIST(0)",
                         0

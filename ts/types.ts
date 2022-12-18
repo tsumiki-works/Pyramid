@@ -4,6 +4,7 @@ type Vec4 = [number, number, number, number];
 
 enum PyramidTypeID {
     Invalid,
+    Generic,
     String,
     Number,
     Bool,
@@ -13,6 +14,7 @@ enum PyramidTypeID {
 function typeid_to_string(id: PyramidTypeID): string {
     switch (id) {
         case PyramidTypeID.Invalid: return "INVALID";
+        case PyramidTypeID.Generic: return "_";
         case PyramidTypeID.String: return "string";
         case PyramidTypeID.Number: return "num";
         case PyramidTypeID.Bool: return "bool";

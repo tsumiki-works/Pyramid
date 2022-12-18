@@ -1,11 +1,14 @@
+import { TempPyramidType, TempPyramidTypeTree, TypeEnv } from "../inference/typeenv.js";
 import { ParentBlock } from "../parent_block.js";
+import { TypedBlock } from "../typed_block.js";
 import { EmptyBlock } from "./empty_block.js";
 
 export class DefineBlock extends ParentBlock {
 
+    private content_wrapper: HTMLDivElement;
+
     constructor(lr: Vec2, content: string) {
         super(
-            { type_id: PyramidTypeID.Invalid, attribute: null }, // TODO:
             lr,
             [
                 ["編集", (e: MouseEvent) => this.popup_event_edit(e, (value: string) => {
@@ -15,7 +18,7 @@ export class DefineBlock extends ParentBlock {
                 })],
                 ["仮引数を編集", (e: MouseEvent) => this.popup_event_edit(e, (value: string) => {
                     if (value.length !== 0) {
-                        for (const child of Array.from(this.children)) {
+                        for (const child of Array.from(this.content_wrapper.children)) {
                             if (child.classList.contains("pyramid-argument")) {
                                 child.remove();
                             }
@@ -25,9 +28,8 @@ export class DefineBlock extends ParentBlock {
                             const span = document.createElement("span");
                             span.innerText = arg;
                             span.classList.add("pyramid-argument");
-                            this.appendChild(span);
+                            this.content_wrapper.appendChild(span);
                         }
-                        this.pyramid_type.attribute.args = args.map(_ => { return { type_id: PyramidTypeID.Number, attribute: null }; }); // TODO:
                     }
                 })],
                 ["評価", _ => this.popup_event_eval()],
@@ -35,6 +37,12 @@ export class DefineBlock extends ParentBlock {
                 ["子も削除", _ => this.popup_event_kill()],
             ]
         );
+        for (const child of Array.from(this.children)) {
+            if (child.classList.contains("content-wrapper")) {
+                this.content_wrapper = child as HTMLDivElement;
+                break;
+            }
+        }
         this.set_content(content);
         this.appendChild(new EmptyBlock(this));
         this.appendChild(new EmptyBlock(this));
@@ -43,7 +51,7 @@ export class DefineBlock extends ParentBlock {
 
     override eval(env: Environment): PyramidObject {
         env.set(this.get_content(), {
-            pyramid_type: this.pyramid_type,
+            pyramid_type: this.get_type(),
             value: (args: PyramidObject[], _: Environment): PyramidObject => {
                 const this_args = this.get_args();
                 if (args.length !== this_args.length) {
@@ -69,13 +77,53 @@ export class DefineBlock extends ParentBlock {
         return this.get_children()[1].eval(env);
     }
 
-    override inference_type(env: Environment) {
-        // TODO:
+    override get_type(): PyramidType {
+        const next = this.get_children()[0];
+        if (next.is_empty()) {
+            return { type_id: PyramidTypeID.Invalid, attribute: null };
+        } else {
+            return (next as TypedBlock).get_type();
+        }
+    }
+
+    override infer_type(env: TypeEnv): TempPyramidTypeTree {
+        const children = this.get_children();
+        let next = (t1: TempPyramidType, t2: TempPyramidTypeTree): TempPyramidTypeTree => {
+            if (!children[1].is_empty()) {
+                return { node: t1, children: [t2, (children[1] as TypedBlock).infer_type(env)] };
+            } else {
+                return { node: t1, children: [t2] };
+            }
+        };
+        // if logic is unset
+        if (children[0].is_empty()) {
+            return next({ id: PyramidTypeID.Invalid, var: null, attribute: null }, null);
+        }
+        // set temporary type onto environment
+        const this_args = this.get_args();
+        const args: TempPyramidType[] = [];
+        for (const arg of this_args) {
+            const tmp = { id: null, var: null, attribute: null };
+            args.push(tmp);
+            env.set(arg, tmp);
+        }
+        // infer logic type
+        const logic_type = (children[0] as TypedBlock).infer_type(env);
+        // set this definition
+        const attribute = {
+            args: args,
+            return: logic_type.node,
+        };
+        const this_type = { id: PyramidTypeID.Function, var: null, attribute: attribute };
+        env.set(this.get_content(), this_type);
+        // goto next
+        // console.log(attribute); //! debug
+        return next(this_type, logic_type);
     }
 
     private get_args(): string[] {
         let res = [];
-        for (const child of Array.from(this.children)) {
+        for (const child of Array.from(this.content_wrapper.children)) {
             if (child.classList.contains("pyramid-argument")) {
                 res.push(child.innerHTML);
             }
