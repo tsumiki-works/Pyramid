@@ -1,18 +1,17 @@
-
-import { Block } from "../block.js";
 import { ParentBlock } from "../parent_block.js";
 import { TypedBlock } from "../typed_block.js";
+import { TypeEnv } from "../inference/typeenv.js";
+import { TempPyramidTypeTree } from "../inference/typeenv.js";
 
 export class ListBlock extends ParentBlock {
 
-    constructor(pyramid_type: PyramidType, lr: Vec2, content: string, args_cnt: number) {
+    constructor(lr: Vec2, content: string, args_cnt: number) {
         super(
-            pyramid_type,
             lr,
             [
                 ["引数の数を変更", (e: MouseEvent) => this.popup_event_edit(e, (value: string) => {
                     if (value.length !== 0 && !isNaN(parseInt(value))) {
-                        this.set_content("List("+value+")");
+                        this.set_content("List(" + value + ")");
                         this.set_children_cnt(parseInt(value));
                     }
                 })],
@@ -28,7 +27,7 @@ export class ListBlock extends ParentBlock {
 
     override eval(env: Environment): PyramidObject {
         let children_values = Array<PyramidObject>();
-        for (const child of this.get_children()){
+        for (const child of this.get_children()) {
             children_values.push(child.eval(env));
         }
         return {
@@ -40,33 +39,52 @@ export class ListBlock extends ParentBlock {
         }
     }
 
-    override inference_type(env: Environment) {
-        if(this.get_children().length == 0){
-            this.set_type({
+    override infer_type(env: TypeEnv): TempPyramidTypeTree {
+        if (this.get_children().length == 0) {
+            return {
                 // TODO: Use Generics List<T>
-                type_id: PyramidTypeID.List,
-                attribute: null
-            })
-        }else{
-            for(const child of this.get_children()){
-                child.inference_type(env);
+                node: {
+                    id: PyramidTypeID.List,
+                    var: null,
+                    attribute: null,
+                },
+                children: null,
             }
+        } else {
             let first_child = this.get_children()[0];
-            if(!first_child.is_empty()){
+            if (!first_child.is_empty()) {
                 // FIXME: in List<T>, 'T' is included at 'FunctionAttribute' now. 
                 // TODO:  This type is not infereced. Need get_inferenced_type().
-                this.set_type({
-                    type_id: PyramidTypeID.List,
-                    attribute: {
-                        args: [],
-                        return_type: (first_child as TypedBlock).get_type()
-                    }
-                })
-            }else{
-                this.set_type({
-                    type_id: PyramidTypeID.List,
-                    attribute: null
-                })
+                let children_type = new Array<TempPyramidTypeTree>();
+                for (const child of this.get_children()) {
+                    children_type.push((child as TypedBlock).infer_type(env));
+                }
+                return ({
+                    node: {
+                        id: PyramidTypeID.List,
+                        var: null,
+                        attribute: {
+                            args: [],
+                            return: {
+                                id: (first_child as TypedBlock).get_type().type_id,
+                                var: null,
+                                attribute: null,
+                            }
+                        },
+                    },
+                    children: children_type,
+                }
+                )
+            } else {
+                return {
+                    // TODO: Use Generics List<T>
+                    node: {
+                        id: PyramidTypeID.Invalid,
+                        var: null,
+                        attribute: null,
+                    },
+                    children: null,
+                }
             }
         }
     }
