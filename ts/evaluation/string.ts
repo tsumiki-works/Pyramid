@@ -1,3 +1,5 @@
+import { Environment } from "./environment.js";
+
 export class String {
     // value != null
     // this conditional check "null" and "undefined"

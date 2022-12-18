@@ -1,3 +1,5 @@
+import { Environment } from "./environment.js";
+
 export class PyramidNumber {
     // check_type return bool and jedge whether value is Number literal or not
     //

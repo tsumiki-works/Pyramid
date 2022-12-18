@@ -1,3 +1,5 @@
+import { Environment } from "./environment.js";
+
 export class Bool {
     static check_type(value: string): boolean {
         if (value === "true" || value === "false") return true;
