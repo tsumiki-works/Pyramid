@@ -1,7 +1,7 @@
 import { ParentBlock } from "../parent_block.js";
 import { TypedBlock } from "../typed_block.js";
-import { TypeEnv } from "../inference/typeenv.js";
-import { TempPyramidTypeTree } from "../inference/typeenv.js";
+import { TypeEnv, unify } from "../inference/typeenv.js";
+import { TempPyramidType, TempPyramidTypeTree, TempPyramidFunctionAttribute } from "../inference/typeenv.js";
 
 export class ListBlock extends ParentBlock {
 
@@ -46,45 +46,76 @@ export class ListBlock extends ParentBlock {
                 node: {
                     id: PyramidTypeID.List,
                     var: null,
-                    attribute: null,
+                    attribute: {
+                        args: [],
+                        return: {
+                            id: PyramidTypeID.Generic,
+                            var: null,
+                            attribute: null,
+                        }
+                    },
                 },
                 children: null,
             }
         } else {
-            let first_child = this.get_children()[0];
-            if (!first_child.is_empty()) {
-                // FIXME: in List<T>, 'T' is included at 'FunctionAttribute' now. 
-                // TODO:  This type is not infereced. Need get_inferenced_type().
-                let children_type = new Array<TempPyramidTypeTree>();
-                for (const child of this.get_children()) {
-                    children_type.push((child as TypedBlock).infer_type(env));
+            let is_invalid: boolean = false;
+            let children_type = new Array<TempPyramidTypeTree>();
+            let first_child = this.get_children()[0] as TypedBlock;
+            let first_child_type: TempPyramidTypeTree;
+            let unify_result = false;
+            let t = {
+                id: null,
+                var: null,
+                attribute: null
+            }
+
+            for (const child of this.get_children()) {
+                if (first_child === child && !first_child.is_empty()) {
+                    first_child_type = first_child.infer_type(env);
+                    unify_result = unify(t, first_child_type.node);
+                    console.log(unify_result);
+                    children_type.push(first_child_type);
+                } else {
+                    if (child.is_empty()) {
+                        is_invalid = true;
+                        children_type.push({
+                            node: {
+                                id: null,
+                                var: null,
+                                attribute: null
+                            },
+                            children: null,
+                        })
+                    } else {
+                        let c_type = (child as TypedBlock).infer_type(env);
+                        children_type.push(c_type);
+                        unify_result = unify(t, c_type.node) && unify_result;
+                    }
                 }
+            }
+            // There're no empty child
+            console.log(unify_result, is_invalid);
+            if (unify_result && !is_invalid) {
                 return ({
                     node: {
                         id: PyramidTypeID.List,
                         var: null,
                         attribute: {
                             args: [],
-                            return: {
-                                id: (first_child as TypedBlock).get_type().type_id,
-                                var: null,
-                                attribute: null,
-                            }
+                            return: t,
                         },
                     },
                     children: children_type,
-                }
-                )
+                })
             } else {
-                return {
-                    // TODO: Use Generics List<T>
+                return ({
                     node: {
                         id: PyramidTypeID.Invalid,
                         var: null,
                         attribute: null,
                     },
-                    children: null,
-                }
+                    children: children_type,
+                })
             }
         }
     }

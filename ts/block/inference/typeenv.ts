@@ -75,6 +75,15 @@ export function unify(t1: TempPyramidType, t2: TempPyramidType): boolean {
                 default:
                     return false;
             }
+        case PyramidTypeID.List:
+            switch(t2.id){
+                case PyramidTypeID.List:
+                    res = unify(t1.attribute.return, t2.attribute.return) && res;
+                    return res;
+                default: 
+                    return false;
+            }
+            
         default:
             return false;
     }
