@@ -1,4 +1,4 @@
-import { TempPyramidTypeTree, TypeEnv, unify } from "../inference/typeenv.js";
+import { TempPyramidType, TempPyramidTypeTree, TypeEnv, unify } from "../inference/typeenv.js";
 import { ParentBlock } from "../parent_block.js";
 import { TypedBlock } from "../typed_block.js";
 
@@ -64,25 +64,44 @@ export class SymbolBlock extends ParentBlock {
         } else if (this_children.length === 0) {
             return { node: v, children: [] };
         } else {
+            const empty_args_idxs: number[] = [];
             const args_tree: TempPyramidTypeTree[] = [];
-            for (const child of this_children) {
-                if (!child.is_empty()) {
-                    args_tree.push((child as TypedBlock).infer_type(env));
+            const args: TempPyramidType[] = [];
+            for (let i = 0; i < this_children.length; ++i) {
+                if (this_children[i].is_empty()) {
+                    empty_args_idxs.push(i);
+                    args.push({ id: null, var: null, attribute: null });
+                } else {
+                    const child_type_tree = (this_children[i] as TypedBlock).infer_type(env);
+                    args_tree.push(child_type_tree);
+                    args.push(child_type_tree.node);
                 }
             }
-            // TODO: currying
-            if (args_tree.length !== this_children.length) {
-                return {
-                    node: { id: PyramidTypeID.Invalid, var: null, attribute: null },
-                    children: args_tree,
-                };
-            }
             const t = { id: null, var: null, attribute: null };
-            const args = args_tree.map(arg => arg.node);
             if (!unify(v, { id: PyramidTypeID.Function, var: null, attribute: { args: args, return: t } })) {
                 return { node: { id: PyramidTypeID.Invalid, var: null, attribute: null }, children: args_tree };
             } else {
-                return { node: t, children: args_tree };
+                if (args_tree.length !== this_children.length) {
+                    const args_for_attribute = [];
+                    for (let i = 0; i < args.length; ++i) {
+                        if (empty_args_idxs.indexOf(i) >= 0) {
+                            args_for_attribute.push(args[i]);
+                        }
+                    }
+                    return {
+                        node: {
+                            id: PyramidTypeID.Function,
+                            var: null,
+                            attribute: {
+                                args: args_for_attribute,
+                                return: t,
+                            },
+                        },
+                        children: args_tree,
+                    };
+                } else {
+                    return { node: t, children: args_tree };
+                }
             }
         }
     }
