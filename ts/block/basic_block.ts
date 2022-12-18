@@ -53,7 +53,7 @@ export abstract class BasicBlock extends TypedBlock {
 
     protected popup_event_eval() {
         Popup.remove_popup();
-        console.log(this.eval(Keywords.get_first_env()));
+        console.log(this.eval(Keywords.get_first_env()).value);
     }
 
     protected popup_event_kill() {
@@ -100,7 +100,7 @@ export abstract class BasicBlock extends TypedBlock {
         this.set_left(x);
         this.set_top(y);
     }
-    
+
     private event_mouse_rightdown(e: MouseEvent, popup_events: PopupEvent[]) {
         new Popup(e.pageX, e.pageY, popup_events);
     }
