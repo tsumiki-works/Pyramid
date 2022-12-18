@@ -81,7 +81,8 @@ export abstract class BasicBlock extends TypedBlock {
         result_block.id = "block-eval-result";
         Roots.append(result_block);
         result_block.format();
-        console.log(this.eval(Keywords.get_first_env()));
+
+        console.log(this.eval(Keywords.get_first_env()).value);
     }
 
     protected popup_event_kill() {
