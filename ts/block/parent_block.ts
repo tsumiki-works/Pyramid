@@ -24,7 +24,7 @@ export abstract class ParentBlock extends BasicBlock {
     }
 
     protected popup_event_kill_self() {
-        Popup.remove_popup();
+        Popup.remove_all_popup();
         const children_cnt = this.get_children().length;
         this.disconnect_all_children();
         for (let i = 0; i < children_cnt; ++i) {

@@ -1,6 +1,10 @@
+import { PyramidNumber } from "../evaluation/pyramid_number.js";
 import { Keywords } from "../keywords.js";
 import { Popup } from "../popup.js";
+import { Block } from "./block.js";
+import { DefineBlock } from "./concrete_block/define_block.js";
 import { EmptyBlock } from "./concrete_block/empty_block.js";
+import { LiteralBlock } from "./concrete_block/literal_block.js";
 import { TypedBlock } from "./typed_block.js";
 import { Roots } from "./roots.js";
 import { Trash } from "./trash.js";
@@ -15,7 +19,6 @@ import { Trash } from "./trash.js";
 
 export abstract class BasicBlock extends TypedBlock {
 
-    private readonly playground: HTMLDivElement = document.getElementById("playground") as HTMLDivElement;
     private readonly content_span: HTMLSpanElement;
 
     constructor(pyramid_type: PyramidType, lr: Vec2, popup_events: PopupEvent[]) {
@@ -52,36 +55,55 @@ export abstract class BasicBlock extends TypedBlock {
     }
 
     protected popup_event_eval() {
-        Popup.remove_popup();
+        Popup.remove_all_popup();
+        let block_eval_result = document.getElementById("block-eval-result"); 
+        if (block_eval_result !== null) {
+            document.getElementById("roots").removeChild(block_eval_result);
+        }
+        let result = this.eval(Keywords.get_first_env());
+        console.log(result);
+        let result_block: Block;
+        switch (result.pyramid_type.type_id) {
+            case PyramidTypeID.Number:
+                result_block = new LiteralBlock(
+                    [
+                        document.documentElement.clientWidth - this.playground.getBoundingClientRect().left -210,
+                        document.documentElement.clientHeight -210,
+                    ],
+                    result.value,
+                );
+                break;
+            case PyramidTypeID.Function:
+            // TODO: Function
+            default:
+                throw Error("Not implemented");
+        }
+        result_block.id = "block-eval-result";
+        Roots.append(result_block);
+        result_block.format();
+
         console.log(this.eval(Keywords.get_first_env()).value);
     }
 
     protected popup_event_kill() {
-        Popup.remove_popup();
+        Popup.remove_all_popup();
         this.kill();
     }
 
     protected popup_event_edit(e: MouseEvent, edit_event: Function) {
-        Popup.remove_popup();
-        //! TODO: move them Popup
-        const popup = document.createElement("div");
-        popup.id = "popup-menu";
-        popup.style.display = "block";
-        popup.style.left = e.pageX + "px";
-        popup.style.top = e.pageY + "px";
-        document.body.appendChild(popup);
-        const input = document.createElement("input");
-        input.id = "popup-menu-edit";
-        input.contentEditable = "true";
-        input.addEventListener("keydown", (e => {
-            if (e.key == "Enter") {
-                Popup.remove_popup();
-                edit_event(input.value);
-                this.get_root().format();
-            }
-        }));
-        popup.appendChild(input);
-        input.focus();
+        Popup.remove_all_popup();
+        Popup.create_input(
+            e.pageX,
+            e.pageY,
+            "popup-block-input",
+            ((ke: KeyboardEvent) => {
+                if (ke.key == "Enter") {
+                    edit_event(Popup.input_get_value());
+                    Popup.remove_all_popup();
+                    this.get_root().format();
+                }
+            })
+        );
     }
 
     private event_mouse_leftdown() {
@@ -102,7 +124,7 @@ export abstract class BasicBlock extends TypedBlock {
     }
 
     private event_mouse_rightdown(e: MouseEvent, popup_events: PopupEvent[]) {
-        new Popup(e.pageX, e.pageY, popup_events);
+        Popup.create_listmenu(e.pageX, e.pageY, "", popup_events);
     }
 
     private event_mousemove(e: MouseEvent) {

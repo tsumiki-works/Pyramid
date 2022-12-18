@@ -28,7 +28,10 @@ export abstract class EventBlock extends Block {
     }
 
     private mouse_down_event_wrapper(e: MouseEvent, mouse_leftdown_event: Function, mouse_rightdown_event: Function) {
-        Popup.remove_popup();
+        Popup.remove_all_popup();
+        if(this.id === "block-eval-result"){
+            this. id = this.id.slice(0, 0);
+        }
         if (e.button === 0) {
             mouse_leftdown_event(e);
             this.removeEventListener("mousedown", this.mouse_down_listener);
@@ -41,13 +44,13 @@ export abstract class EventBlock extends Block {
     }
 
     private mouse_move_event_wrapper(e: MouseEvent, mouse_move_event: Function) {
-        Popup.remove_popup();
+        Popup.remove_all_popup();
         mouse_move_event(e);
         e.stopPropagation();
     }
 
     private mouse_up_event_wrapper(e: MouseEvent, mouse_up_event: Function) {
-        Popup.remove_popup();
+        Popup.remove_all_popup();
         mouse_up_event(e);
         document.removeEventListener("mousemove", this.mouse_move_listener);
         document.removeEventListener("mouseup", this.mouse_up_listener);
