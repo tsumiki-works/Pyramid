@@ -1,4 +1,5 @@
 import { ArithmeticOperator } from "./arithmetic_operator.js";
+import { ComparisonOperator } from "./comparison_operator.js";
 import { LogicalOperator } from "./logical_operator.js";
 import { MathFunction } from "./math_function.js";
 
@@ -16,6 +17,13 @@ export class Environment {
             ["!", LogicalOperator.not],
             ["&&", LogicalOperator.and],
             ["||", LogicalOperator.or],
+
+            ["==", ComparisonOperator.equal],
+            ["!=", ComparisonOperator.not_equal],
+            [">", ComparisonOperator.greater_than],
+            ["<", ComparisonOperator.less_than],
+            [">=", ComparisonOperator.greater_than_or_equal_to],
+            ["<=", ComparisonOperator.less_than_or_equal_to],
     
             ["log", MathFunction.log],
             ["exp", MathFunction.exp],
