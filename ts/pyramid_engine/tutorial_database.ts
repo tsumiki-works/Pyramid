@@ -2,6 +2,7 @@ import { LiteralBlock } from "../block/concrete_block/literal_block.js";
 import { SymbolBlock } from "../block/concrete_block/symbol_block.js";
 import { DefineBlock } from "../block/concrete_block/define_block.js";
 import { PyramidNumber } from "../evaluation/pyramid_number.js";
+import { ListBlock } from "../block/concrete_block/list_block.js";
 import { String } from "../evaluation/string.js";
 import { Bool } from "../evaluation/bool.js";
 
@@ -23,6 +24,7 @@ export class TutorialDatabase {
                         "0",
                     )),
                 });
+                
                 menu_contents_literal.push({
                     color: "blue",
                     text: "text",
@@ -39,6 +41,19 @@ export class TutorialDatabase {
                         "true",
                     )),
                 });
+                menu_contents_literal.push({
+                    color: "lightseagreen",
+                    text: "LIST(0)",
+                    block_constructor: ((_l: number, _t: number) => new ListBlock({
+                        type_id: PyramidTypeID.List,
+                        attribute: null,
+                    },
+                        [_l, _t],
+                        "LIST(0)",
+                        0
+                    )),
+                })
+
                 menu_contents.set({ label: "Literal", color: "black" }, menu_contents_literal);
 
                 // arithmetic operator 
