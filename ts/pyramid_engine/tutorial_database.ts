@@ -94,6 +94,17 @@ export class TutorialDatabase {
                     )),
                 });
 
+                // Comparison Operator
+                menu_contents_symbol.push({
+                    color: "green",
+                    text: "==",
+                    block_constructor: ((_l: number, _t: number) => new SymbolBlock(
+                        [_l, _t],
+                        "==",
+                        2
+                    ))
+                })
+
                 // build in math fanction
                 menu_contents_symbol.push({
                     color: "green",
