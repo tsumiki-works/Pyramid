@@ -35,8 +35,15 @@
     -->
   <!-- /CSS -->
 </head>
-<header>
-  <img id="logo" src="../../images/logo.svg" alt="ピラミッドのロゴ">
+<header class="flex items-center">
+  <a href="../../" class="hover:opacity-80">
+  <img id="logo" src="../../images/logo.svg" alt="Pyramid logo(トップヘ戻る)">
+  </a>
+  <a class="ml-4 text-lg text-slate-700 hover:text-slate-500" href="../">チュートリアルトップへ</a>
+  <nav class="ml-auto">
+    <a class="mr-4 text-slate-700 hover:text-slate-500" href="../../playground/">プレイグラウンド</a>
+    <a class="mr-4 text-slate-700 hover:text-slate-500" href="../../doc/">ドキュメント</a>
+  </nav>
 </header>
 
 <body oncontextmenu="return false;">
@@ -87,4 +94,5 @@
   <a href="https://github.com/tsumiki-works/Pyramid/blob/main/LICENSE" class="hover:text-slate-500">Copyright (c) 2022
     TsumikiWorks</a>
 </footer>
+
 </html>
