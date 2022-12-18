@@ -49,9 +49,9 @@ export class ListBlock extends ParentBlock {
                     attribute: {
                         args: [],
                         return: {
-                            id: PyramidTypeID.Generic,
+                            id: null,
                             var: null,
-                            attribute: null,
+                            attribute: null
                         }
                     },
                 },

@@ -1,14 +1,43 @@
-/*
-class ListFunc{
+export class ListFunction {
+    /*
     static map(fn: PyramidObject, lst: PyramidObject): PyramidObject{
-        if(fn.pyramid_type.type_id === PyramidTypeID.Function 
-        && fn.pyramid_type.attribute === 2 //FIXME: Maybe, this conditional expression never need.
-        && lst.pyramid_type.type_id === PyramidTypeID.List){
-            //
-        }
-        else{
+        if(true){
+        }else{
             new Error("pyramid backend error: invalid operands are given map function")
         }
     }
+    */
+    static push: PyramidObject = {
+        pyramid_type: {
+            type_id: PyramidTypeID.List,
+            attribute: {
+                args: [
+                    {
+                        type_id: PyramidTypeID.Number,
+                        attribute: null,
+                    },
+                    {
+                        type_id: PyramidTypeID.List,
+                        attribute: null,
+                    }
+                ],
+                return_type: {
+                    type_id: PyramidTypeID.List,
+                    attribute: null,
+                } 
+            },
+        },
+        value: (args: PyramidObject[], env: Environment): PyramidObject => {
+            if(args.length != 2){
+                throw new Error("`push` must have 2 arguments but get " + args.length);
+            }
+            return {
+                pyramid_type: {
+                    type_id: PyramidTypeID.List,
+                    attribute: null,
+                },
+                value: args[1].value.push(args[0].value)
+            }
+        }
+    }
 }
-*/
