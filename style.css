@@ -68,6 +68,23 @@ div#workspace {
     user-select: none;
 }
 
+#block-eval-result {
+    outline: 8px skyblue;
+    outline-style: double;
+    width: 160px;
+    animation: moveresult 0.3s ease-out;
+}
+@keyframes moveresult{
+    0% {
+        opacity: 0;
+        transform: translateY(100%) rotateX(90deg);
+    }
+    100% {
+        opacity: 1;
+        transform: translateY(0%) rotateX(0deg);
+    }
+}
+
 pyramid-empty-block {
     background-color: rgba(0, 0, 0, 0.1);
 }
@@ -189,7 +206,7 @@ div#console-content label {
         monospace;
 }
 
-div#popup-menu {
+div.popup {
     display: none;
     position: fixed;
     width: auto;
@@ -198,7 +215,7 @@ div#popup-menu {
     text-align: center;
 }
 
-div#popup-menu ul {
+div.popup ul {
     margin: 5px;
     padding: 0;
 }
