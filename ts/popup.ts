@@ -1,12 +1,20 @@
 export class Popup {
-    constructor(event_page_x: number, event_page_y: number, events: PopupEvent[]) {
-        Popup.remove_popup();
-        const popup = document.createElement("div");
-        popup.id = "popup-menu";
-        popup.style.display = "block";
-        popup.style.left = event_page_x + "px";
-        popup.style.top = event_page_y + "px";
-        document.body.appendChild(popup);
+    private static create_base(x: number, y: number, id: string): HTMLDivElement{
+        let item: HTMLDivElement;
+
+        item = document.createElement("div");
+        item.classList.add("popup");
+        item.id = "popup#" + (id.length == 0 ? "noId" : id);
+        item.style.display = "block";
+        item.style.left = x + "px";
+        item.style.top = y + "px";
+
+        return item;
+    }
+
+    static create_listmenu(x: number, y: number, id: string, events: PopupEvent[]): void {
+        let base = Popup.create_base(x, y, id);
+        Popup.remove_all_popup();
         const ul = document.createElement("ul");
         for (const event of events) {
             if (event === null) {
@@ -18,13 +26,45 @@ export class Popup {
             li.onclick = event[1];
             ul.appendChild(li);
         }
-        popup.appendChild(ul);
+        base.appendChild(ul);
+        Popup.show_popup(base);
     }
 
-    static remove_popup(): void {
-        const popup = document.getElementById("popup-menu");
-        if (popup !== null) {
-            document.body.removeChild(popup);
+    static create_input(event_page_x: number, event_page_y: number, id: string, keydown_event: Function): void {
+        let base = Popup.create_base(event_page_x, event_page_y, id);
+        const input = document.createElement("input");
+        input.id = "popup-menu-edit";
+        input.contentEditable = "true";
+        input.addEventListener("keydown", e => keydown_event(e));
+        base.appendChild(input);
+
+        Popup.show_popup(base);
+        input.focus();        
+    }
+    static input_get_value(){
+        return (document.getElementById("popup-menu-edit") as HTMLInputElement).value;
+    }
+
+    
+
+    static show_popup(popup_item: HTMLElement) {
+        document.body.appendChild(popup_item);
+    }
+
+    static remove_popup(f: Function): void {
+        const popups = document.getElementsByClassName("popup");
+        for (let i = 0; i < popups.length; i++) {
+            if (f(popups.item(i))) {
+                document.body.removeChild(popups.item(i));
+            }
         }
+    }
+
+    // macro functions. may be deleted in the future.
+    static remove_popup_from_id(id: string): void {
+        Popup.remove_popup(e => e.id == id);
+    }
+    static remove_all_popup(): void {
+        Popup.remove_popup(_ => true);
     }
 }

@@ -25,6 +25,15 @@ export abstract class TypedBlock extends BasicBlock {
                 }
                 inner(t.attribute.return_type);
                 buf += ")";
+            } else if (t.type_id === PyramidTypeID.List) {
+                // TODO: FIXME: Where list_type should be?
+                buf += "List<";
+                if(t.attribute === null){
+                    buf += "T";
+                }else{
+                    inner(t.attribute.return_type);
+                }
+                buf += ">";
             } else {
                 buf += typeid_to_string(t.type_id);
             }

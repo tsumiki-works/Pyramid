@@ -29,7 +29,7 @@ export class PyramidPlayground extends PyramidEngine {
     }
 
     protected override event_mousedown(e: MouseEvent) {
-        Popup.remove_popup();
+        Popup.remove_all_popup();
         if (e.button === 2) {
             this.workspace.removeEventListener("mousedown", this.mousedown_listener);
             document.addEventListener("mousemove", this.mousemove_listener);
