@@ -33,17 +33,25 @@
   -->
   <!-- /CSS -->
 </head>
-<header class="container max-w-screen-lg mx-auto py-1 flex flex-wrap items-center">
-  <a href="../index.html">
-    <img class="h-12 ml-1 mr-2 p-2 hover:opacity-80" src="../images/logo.svg" alt="Pyramid logo(トップヘ戻る)">
-    </img>
-  </a>
+<header class="py-1 bg-white shadow">
+  <nav class="container max-w-screen-lg mx-auto flex items-center">
+    <a href="../">
+      <img class="h-12 ml-1 mr-2 p-2 hover:opacity-80" src="../images/logo.svg" alt="Pyramid logo(トップヘ戻る)">
+      </img>
+    </a>
+    <a class="ml-3 leading-tight text-slate-700 hover:text-slate-500"" href=" https://github.com/tsumiki-works/">Tsumiki
+      Works<br>(GitHub)</a>
+    <div class="ml-auto">
+      <a class="mr-4 text-slate-700 hover:text-slate-500" href="../playground/">プレイグラウンド</a>
+      <a class="mr-4 text-slate-700 hover:text-slate-500" href="../tutorial/">チュートリアル</a>
+    </div>
+  </nav>
 </header>
 
-<body class="container max-w-screen-lg mx-auto flex flex-col min-h-screen">
-  <main class="flex-grow">
+<body class="flex flex-col min-h-screen">
+  <main class="container max-w-screen-lg mx-auto flex-grow">
     <dev class="flex">
-      <aside class="w-full mt-2 text-slate-800" aria-label="Sidebar">
+      <aside class="w-full mt-4 text-slate-800" aria-label="Sidebar">
         <a class="ml-1" href="">
           <h1
             class="inline-flex items-center rounded bg-slate-100 py-1 pl-2 pr-2 md:pr-4 lg:pr-10 text-slate-800 hover:opacity-90 text-2xl">
@@ -78,7 +86,7 @@
     </dev>
   </main>
 </body>
-<footer class="container max-w-screen-lg p-2 text-slate-600">
+<footer class="container max-w-screen-lg mx-auto p-2 text-slate-600">
   <p>Copyright (c) 2022 TsumikiWorks</p>
   <p class="text-sm">Released under the MIT license
     <a href="https://github.com/tsumiki-works/Pyramid/blob/main/LICENSE"
