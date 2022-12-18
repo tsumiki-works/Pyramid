@@ -24,7 +24,7 @@ export class TutorialDatabase {
                         "0",
                     )),
                 });
-                
+
                 menu_contents_literal.push({
                     color: "blue",
                     text: "text",
