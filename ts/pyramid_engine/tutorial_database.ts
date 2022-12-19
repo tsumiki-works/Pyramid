@@ -6,6 +6,7 @@ import { ListBlock } from "../block/concrete_block/list_block.js";
 import { String } from "../evaluation/string.js";
 import { Bool } from "../evaluation/bool.js";
 import { IfBlock } from "../block/concrete_block/if_block.js";
+import { MapBlock } from "../block/concrete_block/map_block.js";
 
 export class TutorialDatabase {
     constructor() { }
@@ -137,9 +138,16 @@ export class TutorialDatabase {
                     )),
                 });
                 menu_contents_define.push({
-                    color: "#df7083",
+                    color: "#000000",
                     text: "if",
                     block_constructor: ((_l: number, _t: number) => new IfBlock(
+                        [_l, _t],
+                    )),
+                });
+                menu_contents_define.push({
+                    color: "#000000",
+                    text: "map",
+                    block_constructor: ((_l: number, _t: number) => new MapBlock(
                         [_l, _t],
                     )),
                 });
