@@ -83,9 +83,14 @@ class Environment {
     }
 }
 
+// bottommost, bottomdiff are number for the format of `DefineBlock'
+// bottommost is the height of DefineBlock's logic height
+// bottomdiff is the subset between DefineBlock's height and BlockConst.UNIT_HEIGHT
 type FormatResult = {
     x: number,
     leftmost: number,
     rightmost: number,
+    bottommost: number,
+    bottomdiff: number,
     childrens: FormatResult[],
 };

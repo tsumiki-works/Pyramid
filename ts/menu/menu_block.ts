@@ -56,6 +56,7 @@ export class MenuBlock extends HTMLElement {
             this.block.set_top(e.pageY);
             this.block.style.zIndex = "1";
             Roots.append(this.block);
+            this.block.format();
         }
     }
 

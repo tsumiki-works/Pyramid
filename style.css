@@ -86,6 +86,11 @@ div#workspace {
         transform: translateY(0%) rotateX(0deg);
     }
 }
+div.pyramid-function-wrapper {
+    position: absolute;
+    background-color: black;
+    z-index: -1;
+}
 
 pyramid-empty-block {
     background-color: rgba(15, 23, 42, 0.1);
@@ -97,6 +102,7 @@ pyramid-symbol-block {
     background-color: #40a5a8;
 }
 pyramid-define-block {
+    margin-top: 5px;
     background-color: #df7083;
 }
 pyramid-list-block {

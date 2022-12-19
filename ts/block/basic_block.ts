@@ -125,6 +125,7 @@ export abstract class BasicBlock extends EventBlock {
             Roots.remove(this);
         }
         Roots.append(this);
+        this.get_root().format();
         this.set_parent(null);
         this.set_left(x);
         this.set_top(y);
