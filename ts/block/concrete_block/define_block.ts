@@ -139,7 +139,8 @@ export class DefineBlock extends ParentBlock {
         const center: number = x - res.x;
         let strech_width = res.childrens[0].rightmost + Math.abs(res.childrens[0].x);
         this.style.minWidth = (strech_width * 2 + BlockConst.DEFINE_BLOCK_BORDER * 2) + "px";
-        this.style.minHeight = BlockConst.UNIT_HEIGHT + res.childrens[0].bottommost + BlockConst.DEFINE_BLOCK_BORDER * 2 + "px";
+        console.log(res.childrens[1].bottommost);
+        this.style.minHeight = res.childrens[0].bottommost + BlockConst.UNIT_HEIGHT + BlockConst.DEFINE_BLOCK_BORDER * 2 + "px";
         this.set_left(x);
         this.set_top(y - BlockConst.DEFINE_BLOCK_BORDER);
 
@@ -188,6 +189,7 @@ export class DefineBlock extends ParentBlock {
             childrens.push(res);
             i += 1;
         }
+        let res_apply = children[1].determine_width();
         this.style.minWidth = width + "px";
         const x = leftmost
             + (childrens[0].x - childrens[0].leftmost)
@@ -195,9 +197,9 @@ export class DefineBlock extends ParentBlock {
             + this.get_width() * 0.5;
         return {
             x: x,
-            leftmost: leftmost - x,
-            rightmost: rightmost + x,
-            bottommost: bottommost + BlockConst.UNIT_HEIGHT * 2 + BlockConst.DEFINE_BLOCK_BORDER * 2,
+            leftmost: leftmost - x * 2,
+            rightmost: rightmost + x * 2,
+            bottommost: res_apply.bottommost + bottommost + BlockConst.UNIT_HEIGHT + BlockConst.DEFINE_BLOCK_BORDER * 2,
             bottomdiff: bottomdiff + (bottommost + BlockConst.DEFINE_BLOCK_BORDER * 2) * 0.5,
             childrens: childrens,
         };
