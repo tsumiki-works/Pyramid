@@ -1,3 +1,4 @@
+import { Environment } from "../evaluation/environment.js";
 import { BlockConst } from "./block_const.js";
 import { Inference } from "./inference/inference.js";
 import { Roots } from "./roots.js";
@@ -112,5 +113,5 @@ export abstract class Block extends HTMLElement {
 
     abstract is_empty(): boolean;
     abstract kill(): void;
-    abstract eval(env: Environment): PyramidObject;
+    abstract eval(env: Environment): any;
 }

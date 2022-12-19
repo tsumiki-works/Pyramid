@@ -1,200 +1,51 @@
+import { Environment } from "./environment.js";
+
 export class ArithmeticOperator {
-    static add: PyramidObject = {
-        pyramid_type: {
-            type_id: PyramidTypeID.Function,
-            attribute: {
-                args: [
-                    {
-                        type_id: PyramidTypeID.Number,
-                        attribute: null,
-                    },
-                    {
-                        type_id: PyramidTypeID.Number,
-                        attribute: null,
-                    },
-                ],
-                return_type: {
-                    type_id: PyramidTypeID.Number,
-                    attribute: null,
-                },
-            },
+    static typeof_arythmetic_operator: TempPyramidType = {
+        id: PyramidTypeID.Function,
+        var: null,
+        attribute: {
+            args: [
+                { id: PyramidTypeID.Number, var: null, attribute: null },
+                { id: PyramidTypeID.Number, var: null, attribute: null },
+            ],
+            return: { id: PyramidTypeID.Number, var: null, attribute: null },
         },
-        value: (args: PyramidObject[], env: Environment): PyramidObject => {
-            if (args.length !== 2) {
-                throw new Error("+ must have 2 arguments but get " + args.length + " arguments");
-            }
-            return {
-                pyramid_type: {
-                    type_id: PyramidTypeID.Number,
-                    attribute: null
-                },
-                value: args[0].value + args[1].value
-            }
-        },
+    };
+    static add(args: any[], _: Environment): any {
+        if (args.length !== 2) {
+            throw new Error("+ must have 2 arguments but get " + args.length + " arguments");
+        }
+        return args[0] + args[1];
     }
-    static sub: PyramidObject = {
-        pyramid_type: {
-            type_id: PyramidTypeID.Function,
-            attribute: {
-                args: [
-                    {
-                        type_id: PyramidTypeID.Number,
-                        attribute: null,
-                    },
-                    {
-                        type_id: PyramidTypeID.Number,
-                        attribute: null,
-                    },
-                ],
-                return_type: {
-                    type_id: PyramidTypeID.Number,
-                    attribute: null,
-                },
-            },
-        },
-        value: (args: PyramidObject[], env: Environment): PyramidObject => {
-            if (args.length !== 2) {
-                throw new Error("- must have 2 arguments but get " + args.length + " arguments");
-            }
-            return {
-                pyramid_type: {
-                    type_id: PyramidTypeID.Number,
-                    attribute: null
-                },
-                value: args[0].value - args[1].value
-            }
-        },
+    static sub(args: any[], _: Environment): any {
+        if (args.length !== 2) {
+            throw new Error("- must have 2 arguments but get " + args.length + " arguments");
+        }
+        return args[0] - args[1];
     }
-    static mul: PyramidObject = {
-        pyramid_type: {
-            type_id: PyramidTypeID.Function,
-            attribute: {
-                args: [
-                    {
-                        type_id: PyramidTypeID.Number,
-                        attribute: null,
-                    },
-                    {
-                        type_id: PyramidTypeID.Number,
-                        attribute: null,
-                    },
-                ],
-                return_type: {
-                    type_id: PyramidTypeID.Number,
-                    attribute: null,
-                },
-            },
-        },
-        value: (args: PyramidObject[], env: Environment): PyramidObject => {
-            if (args.length !== 2) {
-                throw new Error("* must have 2 arguments but get " + args.length + " arguments");
-            }
-            return {
-                pyramid_type: {
-                    type_id: PyramidTypeID.Number,
-                    attribute: null
-                },
-                value: args[0].value * args[1].value
-            }
-        },
+    static mul(args: any[], _: Environment): any {
+        if (args.length !== 2) {
+            throw new Error("* must have 2 arguments but get " + args.length + " arguments");
+        }
+        return args[0] * args[1];
     }
-    static div: PyramidObject = {
-        pyramid_type: {
-            type_id: PyramidTypeID.Function,
-            attribute: {
-                args: [
-                    {
-                        type_id: PyramidTypeID.Number,
-                        attribute: null,
-                    },
-                    {
-                        type_id: PyramidTypeID.Number,
-                        attribute: null,
-                    },
-                ],
-                return_type: {
-                    type_id: PyramidTypeID.Number,
-                    attribute: null,
-                },
-            },
-        },
-        value: (args: PyramidObject[], env: Environment): PyramidObject => {
-            if (args.length !== 2) {
-                throw new Error("/ must have 2 arguments but get " + args.length + " arguments");
-            }
-            return {
-                pyramid_type: {
-                    type_id: PyramidTypeID.Number,
-                    attribute: null
-                },
-                value: args[0].value / args[1].value
-            }
-        },
+    static div(args: any[], _: Environment): any {
+        if (args.length !== 2) {
+            throw new Error("/ must have 2 arguments but get " + args.length + " arguments");
+        }
+        return args[0] / args[1];
     }
-    static mod: PyramidObject = {
-        pyramid_type: {
-            type_id: PyramidTypeID.Function,
-            attribute: {
-                args: [
-                    {
-                        type_id: PyramidTypeID.Number,
-                        attribute: null,
-                    },
-                    {
-                        type_id: PyramidTypeID.Number,
-                        attribute: null,
-                    },
-                ],
-                return_type: {
-                    type_id: PyramidTypeID.Number,
-                    attribute: null,
-                },
-            },
-        },
-        value: (args: PyramidObject[], env: Environment): PyramidObject => {
-            if (args.length !== 2) {
-                throw new Error("% must have 2 arguments but get " + args.length + " arguments");
-            }
-            return {
-                pyramid_type: {
-                    type_id: PyramidTypeID.Number,
-                    attribute: null
-                },
-                value: args[0].value % args[1].value
-            }
-        },
+    static mod(args: any[], _: Environment): any {
+        if (args.length !== 2) {
+            throw new Error("% must have 2 arguments but get " + args.length + " arguments");
+        }
+        return args[0] % args[1];
     }
-    static pow: PyramidObject = {
-        pyramid_type: {
-            type_id: PyramidTypeID.Function,
-            attribute: {
-                args: [
-                    {
-                        type_id: PyramidTypeID.Number,
-                        attribute: null,
-                    },
-                    {
-                        type_id: PyramidTypeID.Number,
-                        attribute: null,
-                    },
-                ],
-                return_type: {
-                    type_id: PyramidTypeID.Number,
-                    attribute: null,
-                },
-            },
-        },
-        value: (args: PyramidObject[], env: Environment): PyramidObject => {
-            if (args.length !== 2) {
-                throw new Error("** must have 2 arguments but get " + args.length + " arguments");
-            }
-            return {
-                pyramid_type: {
-                    type_id: PyramidTypeID.Number,
-                    attribute: null
-                },
-                value: args[0].value ** args[1].value
-            }
-        },
+    static pow(args: any[], _: Environment): any {
+        if (args.length !== 2) {
+            throw new Error("** must have 2 arguments but get " + args.length + " arguments");
+        }
+        return args[0] ** args[1];
     }
 }
