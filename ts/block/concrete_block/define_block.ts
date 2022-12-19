@@ -170,7 +170,7 @@ export class DefineBlock extends ParentBlock {
         // Function Logic Parts
         this.get_children()[0].determine_pos(
             this.get_x(),
-            (y - (this.get_height() - BlockConst.UNIT_HEIGHT) * 0.5) + BlockConst.UNIT_HEIGHT + res.childrens[0].bottomdiff,
+            (y - (this.get_height() - BlockConst.UNIT_HEIGHT) * 0.5) + BlockConst.UNIT_HEIGHT + res.childrens[0].bottomdiff * 0.5,
             res.childrens[0]
         );
         // Function Apply Parts
@@ -210,7 +210,7 @@ export class DefineBlock extends ParentBlock {
             x: 0,
             leftmost: leftmost - x,
             rightmost: rightmost + x,
-            bottommost: res_apply.bottommost + bottommost + BlockConst.UNIT_HEIGHT + BlockConst.DEFINE_BLOCK_BORDER,
+            bottommost: res_apply.bottommost + bottommost + BlockConst.UNIT_HEIGHT + BlockConst.DEFINE_BLOCK_BORDER * 2,
             bottomdiff: bottomdiff + bottommost + BlockConst.DEFINE_BLOCK_BORDER * 2,
             childrens: childrens,
         };
