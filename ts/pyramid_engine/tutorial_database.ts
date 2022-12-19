@@ -17,7 +17,7 @@ export class TutorialDatabase {
                 // number, string, bool, literal block
                 const menu_contents_literal = new Array<MenuContent>();
                 menu_contents_literal.push({
-                    color: "blue",
+                    color: "#5d8cd4",
                     text: "0",
                     block_constructor: ((_l: number, _t: number) => new LiteralBlock(
                         [_l, _t],
@@ -26,7 +26,7 @@ export class TutorialDatabase {
                 });
 
                 menu_contents_literal.push({
-                    color: "blue",
+                    color: "#5d8cd4",
                     text: "text",
                     block_constructor: ((_l: number, _t: number) => new LiteralBlock(
                         [_l, _t],
@@ -34,7 +34,7 @@ export class TutorialDatabase {
                     )),
                 });
                 menu_contents_literal.push({
-                    color: "blue",
+                    color: "#5d8cd4",
                     text: "true",
                     block_constructor: ((_l: number, _t: number) => new LiteralBlock(
                         [_l, _t],
@@ -42,7 +42,7 @@ export class TutorialDatabase {
                     )),
                 });
                 menu_contents_literal.push({
-                    color: "lightseagreen",
+                    color: "#99a9c2",
                     text: "LIST(0)",
                     block_constructor: ((_l: number, _t: number) => new ListBlock(
                         [_l, _t],
@@ -51,12 +51,12 @@ export class TutorialDatabase {
                     )),
                 })
 
-                menu_contents.set({ label: "Literal", color: "black" }, menu_contents_literal);
+                menu_contents.set({ label: "Literal", color: "#5d8cd4" }, menu_contents_literal);
 
                 // arithmetic operator 
                 const menu_contents_symbol = new Array<MenuContent>();
                 menu_contents_symbol.push({
-                    color: "green",
+                    color: "#40a5a8",
                     text: "+",
                     block_constructor: ((_l: number, _t: number) => new SymbolBlock(
                         [_l, _t],
@@ -65,7 +65,7 @@ export class TutorialDatabase {
                     )),
                 });
                 menu_contents_symbol.push({
-                    color: "green",
+                    color: "#40a5a8",
                     text: "-",
                     block_constructor: ((_l: number, _t: number) => new SymbolBlock(
                         [_l, _t],
@@ -76,7 +76,7 @@ export class TutorialDatabase {
 
                 // logic operator
                 menu_contents_symbol.push({
-                    color: "green",
+                    color: "#40a5a8",
                     text: "!",
                     block_constructor: ((_l: number, _t: number) => new SymbolBlock(
                         [_l, _t],
@@ -85,7 +85,7 @@ export class TutorialDatabase {
                     )),
                 });
                 menu_contents_symbol.push({
-                    color: "green",
+                    color: "#40a5a8",
                     text: "&&",
                     block_constructor: ((_l: number, _t: number) => new SymbolBlock(
                         [_l, _t],
@@ -96,7 +96,7 @@ export class TutorialDatabase {
 
                 // Comparison Operator
                 menu_contents_symbol.push({
-                    color: "green",
+                    color: "#40a5a8",
                     text: "==",
                     block_constructor: ((_l: number, _t: number) => new SymbolBlock(
                         [_l, _t],
@@ -107,7 +107,7 @@ export class TutorialDatabase {
 
                 // build in math fanction
                 menu_contents_symbol.push({
-                    color: "green",
+                    color: "#40a5a8",
                     text: "exp",
                     block_constructor: ((_l: number, _t: number) => new SymbolBlock(
                         [_l, _t],
@@ -116,7 +116,7 @@ export class TutorialDatabase {
                     )),
                 });
                 menu_contents_symbol.push({
-                    color: "green",
+                    color: "#40a5a8",
                     text: "tan",
                     block_constructor: ((_l: number, _t: number) => new SymbolBlock(
                         [_l, _t],
@@ -124,31 +124,31 @@ export class TutorialDatabase {
                         1
                     )),
                 });
-                menu_contents.set({ label: "Symbol", color: "lightgreen" }, menu_contents_symbol);
+                menu_contents.set({ label: "Symbol", color: "#40a5a8" }, menu_contents_symbol);
 
                 const menu_contents_define = new Array<MenuContent>();
                 menu_contents_define.push({
-                    color: "gray",
+                    color: "#df7083",
                     text: "f",
                     block_constructor: ((_l: number, _t: number) => new DefineBlock(
                         [_l, _t],
                         "f"
                     )),
                 });
-                menu_contents.set({ label: "Define", color: "green" }, menu_contents_define);
+                menu_contents.set({ label: "Define", color: "#df7083" }, menu_contents_define);
                 break;
             case 1:
                 let only_basics: MenuContent[] = [
                     {
                         text: "0",
-                        color: "blue",
+                        color: "#5d8cd4",
                         block_constructor: ((_l: number, _t: number) => new LiteralBlock(
                             [_l, _t],
                             "0"
                         ))
                     },
                     {
-                        color: "green",
+                        color: "#40a5a8",
                         text: "+",
                         block_constructor: ((_l: number, _t: number) => new SymbolBlock(
                             [_l, _t],
@@ -157,7 +157,7 @@ export class TutorialDatabase {
                         ))
                     }
                 ];
-                menu_contents.set({ label: "basic", color: "blue" }, only_basics);
+                menu_contents.set({ label: "basic", color: "#82be64" }, only_basics);
                 break;
             default:
                 alert("Pyramid frontend error: invalid query parameter.");
