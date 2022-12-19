@@ -102,6 +102,9 @@ pyramid-define-block {
 pyramid-list-block {
     background-color: #99a9c2;
 }
+pyramid-if-block {
+    background-color: black;
+}
 
 span.content {
     color: white;
