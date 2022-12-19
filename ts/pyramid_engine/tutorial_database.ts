@@ -125,6 +125,15 @@ export class TutorialDatabase {
                         1
                     )),
                 });
+                menu_contents_symbol.push({
+                    color: "#40a5a8",
+                    text: "pi",
+                    block_constructor: ((_l: number, _t: number) => new SymbolBlock(
+                        [_l, _t],
+                        "pi",
+                        0
+                    )),
+                });
                 menu_contents.set({ label: "Symbol", color: "#40a5a8" }, menu_contents_symbol);
 
                 const menu_contents_define = new Array<MenuContent>();
