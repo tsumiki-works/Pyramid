@@ -1,5 +1,5 @@
 import { BasicBlock } from "./basic_block.js";
-import { TypeEnv, TempPyramidTypeTree, decode_temptype } from "./inference/typeenv.js";
+import { TypeEnv, decode_temptype } from "./inference/typeenv.js";
 
 export abstract class TypedBlock extends BasicBlock {
 
@@ -55,6 +55,10 @@ export abstract class TypedBlock extends BasicBlock {
 
     get_type(): PyramidType {
         return this.ptype;
+    }
+
+    is_invalid(): boolean {
+        return this.classList.contains("pyramid-invalid-block");
     }
 
     abstract infer_type(env: TypeEnv): TempPyramidTypeTree;

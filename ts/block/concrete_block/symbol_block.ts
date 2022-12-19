@@ -1,5 +1,5 @@
-import { TempPyramidType, TempPyramidTypeTree, TypeEnv, unify } from "../inference/typeenv.js";
-import { BlockConst } from "../block_const.js";
+import { Environment } from "../../evaluation/environment.js";
+import { TypeEnv, unify } from "../inference/typeenv.js";
 import { ParentBlock } from "../parent_block.js";
 import { TypedBlock } from "../typed_block.js";
 
@@ -29,23 +29,50 @@ export class SymbolBlock extends ParentBlock {
         this.format();
     }
 
-    override eval(env: Environment): PyramidObject {
+    override eval(env: Environment): any {
+        if (this.is_invalid()) {
+            throw new Error("invalid");
+        }
         const v = env.get(this.get_content());
         if (v === null) {
             throw new Error(this.get_content() + " is undefined symbol");
         }
-        if (v.pyramid_type.type_id === PyramidTypeID.Function) {
-            if (typeof v.value !== "function") {
-                throw new Error("unexpected error: " + this.get_content() + " is not function but expected");
-            }
-            const evaled = this.get_children().map(child => child.eval(env));
-            return v.value(evaled, env);
-        } else {
-            if (JSON.stringify(v.pyramid_type) !== JSON.stringify(this.get_type())) {
-                throw new Error(this.get_content() + " type is wrong"); // TODO: show error better
-            }
+        const this_children = this.get_children();
+        if (this_children.length === 0) {
             return v;
         }
+        if (typeof v !== "function") {
+            throw new Error(this.get_content() + " is not function but passed some args");
+        }
+        const evaluateds: any[] = [];
+        let flag = false;
+        for (const child of this_children) {
+            if (child.is_empty()) {
+                evaluateds.push(null);
+                flag = true;
+            } else {
+                evaluateds.push(child.eval(env));
+            }
+        }
+        if (flag) {
+            return (args_: any[], _: Environment): any => {
+                if (this_children.length !== this.get_type().attribute.args.length + args_.length) {
+                    throw new Error("few or many args passed to curried function" + this.get_content());
+                }
+                const args = [];
+                let cnt = 0;
+                for (const evaluated of evaluateds) {
+                    if (evaluated === null) {
+                        args.push(args_[cnt]);
+                        cnt += 1;
+                    } else {
+                        args.push(evaluated);
+                    }
+                }
+                return v(args, env);
+            };
+        }
+        return v(evaluateds, env);
     }
 
     override infer_type(env: TypeEnv): TempPyramidTypeTree {

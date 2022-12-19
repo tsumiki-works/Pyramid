@@ -5,6 +5,7 @@ import { PyramidNumber } from "../evaluation/pyramid_number.js";
 import { ListBlock } from "../block/concrete_block/list_block.js";
 import { String } from "../evaluation/string.js";
 import { Bool } from "../evaluation/bool.js";
+import { IfBlock } from "../block/concrete_block/if_block.js";
 
 export class TutorialDatabase {
     constructor() { }
@@ -124,6 +125,15 @@ export class TutorialDatabase {
                         1
                     )),
                 });
+                menu_contents_symbol.push({
+                    color: "#40a5a8",
+                    text: "pi",
+                    block_constructor: ((_l: number, _t: number) => new SymbolBlock(
+                        [_l, _t],
+                        "pi",
+                        0
+                    )),
+                });
                 menu_contents.set({ label: "Symbol", color: "#40a5a8" }, menu_contents_symbol);
 
                 const menu_contents_define = new Array<MenuContent>();
@@ -133,6 +143,13 @@ export class TutorialDatabase {
                     block_constructor: ((_l: number, _t: number) => new DefineBlock(
                         [_l, _t],
                         "f"
+                    )),
+                });
+                menu_contents_define.push({
+                    color: "#df7083",
+                    text: "if",
+                    block_constructor: ((_l: number, _t: number) => new IfBlock(
+                        [_l, _t],
                     )),
                 });
                 menu_contents.set({ label: "Define", color: "#df7083" }, menu_contents_define);

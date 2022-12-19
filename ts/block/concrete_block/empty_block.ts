@@ -1,3 +1,4 @@
+import { Environment } from "../../evaluation/environment.js";
 import { Block } from "../block.js";
 import { BlockConst } from "../block_const.js";
 import { EventBlock } from "../event_block.js";
@@ -27,7 +28,7 @@ export class EmptyBlock extends EventBlock {
     override kill(): void {
         this.remove();
     }
-    override eval(_: Environment): PyramidObject {
+    override eval(_: Environment): any {
         throw new Error("empty block evaluated");
     }
 }

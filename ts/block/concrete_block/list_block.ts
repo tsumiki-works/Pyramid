@@ -2,7 +2,7 @@ import { BlockConst } from "../block_const.js";
 import { ParentBlock } from "../parent_block.js";
 import { TypedBlock } from "../typed_block.js";
 import { TypeEnv, unify } from "../inference/typeenv.js";
-import { TempPyramidType, TempPyramidTypeTree, TempFunctionAttribute } from "../inference/typeenv.js";
+import { Environment } from "../../evaluation/environment.js";
 
 export class ListBlock extends ParentBlock {
 
@@ -26,18 +26,12 @@ export class ListBlock extends ParentBlock {
         this.format();
     }
 
-    override eval(env: Environment): PyramidObject {
-        let children_values = Array<PyramidObject>();
+    override eval(env: Environment): any {
+        let children_values = Array<any>();
         for (const child of this.get_children()) {
             children_values.push(child.eval(env));
         }
-        return {
-            pyramid_type: {
-                type_id: PyramidTypeID.List,
-                attribute: null,
-            },
-            value: children_values.reverse()
-        }
+        return children_values.reverse();
     }
 
     override infer_type(env: TypeEnv): TempPyramidTypeTree {
