@@ -28,4 +28,6 @@ export const keywords: [string, TempPyramidType, any][] = [
     ["sin", MathFunction.typeof_math_function, MathFunction.sin],
     ["cos", MathFunction.typeof_math_function, MathFunction.cos],
     ["tan", MathFunction.typeof_math_function, MathFunction.tan],
+
+    ["π", { id: PyramidTypeID.Number, var: null, attribute: null }, 3.1415926536]
 ];
