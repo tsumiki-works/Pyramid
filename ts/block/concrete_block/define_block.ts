@@ -1,5 +1,5 @@
 import { Environment } from "../../evaluation/environment.js";
-import { TypeEnv } from "../inference/typeenv.js";
+import { TypeEnv, unify } from "../inference/typeenv.js";
 import { ParentBlock } from "../parent_block.js";
 import { TypedBlock } from "../typed_block.js";
 import { EmptyBlock } from "./empty_block.js";
@@ -18,19 +18,17 @@ export class DefineBlock extends ParentBlock {
                     }
                 })],
                 ["仮引数を編集", (e: MouseEvent) => this.popup_event_edit(e, (value: string) => {
-                    if (value.length !== 0) {
-                        for (const child of Array.from(this.content_wrapper.children)) {
-                            if (child.classList.contains("pyramid-argument")) {
-                                child.remove();
-                            }
+                    for (const child of Array.from(this.content_wrapper.children)) {
+                        if (child.classList.contains("pyramid-argument")) {
+                            child.remove();
                         }
-                        const args = value.split(" ");
-                        for (const arg of args) {
-                            const span = document.createElement("span");
-                            span.innerText = arg;
-                            span.classList.add("pyramid-argument");
-                            this.content_wrapper.appendChild(span);
-                        }
+                    }
+                    const args = value.split(" ");
+                    for (const arg of args) {
+                        const span = document.createElement("span");
+                        span.innerText = arg;
+                        span.classList.add("pyramid-argument");
+                        this.content_wrapper.appendChild(span);
                     }
                 })],
                 ["評価", _ => this.popup_event_eval()],
@@ -51,30 +49,34 @@ export class DefineBlock extends ParentBlock {
     }
 
     override eval(env: Environment): any {
-        env.set(
-            this.get_content(),
-            (args: any[], _: Environment): any => {
-                const this_args = this.get_args();
-                if (args.length !== this_args.length) {
-                    throw new Error(
-                        "num of args of "
-                        + this.get_content()
-                        + " is expected "
-                        + this_args.length
-                        + " but passed "
-                        + args.length
-                    );
+        if (this.get_args().length === 0) {
+            env.set(this.get_content(), this.get_children()[0].eval(env));
+        } else {
+            env.set(
+                this.get_content(),
+                (args: any[], _: Environment): any => {
+                    const this_args = this.get_args();
+                    if (args.length !== this_args.length) {
+                        throw new Error(
+                            "num of args of "
+                            + this.get_content()
+                            + " is expected "
+                            + this_args.length
+                            + " but passed "
+                            + args.length
+                        );
+                    }
+                    for (let i = 0; i < args.length; ++i) {
+                        env.set(this_args[i], args[i]);
+                    }
+                    const res = this.get_children()[0].eval(env);
+                    for (const arg of this_args) {
+                        env.remove(arg);
+                    }
+                    return res;
                 }
-                for (let i = 0; i < args.length; ++i) {
-                    env.set(this_args[i], args[i]);
-                }
-                const res = this.get_children()[0].eval(env);
-                for (const arg of this_args) {
-                    env.remove(arg);
-                }
-                return res;
-            }
-        );
+            );
+        }
         return this.get_children()[1].eval(env);
     }
 
@@ -109,17 +111,30 @@ export class DefineBlock extends ParentBlock {
             env.set(arg, tmp);
         }
         // infer logic type
-        const logic_type = (children[0] as TypedBlock).infer_type(env);
-        // set this definition
-        const attribute = {
-            args: args,
-            return: logic_type.node,
-        };
-        const this_type = { id: PyramidTypeID.Function, var: null, attribute: attribute };
+        const this_type = { id: null, var: null, attribute: null };
         env.set(this.get_content(), this_type);
-        // goto next
-        // console.log(attribute); //! debug
-        return next(this_type, logic_type);
+        const logic_type_tree = (children[0] as TypedBlock).infer_type(env);
+        if (this_args.length === 0) {
+            if (!unify(this_type, logic_type_tree.node)) {
+                return next({ id: PyramidTypeID.Invalid, var: null, attribute: null }, logic_type_tree);
+            } else {
+                return next(this_type, logic_type_tree);
+            }
+        } else {
+            const this_type_ = {
+                id: PyramidTypeID.Function,
+                var: null,
+                attribute: {
+                    args: args,
+                    return: logic_type_tree.node,
+                },
+            };
+            if (!unify(this_type, this_type_)) {
+                return next({ id: PyramidTypeID.Invalid, var: null, attribute: null }, logic_type_tree);
+            } else {
+                return next(this_type, logic_type_tree);
+            }
+        }
     }
 
     private get_args(): string[] {

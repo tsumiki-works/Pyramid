@@ -67,16 +67,20 @@ export abstract class BasicBlock extends EventBlock {
         let result = this.eval(new Environment());
         console.log(result);
         let result_block: Block;
-        result_block = new LiteralBlock(
-            [
-                document.documentElement.clientWidth - this.playground.getBoundingClientRect().left - 210,
-                document.documentElement.clientHeight - 210,
-            ],
-            String(result),
-        );
-        result_block.id = "block-eval-result";
-        Roots.append(result_block);
-        result_block.format();
+        if (typeof result !== "function") {
+            result_block = new LiteralBlock(
+                [
+                    document.documentElement.clientWidth - this.playground.getBoundingClientRect().left - 210,
+                    document.documentElement.clientHeight - 210,
+                ],
+                String(result),
+            );
+            result_block.id = "block-eval-result";
+            Roots.append(result_block);
+            result_block.format();
+        } else {
+            console.log("result is function so cannot create result block");
+        }
     }
 
     protected popup_event_kill() {
