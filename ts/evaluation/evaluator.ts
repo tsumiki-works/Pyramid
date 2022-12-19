@@ -12,12 +12,13 @@ export class Evaluator {
         else if (String.check_type(literal)) return { type_id: PyramidTypeID.String, attribute: null };
         else return { type_id: PyramidTypeID.Invalid, attribute: null };
     }
-    static eval_literal(literal: string, pyramid_type: PyramidType): PyramidObject {
+    static eval_literal(literal: string, pyramid_type: PyramidType): any {
         // TODO:
-        if (PyramidNumber.check_type(literal)) return PyramidNumber.eval(literal, null);
-        else if (Bool.check_type(literal)) return Bool.eval(literal, null);
-        else if (String.check_type(literal)) return String.eval(literal, null);
-        else throw Error("");
-        // ERROR
+        switch (pyramid_type.type_id) {
+            case PyramidTypeID.Number: return  PyramidNumber.eval(literal, null);
+            case PyramidTypeID.Bool: return  Bool.eval(literal, null);
+            case PyramidTypeID.String: return  String.eval(literal, null);
+            default: throw new Error("");
+        }
     }
 }

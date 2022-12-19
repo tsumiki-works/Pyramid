@@ -9,76 +9,40 @@ export class MathFunction {
             return: { id: PyramidTypeID.Number, var: null, attribute: null },
         },
     };
-    static log(args: PyramidObject[], _: Environment): PyramidObject {
+    static log(args: any[], _: Environment): any {
         if (args.length !== 1) {
             throw new Error("log function must have 1 arguments but get " + args.length + " arguments");
         }
-        return {
-            pyramid_type: {
-                type_id: PyramidTypeID.Number,
-                attribute: null
-            },
-            value: Math.log(args[0].value)
-        }
+        return Math.log(args[0]);
     }
-    static exp(args: PyramidObject[], _: Environment): PyramidObject {
+    static exp(args: any[], _: Environment): any {
         if (args.length !== 1) {
             throw new Error("exp function must have 1 arguments but get " + args.length + " arguments");
         }
-        return {
-            pyramid_type: {
-                type_id: PyramidTypeID.Number,
-                attribute: null
-            },
-            value: Math.exp(args[0].value)
-        }
+        return Math.exp(args[0]);
     }
-    static sqrt(args: PyramidObject[], _: Environment): PyramidObject {
+    static sqrt(args: any[], _: Environment): any {
         if (args.length !== 1) {
             throw new Error("sqrt function must have 1 arguments but get " + args.length + " arguments");
         }
-        return {
-            pyramid_type: {
-                type_id: PyramidTypeID.Number,
-                attribute: null
-            },
-            value: Math.sqrt(args[0].value)
-        }
+        return Math.sqrt(args[0]);
     }
-    static sin(args: PyramidObject[], _: Environment): PyramidObject {
+    static sin(args: any[], _: Environment): any {
         if (args.length !== 1) {
             throw new Error("sin function must have 1 arguments but get " + args.length + " arguments");
         }
-        return {
-            pyramid_type: {
-                type_id: PyramidTypeID.Number,
-                attribute: null
-            },
-            value: Math.sin(args[0].value)
-        }
+        return Math.sin(args[0]);
     }
-    static cos(args: PyramidObject[], _: Environment): PyramidObject {
+    static cos(args: any[], _: Environment): any {
         if (args.length !== 1) {
             throw new Error("cos function must have 1 arguments but get " + args.length + " arguments");
         }
-        return {
-            pyramid_type: {
-                type_id: PyramidTypeID.Number,
-                attribute: null
-            },
-            value: Math.cos(args[0].value)
-        }
+        return Math.cos(args[0]);
     }
-    static tan(args: PyramidObject[], _: Environment): PyramidObject {
+    static tan(args: any[], _: Environment): any {
         if (args.length !== 1) {
             throw new Error("tan function must have 1 arguments but get " + args.length + " arguments");
         }
-        return {
-            pyramid_type: {
-                type_id: PyramidTypeID.Number,
-                attribute: null
-            },
-            value: Math.tan(args[0].value)
-        }
+        return Math.tan(args[0]);
     }
 }

@@ -21,17 +21,11 @@ export class PyramidNumber {
         return true;
     }
 
-    static eval(content: string, _: Environment): PyramidObject {
+    static eval(content: string, _: Environment): any {
         if (!PyramidNumber.check_type(content)) {
             throw new Error("unexpected error: " + content + " is not Number");
         }
         const v = Number(content);
-        return {
-            pyramid_type: {
-                type_id: PyramidTypeID.Number,
-                attribute: null,
-            },
-            value: v
-        }
+        return v;
     }
 }

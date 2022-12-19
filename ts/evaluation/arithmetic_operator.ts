@@ -12,76 +12,40 @@ export class ArithmeticOperator {
             return: { id: PyramidTypeID.Number, var: null, attribute: null },
         },
     };
-    static add(args: PyramidObject[], _: Environment): PyramidObject {
+    static add(args: any[], _: Environment): any {
         if (args.length !== 2) {
             throw new Error("+ must have 2 arguments but get " + args.length + " arguments");
         }
-        return {
-            pyramid_type: {
-                type_id: PyramidTypeID.Number,
-                attribute: null
-            },
-            value: args[0].value + args[1].value
-        }
+        return args[0] + args[1];
     }
-    static sub(args: PyramidObject[], _: Environment): PyramidObject {
+    static sub(args: any[], _: Environment): any {
         if (args.length !== 2) {
             throw new Error("- must have 2 arguments but get " + args.length + " arguments");
         }
-        return {
-            pyramid_type: {
-                type_id: PyramidTypeID.Number,
-                attribute: null
-            },
-            value: args[0].value - args[1].value
-        }
+        return args[0] - args[1];
     }
-    static mul(args: PyramidObject[], _: Environment): PyramidObject {
+    static mul(args: any[], _: Environment): any {
         if (args.length !== 2) {
             throw new Error("* must have 2 arguments but get " + args.length + " arguments");
         }
-        return {
-            pyramid_type: {
-                type_id: PyramidTypeID.Number,
-                attribute: null
-            },
-            value: args[0].value * args[1].value
-        }
+        return args[0] * args[1];
     }
-    static div(args: PyramidObject[], _: Environment): PyramidObject {
+    static div(args: any[], _: Environment): any {
         if (args.length !== 2) {
             throw new Error("/ must have 2 arguments but get " + args.length + " arguments");
         }
-        return {
-            pyramid_type: {
-                type_id: PyramidTypeID.Number,
-                attribute: null
-            },
-            value: args[0].value / args[1].value
-        }
+        return args[0] / args[1];
     }
-    static mod(args: PyramidObject[], _: Environment): PyramidObject {
+    static mod(args: any[], _: Environment): any {
         if (args.length !== 2) {
             throw new Error("% must have 2 arguments but get " + args.length + " arguments");
         }
-        return {
-            pyramid_type: {
-                type_id: PyramidTypeID.Number,
-                attribute: null
-            },
-            value: args[0].value % args[1].value
-        }
+        return args[0] % args[1];
     }
-    static pow(args: PyramidObject[], _: Environment): PyramidObject {
+    static pow(args: any[], _: Environment): any {
         if (args.length !== 2) {
             throw new Error("** must have 2 arguments but get " + args.length + " arguments");
         }
-        return {
-            pyramid_type: {
-                type_id: PyramidTypeID.Number,
-                attribute: null
-            },
-            value: args[0].value ** args[1].value
-        }
+        return args[0] ** args[1];
     }
 }

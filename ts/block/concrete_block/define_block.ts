@@ -50,10 +50,10 @@ export class DefineBlock extends ParentBlock {
         this.format();
     }
 
-    override eval(env: Environment): PyramidObject {
-        env.set(this.get_content(), {
-            pyramid_type: this.get_type(),
-            value: (args: PyramidObject[], _: Environment): PyramidObject => {
+    override eval(env: Environment): any {
+        env.set(
+            this.get_content(),
+            (args: any[], _: Environment): any => {
                 const this_args = this.get_args();
                 if (args.length !== this_args.length) {
                     throw new Error(
@@ -74,7 +74,7 @@ export class DefineBlock extends ParentBlock {
                 }
                 return res;
             }
-        })
+        );
         return this.get_children()[1].eval(env);
     }
 

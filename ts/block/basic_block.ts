@@ -60,34 +60,20 @@ export abstract class BasicBlock extends EventBlock {
 
     protected popup_event_eval() {
         Popup.remove_all_popup();
-        let block_eval_result = document.getElementById("block-eval-result"); 
+        let block_eval_result = document.getElementById("block-eval-result");
         if (block_eval_result !== null) {
             document.getElementById("roots").removeChild(block_eval_result);
         }
         let result = this.eval(new Environment());
         console.log(result);
         let result_block: Block;
-        switch (result.pyramid_type.type_id) {
-            case PyramidTypeID.Function:
-                /*result_block = new SymbolBlock(
-                    [
-                        document.documentElement.clientWidth - this.playground.getBoundingClientRect().left -210,
-                        document.documentElement.clientHeight -210,
-                    ],
-                    "hoge", // TODO:
-                    result.pyramid_type.attribute.args.length,
-                );*/
-            default:
-                // TODO: this is dangerous
-                result_block = new LiteralBlock(
-                    [
-                        document.documentElement.clientWidth - this.playground.getBoundingClientRect().left -210,
-                        document.documentElement.clientHeight -210,
-                    ],
-                    result.value,
-                );
-                break;
-        }
+        result_block = new LiteralBlock(
+            [
+                document.documentElement.clientWidth - this.playground.getBoundingClientRect().left - 210,
+                document.documentElement.clientHeight - 210,
+            ],
+            String(result),
+        );
         result_block.id = "block-eval-result";
         Roots.append(result_block);
         result_block.format();

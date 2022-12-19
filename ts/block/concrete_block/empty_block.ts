@@ -27,7 +27,7 @@ export class EmptyBlock extends EventBlock {
     override kill(): void {
         this.remove();
     }
-    override eval(_: Environment): PyramidObject {
+    override eval(_: Environment): any {
         throw new Error("empty block evaluated");
     }
 }

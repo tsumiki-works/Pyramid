@@ -8,15 +8,9 @@ export class String {
         else return false;
     }
 
-    static eval(content: string, _: Environment): PyramidObject {
+    static eval(content: string, _: Environment): any {
         if (content != null) {
-            return {
-                pyramid_type: {
-                    type_id: PyramidTypeID.String,
-                    attribute: null,
-                },
-                value: content
-            }
+            return content;
         }
         else new Error("unexpected error: null or undefined is detected")
     }

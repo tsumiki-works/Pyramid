@@ -46,10 +46,6 @@ type FunctionAttribute = {
     args: PyramidType[];
     return_type: PyramidType;
 };
-type PyramidObject = {
-    pyramid_type: PyramidType;
-    value: any;
-};
 
 type MenuContent = {
     text: string;
@@ -60,7 +56,5 @@ type MenuTabContent = {
     label: string;
     color: string;
 }
-
-type Keyword = [string, PyramidObject];
 
 type PopupEvent = [string, EventListener];

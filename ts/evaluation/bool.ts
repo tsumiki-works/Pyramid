@@ -6,24 +6,12 @@ export class Bool {
         else return false;
     }
 
-    static eval(content: string, _: Environment): PyramidObject {
+    static eval(content: string, _: Environment): any {
         if (content === "true") {
-            return {
-                pyramid_type: {
-                    type_id: PyramidTypeID.Bool,
-                    attribute: null,
-                },
-                value: true
-            }
+            return true;
         }
         else if (content === "false") {
-            return {
-                pyramid_type: {
-                    type_id: PyramidTypeID.Bool,
-                    attribute: null,
-                },
-                value: false
-            }
+            return false;
         }
         else new Error("unexpected error: null or undefined is detected")
     }

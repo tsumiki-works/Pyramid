@@ -25,18 +25,12 @@ export class ListBlock extends ParentBlock {
         this.format();
     }
 
-    override eval(env: Environment): PyramidObject {
-        let children_values = Array<PyramidObject>();
+    override eval(env: Environment): any {
+        let children_values = Array<any>();
         for (const child of this.get_children()) {
             children_values.push(child.eval(env));
         }
-        return {
-            pyramid_type: {
-                type_id: PyramidTypeID.List,
-                attribute: null,
-            },
-            value: children_values.reverse()
-        }
+        return children_values.reverse();
     }
 
     override infer_type(env: TypeEnv): TempPyramidTypeTree {

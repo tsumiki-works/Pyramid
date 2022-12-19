@@ -113,5 +113,5 @@ export abstract class Block extends HTMLElement {
 
     abstract is_empty(): boolean;
     abstract kill(): void;
-    abstract eval(env: Environment): PyramidObject;
+    abstract eval(env: Environment): any;
 }

@@ -26,7 +26,7 @@ export class LiteralBlock extends TypedBlock {
         this.set_content(content);
         this.format();
     }
-    override eval(_: Environment): PyramidObject {
+    override eval(_: Environment): any {
         if (this.is_invalid()) {
             throw new Error("invalid");
         }

@@ -12,76 +12,40 @@ export class ComparisonOperator {
             return: { id: PyramidTypeID.Bool, var: null, attribute: null },
         },
     };
-    static equal(args: PyramidObject[], _: Environment): PyramidObject {
+    static equal(args: any[], _: Environment): any {
         if (args.length !== 2) {
             throw new Error("== must have 2 arguments but get " + args.length + " arguments");
         }
-        return {
-            pyramid_type: {
-                type_id: PyramidTypeID.Bool,
-                attribute: null
-            },
-            value: args[0].value === args[1].value
-        }
+        return args[0] === args[1];
     }
-    static not_equal(args: PyramidObject[], _: Environment): PyramidObject {
+    static not_equal(args: any[], _: Environment): any {
         if (args.length !== 2) {
             throw new Error("!= must have 2 arguments but get " + args.length + " arguments");
         }
-        return {
-            pyramid_type: {
-                type_id: PyramidTypeID.Bool,
-                attribute: null
-            },
-            value: args[0].value !== args[1].value
-        }
+        return args[0] !== args[1];
     }
-    static greater_than(args: PyramidObject[], _: Environment): PyramidObject {
+    static greater_than(args: any[], _: Environment): any {
         if (args.length !== 2) {
             throw new Error("> must have 2 arguments but get " + args.length + " arguments");
         }
-        return {
-            pyramid_type: {
-                type_id: PyramidTypeID.Bool,
-                attribute: null
-            },
-            value: args[0].value > args[1].value
-        }
+        return args[0] > args[1];
     }
-    static less_than(args: PyramidObject[], _: Environment): PyramidObject {
+    static less_than(args: any[], _: Environment): any {
         if (args.length !== 2) {
             throw new Error("< must have 2 arguments but get " + args.length + " arguments");
         }
-        return {
-            pyramid_type: {
-                type_id: PyramidTypeID.Bool,
-                attribute: null
-            },
-            value: args[0].value < args[1].value
-        }
+        return args[0] < args[1];
     }
-    static greater_than_or_equal_to(args: PyramidObject[], _: Environment): PyramidObject {
+    static greater_than_or_equal_to(args: any[], _: Environment): any {
         if (args.length !== 2) {
             throw new Error(">= must have 2 arguments but get " + args.length + " arguments");
         }
-        return {
-            pyramid_type: {
-                type_id: PyramidTypeID.Bool,
-                attribute: null
-            },
-            value: args[0].value >= args[1].value
-        }
+        return args[0] >= args[1];
     }
-    static less_than_or_equal_to(args: PyramidObject[], _: Environment): PyramidObject {
+    static less_than_or_equal_to(args: any[], _: Environment): any {
         if (args.length !== 2) {
             throw new Error("<= must have 2 arguments but get " + args.length + " arguments");
         }
-        return {
-            pyramid_type: {
-                type_id: PyramidTypeID.Bool,
-                attribute: null
-            },
-            value: args[0].value <= args[1].value
-        }
+        return args[0] <= args[1];
     }
 }

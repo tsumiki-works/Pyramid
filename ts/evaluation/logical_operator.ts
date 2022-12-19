@@ -20,40 +20,22 @@ export class LogicalOperator {
             return: { id: PyramidTypeID.Bool, var: null, attribute: null },
         },
     };
-    static not(args: PyramidObject[], _: Environment): PyramidObject {
+    static not(args: any[], _: Environment): any {
         if (args.length !== 1) {
             throw new Error("! must have 1 arguments but get " + args.length + " arguments");
         }
-        return {
-            pyramid_type: {
-                type_id: PyramidTypeID.Bool,
-                attribute: null
-            },
-            value: !args[0].value
-        }
+        return !args[0];
     }
-    static and(args: PyramidObject[], _: Environment): PyramidObject {
+    static and(args: any[], _: Environment): any {
         if (args.length !== 2) {
             throw new Error("&& must have 2 arguments but get " + args.length + " arguments");
         }
-        return {
-            pyramid_type: {
-                type_id: PyramidTypeID.Bool,
-                attribute: null
-            },
-            value: args[0].value && args[1].value
-        }
+        return args[0] && args[1];
     }
-    static or(args: PyramidObject[], _: Environment): PyramidObject {
+    static or(args: any[], _: Environment): any {
         if (args.length !== 2) {
             throw new Error("|| must have 2 arguments but get " + args.length + " arguments");
         }
-        return {
-            pyramid_type: {
-                type_id: PyramidTypeID.Bool,
-                attribute: null
-            },
-            value: args[0].value || args[1].value
-        }
+        return args[0] || args[1];
     }
 }
