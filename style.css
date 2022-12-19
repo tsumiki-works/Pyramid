@@ -97,6 +97,7 @@ pyramid-symbol-block {
     background-color: #40a5a8;
 }
 pyramid-define-block {
+    margin-top: 5px;
     background-color: #df7083;
 }
 pyramid-list-block {

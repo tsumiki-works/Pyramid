@@ -87,5 +87,6 @@ type FormatResult = {
     x: number,
     leftmost: number,
     rightmost: number,
+    bottommost: number,
     childrens: FormatResult[],
 };
