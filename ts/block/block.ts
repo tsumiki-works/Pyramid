@@ -107,8 +107,11 @@ export abstract class Block extends HTMLElement {
 
     format() {
         Inference.infer(this);
-        Roots.determine_pos(this.get_x(), this.get_y(), this, Roots.determine_width(this));
+        this.determine_pos(this.get_x(), this.get_y(), this.determine_width());
     }
+
+    abstract determine_pos(x: number, y: number, res: FormatResult): void;
+    abstract determine_width(): FormatResult;
 
     abstract is_empty(): boolean;
     abstract kill(): void;

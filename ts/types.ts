@@ -82,3 +82,10 @@ class Environment {
         throw new Error(key + " isn't in enviroment");
     }
 }
+
+type FormatResult = {
+    x: number,
+    leftmost: number,
+    rightmost: number,
+    childrens: FormatResult[],
+};
