@@ -8,19 +8,35 @@ export class PyramidTutorialReader {
 
     private title: string;
     private body: string;
+    private texts: Array<string>;
     private check_texts: CheckText[];
 
     constructor(_file_idx: number) {
         this.file_idx = _file_idx;
         this.check_texts = new Array<CheckText>();
-
-        this.read_all();
+        this.texts = [
+            "",
+            "## 1-1 四則演算をしてみよう\n[] 演算子ブロックを置こう\n- 左側のメニュー欄からドラッグ\n[] 演算子ブロックに数値ブロックをくっつけてみよう\n- 陰になっている部分に数値ブロックをくっつけることができます\n[] 演算子ブロックで評価しよう\n- 演算子ブロックを右クリックすると評価という項目が出るので、数値ブロックがくっついた状態で押してみましょう。",
+            "## 1-2 bool型の演算ブロックを使ってみよう\n[] 演算子ブロックを置こう\n- 左側のメニュー欄からドラッグ\n",
+            "## 1-3 三角関数ブロックを使ってみよう\n[] ",
+            "## 1-4",
+            "## 1-5",
+            "## 1-6",
+            "## 2-1",
+            "## 2-2",
+            "## 2-3",
+            "## 2-4",
+            "## 2-5",
+            "## 2-6"
+        ];
+        this.read_all(_file_idx);
     }
 
-    read_all(): void {
+    read_all(problem_number: number): void {
         // debug
-        let texts = "## Q-1 Pyramidの基本\n[] ブロックを置こう\n- 左側のメニュー欄からドラッグ\n[] 編集しよう\n- ブロックを右クリックでメニューが出ます";
-        let text_array = texts.split("\n");
+
+        //問題番号によってtextsを変える
+        let text_array = this.texts[problem_number].split("\n");
         let tmp_head: string = "";
         let tmp_caption: string[] = new Array<string>();
         for (const line of text_array) {

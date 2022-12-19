@@ -138,7 +138,7 @@ export class TutorialDatabase {
                 menu_contents.set({ label: "Define", color: "#df7083" }, menu_contents_define);
                 break;
             case 1:
-                let only_basics: MenuContent[] = [
+                let tutorial1: MenuContent[] = [
                     {
                         text: "0",
                         color: "#5d8cd4",
@@ -155,9 +155,87 @@ export class TutorialDatabase {
                             "+",
                             2
                         ))
+                    },
+                    {
+                        color: "#40a5a8",
+                        text: "-",
+                        block_constructor: ((_l: number, _t: number) => new SymbolBlock(
+                            [_l, _t],
+                            "-",
+                            2
+                        ))
+                    },
+                    {
+                        color: "#40a5a8",
+                        text: "*",
+                        block_constructor: ((_l: number, _t: number) => new SymbolBlock(
+                            [_l, _t],
+                            "*",
+                            2
+                        ))
+                    },
+                    {
+                        color: "#40a5a8",
+                        text: "/",
+                        block_constructor: ((_l: number, _t: number) => new SymbolBlock(
+                            [_l, _t],
+                            "/",
+                            2
+                        ))
                     }
                 ];
-                menu_contents.set({ label: "basic", color: "#82be64" }, only_basics);
+                menu_contents.set({ label: "sample", color: "#82be64" }, tutorial1);
+                break;
+
+            case 2:
+                let tutorial2: MenuContent[] = [
+                    {
+                        text: "true",
+                        color: "#5d8cd4",
+                        block_constructor: ((_l: number, _t: number) => new LiteralBlock(
+                            [_l, _t],
+                            "true"
+                        ))
+                    },
+                    {
+                        text: "false",
+                        color: "#5d8cd4",
+                        block_constructor: ((_l: number, _t: number) => new LiteralBlock(
+                            [_l, _t],
+                            "false"
+                        ))
+                    },
+                    {
+                        color: "#40a5a8",
+                        text: "!",
+                        block_constructor: ((_l: number, _t: number) => new SymbolBlock(
+                            [_l, _t],
+                            "!",
+                            1
+                        ))
+                    },
+                    {
+                        color: "#40a5a8",
+                        text: "&&",
+                        block_constructor: ((_l: number, _t: number) => new SymbolBlock(
+                            [_l, _t],
+                            "&&",
+                            2
+
+                        ))
+                    },
+                    {
+                        color: "#40a5a8",
+                        text: "==",
+                        block_constructor: ((_l: number, _t: number) => new SymbolBlock(
+                            [_l, _t],
+                            "==",
+                            2
+                        ))
+                    }
+                    
+                ];
+                menu_contents.set({ label: "sample", color: "#82be64" }, tutorial2);
                 break;
             default:
                 alert("Pyramid frontend error: invalid query parameter.");
