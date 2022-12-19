@@ -127,10 +127,10 @@ export class TutorialDatabase {
                 });
                 menu_contents_symbol.push({
                     color: "#40a5a8",
-                    text: "π",
+                    text: "pi",
                     block_constructor: ((_l: number, _t: number) => new SymbolBlock(
                         [_l, _t],
-                        "π",
+                        "pi",
                         0
                     )),
                 });
