@@ -102,9 +102,8 @@ pyramid-symbol-block {
     background-color: #40a5a8;
 }
 pyramid-define-block {
-    margin-top: 5px;
     background-color: #df7083;
-    outline: #40475E solid;
+    outline: #40475E solid 5px;
 }
 pyramid-list-block {
     background-color: #99a9c2;

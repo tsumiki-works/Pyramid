@@ -44,7 +44,6 @@ export class DefineBlock extends ParentBlock {
                 break;
             }
         }
-        this.style.height = BlockConst.UNIT_WIDTH + BlockConst.DEFINE_BLOCK_BORDER + "px";
         this.set_content(content);
         this.appendChild(new EmptyBlock(this));
         this.appendChild(new EmptyBlock(this));
@@ -151,13 +150,15 @@ export class DefineBlock extends ParentBlock {
     }
 
     override determine_pos(x: number, y: number, res: FormatResult) {
+        console.log(res);
         const center: number = x - res.x;
+        /*
         let strech_width = res.childrens[0].rightmost + Math.abs(res.childrens[0].x);
         this.style.minWidth = (strech_width * 2 + BlockConst.DEFINE_BLOCK_BORDER * 2) + "px";
-        console.log(res.childrens[1].bottommost);
         this.style.minHeight = res.childrens[0].bottommost + BlockConst.UNIT_HEIGHT + BlockConst.DEFINE_BLOCK_BORDER * 2 + "px";
+        */
         this.set_left(x);
-        this.set_top(y - BlockConst.DEFINE_BLOCK_BORDER);
+        this.set_top(y);
 
         let offset: number = center + res.leftmost;
         if (res.childrens.length !== 2) {
@@ -169,13 +170,13 @@ export class DefineBlock extends ParentBlock {
         // Function Logic Parts
         this.get_children()[0].determine_pos(
             this.get_x(),
-            (y - (this.get_height() - BlockConst.UNIT_HEIGHT) * 0.5) + BlockConst.UNIT_HEIGHT + BlockConst.DEFINE_BLOCK_BORDER + res.childrens[0].bottomdiff,
+            (y - (this.get_height() - BlockConst.UNIT_HEIGHT) * 0.5) + BlockConst.UNIT_HEIGHT + res.childrens[0].bottomdiff,
             res.childrens[0]
         );
         // Function Apply Parts
         this.get_children()[1].determine_pos(
             this.get_x(),
-            (y - (this.get_height() - BlockConst.UNIT_HEIGHT) * 0.5) + res.childrens[0].bottommost + BlockConst.UNIT_HEIGHT + BlockConst.DEFINE_BLOCK_BORDER * 2 + res.childrens[0].bottomdiff,
+            (y - (this.get_height() - BlockConst.UNIT_HEIGHT) * 0.5) + res.childrens[0].bottommost + BlockConst.UNIT_HEIGHT + BlockConst.DEFINE_BLOCK_BORDER,
             res.childrens[1]
         );
     }
@@ -187,35 +188,30 @@ export class DefineBlock extends ParentBlock {
         let bottommost = 0.0;
         let bottomdiff = 0.0;
         let childrens: FormatResult[] = [];
-        let i = 0;
-        for (const child of children) {
-            const res = child.determine_width();
-            leftmost += res.leftmost;
-            rightmost += res.rightmost;
-            if (i == 0) {
-                width += res.rightmost - res.x - child.get_width() * 0.5;
-            } else if (i == children.length - 1) {
-                width += res.x - child.get_width() * 0.5 - res.leftmost;
-            } else {
-                width += res.rightmost - res.leftmost;
-            }
-            bottommost = Math.max(bottommost, res.bottommost);
-            bottomdiff = Math.max(bottomdiff, res.bottomdiff - this.get_height());
-            childrens.push(res);
-            i += 1;
-        }
+
+        let res_logic = children[0].determine_width();
         let res_apply = children[1].determine_width();
-        this.style.minWidth = width + "px";
+
+        childrens.push(res_logic);
+        childrens.push(res_apply);
+
+        bottommost = Math.max(bottommost, res_logic.bottommost, res_apply.bottommost);
+        bottomdiff = Math.max(bottomdiff, res_logic.bottomdiff - this.get_height(), res_apply.bottomdiff - this.get_height());
+
+        let strech_width = res_logic.rightmost + Math.abs(res_logic.x);
+        this.style.minWidth = strech_width * 2  + "px";
+        this.style.minHeight = res_logic.bottommost + BlockConst.UNIT_HEIGHT + "px";
+        //this.style.minWidth = width + "px";
         const x = leftmost
-            + (childrens[0].x - childrens[0].leftmost)
+            + (res_logic.x - res_logic.leftmost - BlockConst.UNIT_HALF_WIDTH)
             + (children[0].get_width() * 0.5 - BlockConst.UNIT_HALF_WIDTH)
             + this.get_width() * 0.5;
         return {
-            x: x,
-            leftmost: leftmost - x * 2,
-            rightmost: rightmost + x * 2,
-            bottommost: res_apply.bottommost + bottommost + BlockConst.UNIT_HEIGHT + BlockConst.DEFINE_BLOCK_BORDER * 2,
-            bottomdiff: bottomdiff + (bottommost + BlockConst.DEFINE_BLOCK_BORDER * 2) * 0.5,
+            x: 0,
+            leftmost: leftmost - x,
+            rightmost: rightmost + x,
+            bottommost: res_apply.bottommost + bottommost + BlockConst.UNIT_HEIGHT + BlockConst.DEFINE_BLOCK_BORDER,
+            bottomdiff: bottomdiff + bottommost + BlockConst.DEFINE_BLOCK_BORDER * 2,
             childrens: childrens,
         };
     }

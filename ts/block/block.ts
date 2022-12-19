@@ -113,6 +113,7 @@ export abstract class Block extends HTMLElement {
     }
 
     determine_pos(x: number, y: number, res: FormatResult) {
+        //console.log(res);
         const center: number = x - res.x;
         this.set_left(x);
         this.set_top(y);
@@ -121,7 +122,7 @@ export abstract class Block extends HTMLElement {
             const child_area = (res.childrens[i].rightmost - res.childrens[i].leftmost);
             this.get_children()[i].determine_pos(
                 offset + child_area * 0.5 + res.childrens[i].x,
-                y + this.get_height() + res.childrens[i].bottomdiff,
+                y + this.get_height() + res.childrens[i].bottomdiff * 0.5,
                 res.childrens[i]
             );
             offset += child_area;
