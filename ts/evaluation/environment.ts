@@ -1,37 +1,9 @@
-import { ArithmeticOperator } from "./arithmetic_operator.js";
-import { ComparisonOperator } from "./comparison_operator.js";
-import { LogicalOperator } from "./logical_operator.js";
-import { MathFunction } from "./math_function.js";
+import { keywords } from "../keywords.js";
 
 export class Environment {
     private env: [string, any][];
     constructor() {
-        this.env = [
-            ["+", ArithmeticOperator.add],
-            ["-", ArithmeticOperator.sub],
-            ["*", ArithmeticOperator.mul],
-            ["/", ArithmeticOperator.div],
-            ["%", ArithmeticOperator.mod],
-            ["**", ArithmeticOperator.pow],
-    
-            ["!", LogicalOperator.not],
-            ["&&", LogicalOperator.and],
-            ["||", LogicalOperator.or],
-
-            ["==", ComparisonOperator.equal],
-            ["!=", ComparisonOperator.not_equal],
-            [">", ComparisonOperator.greater_than],
-            ["<", ComparisonOperator.less_than],
-            [">=", ComparisonOperator.greater_than_or_equal_to],
-            ["<=", ComparisonOperator.less_than_or_equal_to],
-    
-            ["log", MathFunction.log],
-            ["exp", MathFunction.exp],
-            ["sqrt", MathFunction.sqrt],
-            ["sin", MathFunction.sin],
-            ["cos", MathFunction.cos],
-            ["tan", MathFunction.tan],
-        ];
+        this.env = keywords.map(keyword => [keyword[0], keyword[2]]);
     }
     get(key: string): any {
         for (let i = this.env.length - 1; i >= 0; --i) {

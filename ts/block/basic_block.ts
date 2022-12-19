@@ -68,7 +68,17 @@ export abstract class BasicBlock extends EventBlock {
         console.log(result);
         let result_block: Block;
         switch (result.pyramid_type.type_id) {
-            case PyramidTypeID.Number:
+            case PyramidTypeID.Function:
+                /*result_block = new SymbolBlock(
+                    [
+                        document.documentElement.clientWidth - this.playground.getBoundingClientRect().left -210,
+                        document.documentElement.clientHeight -210,
+                    ],
+                    "hoge", // TODO:
+                    result.pyramid_type.attribute.args.length,
+                );*/
+            default:
+                // TODO: this is dangerous
                 result_block = new LiteralBlock(
                     [
                         document.documentElement.clientWidth - this.playground.getBoundingClientRect().left -210,
@@ -77,10 +87,6 @@ export abstract class BasicBlock extends EventBlock {
                     result.value,
                 );
                 break;
-            case PyramidTypeID.Function:
-            // TODO: Function
-            default:
-                throw Error("Not implemented");
         }
         result_block.id = "block-eval-result";
         Roots.append(result_block);

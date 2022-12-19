@@ -1,5 +1,5 @@
 import { Environment } from "../../evaluation/environment.js";
-import { TempPyramidType, TempPyramidTypeTree, TypeEnv } from "../inference/typeenv.js";
+import { TypeEnv } from "../inference/typeenv.js";
 import { ParentBlock } from "../parent_block.js";
 import { TypedBlock } from "../typed_block.js";
 import { EmptyBlock } from "./empty_block.js";

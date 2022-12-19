@@ -1,6 +1,17 @@
 import { Environment } from "./environment.js";
 
 export class ComparisonOperator {
+    static typeof_comparison_operator: TempPyramidType = {
+        id: PyramidTypeID.Function,
+        var: null,
+        attribute: {
+            args: [
+                { id: PyramidTypeID.Number, var: null, attribute: null },
+                { id: PyramidTypeID.Number, var: null, attribute: null },
+            ],
+            return: { id: PyramidTypeID.Bool, var: null, attribute: null },
+        },
+    };
     static equal(args: PyramidObject[], _: Environment): PyramidObject {
         if (args.length !== 2) {
             throw new Error("== must have 2 arguments but get " + args.length + " arguments");

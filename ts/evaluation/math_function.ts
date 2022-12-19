@@ -1,6 +1,14 @@
 import { Environment } from "./environment.js";
 
 export class MathFunction {
+    static typeof_math_function: TempPyramidType = {
+        id: PyramidTypeID.Function,
+        var: null,
+        attribute: {
+            args: [{ id: PyramidTypeID.Number, var: null, attribute: null }],
+            return: { id: PyramidTypeID.Number, var: null, attribute: null },
+        },
+    };
     static log(args: PyramidObject[], _: Environment): PyramidObject {
         if (args.length !== 1) {
             throw new Error("log function must have 1 arguments but get " + args.length + " arguments");

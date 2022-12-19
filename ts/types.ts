@@ -24,6 +24,20 @@ function typeid_to_string(id: PyramidTypeID): string {
     }
 }
 
+type TempFunctionAttribute = {
+    args: TempPyramidType[],
+    return: TempPyramidType,
+};
+type TempPyramidType = {
+    id: PyramidTypeID | null,
+    var: TempPyramidType | null,
+    attribute: TempFunctionAttribute | null,
+};
+type TempPyramidTypeTree = {
+    node: TempPyramidType,
+    children: TempPyramidTypeTree[],
+};
+
 type PyramidType = {
     type_id: PyramidTypeID;
     attribute: FunctionAttribute | null,

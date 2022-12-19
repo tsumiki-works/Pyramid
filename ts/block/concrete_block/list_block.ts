@@ -1,7 +1,6 @@
 import { ParentBlock } from "../parent_block.js";
 import { TypedBlock } from "../typed_block.js";
 import { TypeEnv, unify } from "../inference/typeenv.js";
-import { TempPyramidTypeTree } from "../inference/typeenv.js";
 import { Environment } from "../../evaluation/environment.js";
 
 export class ListBlock extends ParentBlock {

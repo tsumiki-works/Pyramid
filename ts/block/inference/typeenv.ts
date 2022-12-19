@@ -1,16 +1,4 @@
-export type TempFunctionAttribute = {
-    args: TempPyramidType[],
-    return: TempPyramidType,
-};
-export type TempPyramidType = {
-    id: PyramidTypeID | null,
-    var: TempPyramidType | null,
-    attribute: TempFunctionAttribute | null,
-};
-export type TempPyramidTypeTree = {
-    node: TempPyramidType,
-    children: TempPyramidTypeTree[],
-};
+import { keywords } from "../../keywords.js";
 
 export function decode_temptype(temptype: TempPyramidType): PyramidType {
     if (temptype === null) return { type_id: PyramidTypeID.Generic, attribute: null };
@@ -22,7 +10,7 @@ export function decode_temptype(temptype: TempPyramidType): PyramidType {
 
 export function encode_type(type: PyramidType): TempPyramidType | null {
     if (type.type_id === PyramidTypeID.Generic) return null;
-    if (type.attribute === null) return {id: type.type_id, var: null, attribute: null}
+    if (type.attribute === null) return { id: type.type_id, var: null, attribute: null }
     const args = type.attribute.args.map(arg => encode_type(arg))
     return { id: type.type_id, var: null, attribute: { args: args, return: encode_type(type.attribute.return_type) } }
 }
@@ -88,14 +76,14 @@ export function unify(t1: TempPyramidType, t2: TempPyramidType): boolean {
                     return false;
             }
         case PyramidTypeID.List:
-            switch(t2.id){
+            switch (t2.id) {
                 case PyramidTypeID.List:
                     res = unify(t1.attribute.return, t2.attribute.return) && res;
                     return res;
-                default: 
+                default:
                     return false;
             }
-            
+
         default:
             return false;
     }
@@ -104,7 +92,7 @@ export function unify(t1: TempPyramidType, t2: TempPyramidType): boolean {
 export class TypeEnv {
     private env: [string, TempPyramidType][];
     constructor() {
-        this.env = [];
+        this.env = keywords.map(keyword => [keyword[0], keyword[1]]);
     }
     set(k: string, t: TempPyramidType) {
         this.env.push([k, t]);

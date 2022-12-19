@@ -1,6 +1,6 @@
 import { Environment } from "../../evaluation/environment.js";
 import { Evaluator } from "../../evaluation/evaluator.js";
-import { TempPyramidTypeTree, TypeEnv } from "../inference/typeenv.js";
+import { TypeEnv } from "../inference/typeenv.js";
 import { TypedBlock } from "../typed_block.js";
 
 /* ================================================================================================================= */
@@ -27,6 +27,9 @@ export class LiteralBlock extends TypedBlock {
         this.format();
     }
     override eval(_: Environment): PyramidObject {
+        if (this.is_invalid()) {
+            throw new Error("invalid");
+        }
         return Evaluator.eval_literal(this.get_content(), this.get_type());
     }
     override infer_type(_: TypeEnv): TempPyramidTypeTree {
