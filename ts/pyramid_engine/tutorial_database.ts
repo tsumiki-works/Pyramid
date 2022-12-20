@@ -7,6 +7,7 @@ import { String } from "../evaluation/string.js";
 import { Bool } from "../evaluation/bool.js";
 import { IfBlock } from "../block/concrete_block/if_block.js";
 import { MapBlock } from "../block/concrete_block/map_block.js";
+import { AddBlock } from "../block/concrete_block/operator/add_block.js";
 
 export class TutorialDatabase {
     constructor() { }
@@ -68,10 +69,8 @@ export class TutorialDatabase {
                 menu_contents_symbol.push({
                     color: "#40a5a8",
                     text: "+",
-                    block_constructor: ((_l: number, _t: number) => new SymbolBlock(
+                    block_constructor: ((_l: number, _t: number) => new AddBlock(
                         [_l, _t],
-                        "+",
-                        2
                     )),
                 });
                 menu_contents_symbol.push({

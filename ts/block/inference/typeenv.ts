@@ -56,6 +56,18 @@ export function unify(t1: TempPyramidType, t2: TempPyramidType): boolean {
         case PyramidTypeID.Number:
             switch (t2.id) {
                 case PyramidTypeID.Number: return true;
+                case PyramidTypeID.I32: return true;
+                case PyramidTypeID.F32: return true;
+                default: return false;
+            }
+        case PyramidTypeID.I32:
+            switch (t2.id) {
+                case PyramidTypeID.I32: return true;
+                default: return false;
+            }
+        case PyramidTypeID.F32:
+            switch (t2.id) {
+                case PyramidTypeID.F32: return true;
                 default: return false;
             }
         case PyramidTypeID.Bool:

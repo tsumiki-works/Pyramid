@@ -1,8 +1,6 @@
-import { ArithmeticOperator } from "./evaluation/arithmetic_operator.js";
 import { ComparisonOperator } from "./evaluation/comparison_operator.js";
 import { LogicalOperator } from "./evaluation/logical_operator.js";
 import { MathFunction } from "./evaluation/math_function.js";
-import { ListFunction } from "./evaluation/list_func.js";
 
 export const keywords: [string, TempPyramidType, any][] = [
     ["!", LogicalOperator.typeof_not, LogicalOperator.not],
