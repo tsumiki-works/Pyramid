@@ -89,8 +89,8 @@ export abstract class BasicBlock extends EventBlock {
         }
         Roots.append(this);
         this.set_parent(null);
-        this.style.left = (e.pageX - this.get_width() * 0.5 - this.playground.getBoundingClientRect().left) + "px";
-        this.style.top = (e.pageY - this.get_height() * 0.5 - this.playground.getBoundingClientRect().top) + "px";
+        this.set_left(e.pageX);
+        this.set_top(e.pageY);
         this.get_root().format();
     }
 
