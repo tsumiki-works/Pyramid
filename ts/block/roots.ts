@@ -34,6 +34,10 @@ export class Roots {
         }
     }
 
+    static get(): Block[] {
+        return Array.from(Roots.roots.children) as Array<Block>;
+    }
+
     //! TODO: move this to Block as abstract method
     static determine_width(block: Block): FormatResult {
         //! [ToDo]
