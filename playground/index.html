@@ -36,7 +36,7 @@
 </head>
 <header class="flex items-center">
   <a href="../" class="hover:opacity-80">
-  <img id="logo" src="../images/logo.svg" alt="Pyramid logo(トップヘ戻る)">
+    <img id="logo" src="../images/logo.svg" alt="Pyramid logo(トップヘ戻る)">
   </a>
   <nav class="ml-auto">
     <a class="mr-4 text-slate-700 hover:text-slate-500" href="../tutorial/">チュートリアル</a>
@@ -45,5 +45,26 @@
 </header>
 
 <body oncontextmenu="return false;">
-  </body>
+  <div id="pyramid-wrapper">
+    <div id="playground">
+      <div id="workspace">
+        <div id="roots"></div>
+        <div id="trash"></div>
+      </div>
+      <div id="menu">
+        <div id="menu-tab"></div>
+        <div id="menu-items"></div>
+      </div>
+    </div>
+  </div>
+  <script src="../js/types.js"></script>
+  <script type="module" src="../js/main.js"></script>
+  <script type="module">
+    import { Pyramid } from "../js/main.js"
+    window.onload = () => {
+      new Pyramid("playground");
+    }
+  </script>
+</body>
+
 </html>
