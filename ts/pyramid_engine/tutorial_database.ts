@@ -156,7 +156,7 @@ export class TutorialDatabase {
 
                 const menu_contents_define = new Array<MenuContent>();
                 menu_contents_define.push({
-                    color: "#df7083",
+                    color: "#f09ecb",
                     text: "f",
                     block_constructor: ((_l: number, _t: number) => new DefineBlock(
                         [_l, _t],
@@ -164,20 +164,20 @@ export class TutorialDatabase {
                     )),
                 });
                 menu_contents_define.push({
-                    color: "#000000",
+                    color: "#ea7f90",
                     text: "if",
                     block_constructor: ((_l: number, _t: number) => new IfBlock(
                         [_l, _t],
                     )),
                 });
                 menu_contents_define.push({
-                    color: "#000000",
+                    color: "#66bbaa",
                     text: "map",
                     block_constructor: ((_l: number, _t: number) => new MapBlock(
                         [_l, _t],
                     )),
                 });
-                menu_contents.set({ label: "Define", color: "#df7083" }, menu_contents_define);
+                menu_contents.set({ label: "Define", color: "#dc8ebc" }, menu_contents_define);
                 break;
             case 1:
                 let tutorial1: MenuContent[] = [

@@ -102,15 +102,17 @@ pyramid-symbol-block {
     background-color: #40a5a8;
 }
 pyramid-define-block {
-    background-color: #df7083;
+    background-color: #f09ecb;
     outline: white solid 2px;
 }
 pyramid-list-block {
     background-color: #99a9c2;
 }
-pyramid-if-block,
+pyramid-if-block {
+    background-color: #ea7f90;
+}
 pyramid-map-block {
-    background-color: black;
+    background-color: #66bbaa;
 }
 
 span.content {
