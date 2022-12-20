@@ -118,7 +118,7 @@ export class TutorialDatabase {
                         2
                     )),
                 });
-                menu_contents.set({ label: "arith.", color: "#40a5a8" }, menu_contents_arithmetic);
+                menu_contents.set({ label: "Arith.", color: "#559cb3" }, menu_contents_arithmetic);
 
                 const menu_contents_logic = new Array<MenuContent>();
                 // logic operator
@@ -149,7 +149,7 @@ export class TutorialDatabase {
                         2
                     )),
                 });
-                menu_contents.set({ label: "logic", color: "#40a5a8" }, menu_contents_logic);
+                menu_contents.set({ label: "Logic", color: "#55ada5" }, menu_contents_logic);
 
                 const menu_contents_comparison = new Array<MenuContent>();
                 // Comparison Operator
@@ -216,7 +216,7 @@ export class TutorialDatabase {
                         2
                     ))
                 })
-                menu_contents.set({ label: "cf.", color: "#40a5a8" }, menu_contents_comparison);
+                menu_contents.set({ label: "Comp.", color: "#58b88f" }, menu_contents_comparison);
 
                 const menu_contents_function = new Array<MenuContent>();
                 // build in math fanction
@@ -284,7 +284,7 @@ export class TutorialDatabase {
                     )),
                 });
                 
-                menu_contents.set({ label: "fun.", color: "#40a5a8" }, menu_contents_function);
+                menu_contents.set({ label: "Fun.", color: "#5dbf7f" }, menu_contents_function);
 
                 const menu_contents_define = new Array<MenuContent>();
                 menu_contents_define.push({
@@ -330,7 +330,7 @@ export class TutorialDatabase {
                         0
                     )),
                 });
-                menu_contents.set({ label: "variable", color: "#75b595" }, menu_contents_variable);
+                menu_contents.set({ label: "Variable", color: "#91abaa" }, menu_contents_variable);
                 break;
             case 1:
                 let tutorial1: MenuContent[] = [
