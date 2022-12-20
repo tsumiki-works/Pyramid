@@ -111,7 +111,11 @@ pyramid-list-block {
 pyramid-if-block {
     background-color: #ea7f90;
 }
-pyramid-map-block {
+pyramid-map-block,
+pyramid-push-block,
+pyramid-pop-block,
+pyramid-rest-block,
+pyramid-length-block {
     background-color: #66bbaa;
 }
 

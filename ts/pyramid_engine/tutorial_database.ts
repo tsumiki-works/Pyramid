@@ -6,7 +6,11 @@ import { ListBlock } from "../block/concrete_block/list_block.js";
 import { String } from "../evaluation/string.js";
 import { Bool } from "../evaluation/bool.js";
 import { IfBlock } from "../block/concrete_block/if_block.js";
-import { MapBlock } from "../block/concrete_block/map_block.js";
+import { MapBlock } from "../block/concrete_block/list/map_block.js";
+import { PushBlock } from "../block/concrete_block/list/push_block.js";
+import { PopBlock } from "../block/concrete_block/list/pop_block.js";
+import { RestBlock } from "../block/concrete_block/list/rest_block.js";
+import { LengthBlock } from "../block/concrete_block/list/length_block.js";
 
 export class TutorialDatabase {
     constructor() { }
@@ -305,6 +309,34 @@ export class TutorialDatabase {
                     color: "#66bbaa",
                     text: "map",
                     block_constructor: ((_l: number, _t: number) => new MapBlock(
+                        [_l, _t],
+                    )),
+                });
+                menu_contents_define.push({
+                    color: "#66bbaa",
+                    text: "push",
+                    block_constructor: ((_l: number, _t: number) => new PushBlock(
+                        [_l, _t],
+                    )),
+                });
+                menu_contents_define.push({
+                    color: "#66bbaa",
+                    text: "pop",
+                    block_constructor: ((_l: number, _t: number) => new PopBlock(
+                        [_l, _t],
+                    )),
+                });
+                menu_contents_define.push({
+                    color: "#66bbaa",
+                    text: "rest",
+                    block_constructor: ((_l: number, _t: number) => new RestBlock(
+                        [_l, _t],
+                    )),
+                });
+                menu_contents_define.push({
+                    color: "#66bbaa",
+                    text: "length",
+                    block_constructor: ((_l: number, _t: number) => new LengthBlock(
                         [_l, _t],
                     )),
                 });
