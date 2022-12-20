@@ -64,7 +64,7 @@ export class PyramidTutorial extends PyramidEngine {
         if (page_number != 1) {
             let a1 = document.createElement("a");
             a1.setAttribute("class", "mx-1 my-2");
-            a1.setAttribute("href", "?q=" + (page_number-1));
+            a1.setAttribute("href", "?q=" + (page_number - 1));
             let button1 = document.createElement("button");
             button1.innerText = "前の問題";
             button1.setAttribute("class", "bg-sky-600 py-1 px-2 text-white hover:bg-sky-500 rounded");
@@ -79,16 +79,17 @@ export class PyramidTutorial extends PyramidEngine {
         button2.innerText = "解き直す";
         a2.appendChild(button2);
         elem.appendChild(a2);
-        let a3 = document.createElement("a");
-        a3.setAttribute("href", "?q=" + (page_number + 1));
-        a3.setAttribute("class", "mx-1 my-2");
-        let button3 = document.createElement("button");
-        button3.setAttribute("class", "bg-sky-600 py-1 px-2 text-white hover:bg-sky-500 rounded");
-        button3.innerText = "次の問題";
-        a3.appendChild(button3);
-        elem.appendChild(a3);
+        if (page_number != 9) {
+            let a3 = document.createElement("a");
+            a3.setAttribute("href", "?q=" + (page_number + 1));
+            a3.setAttribute("class", "mx-1 my-2");
+            let button3 = document.createElement("button");
+            button3.setAttribute("class", "bg-sky-600 py-1 px-2 text-white hover:bg-sky-500 rounded");
+            button3.innerText = "次の問題";
+            a3.appendChild(button3);
+            elem.appendChild(a3);
+        }
         return elem;
-
     }
     private get_checkmark_icon(): HTMLElement {
         //! TODO: Form this Elem or Use CheckBox(disabled)
