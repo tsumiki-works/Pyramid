@@ -4,7 +4,7 @@ import { BinopBlock } from "../../binop_block.js";
 import { TypedBlock } from "../../typed_block.js";
 import { TypeEnv, unify } from "../../inference/typeenv.js";
 
-export class FloatDiv extends BinopBlock {
+export class FloatDivBlock extends BinopBlock {
     constructor(lr: Vec2) {
         super(lr);
         this.set_content("/");
@@ -102,4 +102,4 @@ export class FloatDiv extends BinopBlock {
         };
     }
 }
-customElements.define('pyramid-float-div-block', FloatDiv);
+customElements.define('pyramid-float-div-block', FloatDivBlock);

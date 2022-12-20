@@ -11,7 +11,7 @@ import { AddBlock } from "../block/concrete_block/operator/add_block.js";
 import { SubBlock } from "../block/concrete_block/operator/sub_block.js";
 import { IntDivBlock } from "../block/concrete_block/operator/int_div.js";
 import { MulBlock } from "../block/concrete_block/operator/mul_block.js";
-import { FloatDiv } from "../block/concrete_block/operator/float_div.js";
+import { FloatDivBlock } from "../block/concrete_block/operator/float_div.js";
 import { ModBlock } from "../block/concrete_block/operator/mod_block.js";
 import { PowBlock } from "../block/concrete_block/operator/pow_block.js";
 import { PushBlock } from "../block/concrete_block/list/push_block.js";
@@ -106,7 +106,7 @@ export class TutorialDatabase {
                 menu_contents_arithmetic.push({
                     color: "#40a5a8",
                     text: "/",
-                    block_constructor: ((_l: number, _t: number) => new FloatDiv(
+                    block_constructor: ((_l: number, _t: number) => new FloatDivBlock(
                         [_l, _t],
                     )),
                 });
@@ -390,37 +390,36 @@ export class TutorialDatabase {
                     {
                         color: "#40a5a8",
                         text: "+",
-                        block_constructor: ((_l: number, _t: number) => new SymbolBlock(
+                        block_constructor: ((_l: number, _t: number) => new AddBlock(
                             [_l, _t],
-                            "+",
-                            2
                         ))
                     },
                     {
                         color: "#40a5a8",
                         text: "-",
-                        block_constructor: ((_l: number, _t: number) => new SymbolBlock(
+                        block_constructor: ((_l: number, _t: number) => new SubBlock(
                             [_l, _t],
-                            "-",
-                            2
                         ))
                     },
                     {
                         color: "#40a5a8",
                         text: "*",
-                        block_constructor: ((_l: number, _t: number) => new SymbolBlock(
+                        block_constructor: ((_l: number, _t: number) => new MulBlock(
                             [_l, _t],
-                            "*",
-                            2
+                        ))
+                    },
+                    {
+                        color: "#40a5a8",
+                        text: "//",
+                        block_constructor: ((_l: number, _t: number) => new IntDivBlock(
+                            [_l, _t],
                         ))
                     },
                     {
                         color: "#40a5a8",
                         text: "/",
-                        block_constructor: ((_l: number, _t: number) => new SymbolBlock(
+                        block_constructor: ((_l: number, _t: number) => new FloatDivBlock(
                             [_l, _t],
-                            "/",
-                            2
                         ))
                     }
                 ];
@@ -500,37 +499,36 @@ export class TutorialDatabase {
                     {
                         color: "#40a5a8",
                         text: "+",
-                        block_constructor: ((_l: number, _t: number) => new SymbolBlock(
+                        block_constructor: ((_l: number, _t: number) => new AddBlock(
                             [_l, _t],
-                            "+",
-                            2
                         ))
                     },
                     {
                         color: "#40a5a8",
                         text: "-",
-                        block_constructor: ((_l: number, _t: number) => new SymbolBlock(
+                        block_constructor: ((_l: number, _t: number) => new SubBlock(
                             [_l, _t],
-                            "-",
-                            2
                         ))
                     },
                     {
                         color: "#40a5a8",
                         text: "*",
-                        block_constructor: ((_l: number, _t: number) => new SymbolBlock(
+                        block_constructor: ((_l: number, _t: number) => new MulBlock(
                             [_l, _t],
-                            "*",
-                            2
+                        ))
+                    },
+                    {
+                        color: "#40a5a8",
+                        text: "//",
+                        block_constructor: ((_l: number, _t: number) => new IntDivBlock(
+                            [_l, _t],
                         ))
                     },
                     {
                         color: "#40a5a8",
                         text: "/",
-                        block_constructor: ((_l: number, _t: number) => new SymbolBlock(
+                        block_constructor: ((_l: number, _t: number) => new FloatDivBlock(
                             [_l, _t],
-                            "/",
-                            2
                         ))
                     },
                     {
@@ -577,37 +575,36 @@ export class TutorialDatabase {
                     {
                         color: "#40a5a8",
                         text: "+",
-                        block_constructor: ((_l: number, _t: number) => new SymbolBlock(
+                        block_constructor: ((_l: number, _t: number) => new AddBlock(
                             [_l, _t],
-                            "+",
-                            2
                         ))
                     },
                     {
                         color: "#40a5a8",
                         text: "-",
-                        block_constructor: ((_l: number, _t: number) => new SymbolBlock(
+                        block_constructor: ((_l: number, _t: number) => new SubBlock(
                             [_l, _t],
-                            "-",
-                            2
                         ))
                     },
                     {
                         color: "#40a5a8",
                         text: "*",
-                        block_constructor: ((_l: number, _t: number) => new SymbolBlock(
+                        block_constructor: ((_l: number, _t: number) => new MulBlock(
                             [_l, _t],
-                            "*",
-                            2
+                        ))
+                    },
+                    {
+                        color: "#40a5a8",
+                        text: "//",
+                        block_constructor: ((_l: number, _t: number) => new IntDivBlock(
+                            [_l, _t],
                         ))
                     },
                     {
                         color: "#40a5a8",
                         text: "/",
-                        block_constructor: ((_l: number, _t: number) => new SymbolBlock(
+                        block_constructor: ((_l: number, _t: number) => new FloatDivBlock(
                             [_l, _t],
-                            "/",
-                            2
                         ))
                     },
                     {
