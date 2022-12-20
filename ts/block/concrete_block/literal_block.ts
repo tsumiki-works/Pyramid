@@ -1,6 +1,7 @@
 import { Environment } from "../../evaluation/environment.js";
 import { Evaluator } from "../../evaluation/evaluator.js";
 import { TypeEnv } from "../inference/typeenv.js";
+import { popup_event_eval } from "../result_block.js";
 import { TypedBlock } from "../typed_block.js";
 
 /* ================================================================================================================= */
@@ -19,7 +20,7 @@ export class LiteralBlock extends TypedBlock {
                         this.set_content(value);
                     }
                 })],
-                ["評価", _ => this.popup_event_eval()],
+                ["評価", _ => popup_event_eval(this)],
                 ["削除", _ => this.popup_event_kill()],
             ]
         );
