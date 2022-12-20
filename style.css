@@ -109,15 +109,21 @@ pyramid-pow-block {
     background-color: #40a5a8;
 }
 pyramid-define-block {
-    background-color: #df7083;
+    background-color: #f09ecb;
     outline: white solid 2px;
 }
 pyramid-list-block {
     background-color: #99a9c2;
 }
-pyramid-if-block,
-pyramid-map-block {
-    background-color: black;
+pyramid-if-block {
+    background-color: #ea7f90;
+}
+pyramid-map-block,
+pyramid-push-block,
+pyramid-pop-block,
+pyramid-rest-block,
+pyramid-length-block {
+    background-color: #66bbaa;
 }
 
 span.content {
@@ -166,8 +172,9 @@ span.pyramid-argument {
 }
 
 .pyramid-block-folding {
-    border: thick double #cc1a2c;
-    box-sizing: border-box;
+    outline: solid #64748b 2px;
+    box-shadow: 3px 3px 0px 0 #64748b;
+    outline-offset: -2px;
 }
 
 .pyramid-block-variable {

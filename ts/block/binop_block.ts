@@ -73,13 +73,14 @@ export abstract class BinopBlock extends ParentBlock {
             children.push(child_type_tree);
         }
         let id = PyramidTypeID.Number;
-        if (invalid_flag) {
-            id = PyramidTypeID.Invalid
-        }
-        else if (i32_cnt === 2) {
+        if (i32_cnt === 2) {
             id = PyramidTypeID.I32;
-        } else if ((f32_cnt === 1 && i32_cnt === 1) || f32_cnt === 2) {
+        }
+        else if ((f32_cnt === 1 && i32_cnt === 1) || f32_cnt === 2) {
             id = PyramidTypeID.F32;
+        }
+        else if (invalid_flag) {
+            id = PyramidTypeID.Invalid
         }
         return {
             node: { id: id, var: null, attribute: null },

@@ -101,9 +101,17 @@ export class DefineBlock extends ParentBlock {
                 return { node: t1, children: [t2] };
             }
         };
-        // if logic is unset
-        if (children[0].is_empty()) {
-            return next({ id: PyramidTypeID.Invalid, var: null, attribute: null }, null);
+        let children_tree = new Array<TempPyramidTypeTree>();
+        // set if child is unset
+        for(const child of children){
+            if(child.is_empty()){
+                children_tree.push({ node: { id: null, var: null, attribute: null }, children: null});
+            }else{
+                children_tree.push((child as TypedBlock).infer_type(env));
+            }
+        }
+        if(children[0].is_empty()){
+            return next({ id: PyramidTypeID.Invalid, var: null, attribute: null }, children_tree[1]);
         }
         // set temporary type onto environment
         const this_args = this.get_args();
@@ -151,13 +159,7 @@ export class DefineBlock extends ParentBlock {
     }
 
     override determine_pos(x: number, y: number, res: FormatResult) {
-        console.log(res);
         const center: number = x - res.x;
-        /*
-        let strech_width = res.childrens[0].rightmost + Math.abs(res.childrens[0].x);
-        this.style.minWidth = (strech_width * 2 + BlockConst.DEFINE_BLOCK_BORDER * 2) + "px";
-        this.style.minHeight = res.childrens[0].bottommost + BlockConst.UNIT_HEIGHT + BlockConst.DEFINE_BLOCK_BORDER * 2 + "px";
-        */
         this.set_left(x);
         this.set_top(y);
 
@@ -177,7 +179,7 @@ export class DefineBlock extends ParentBlock {
         // Function Apply Parts
         this.get_children()[1].determine_pos(
             this.get_x(),
-            (y - (this.get_height() - BlockConst.UNIT_HEIGHT) * 0.5) + res.childrens[0].bottommost + BlockConst.UNIT_HEIGHT + BlockConst.DEFINE_BLOCK_BORDER,
+            (y - (this.get_height() - BlockConst.UNIT_HEIGHT) * 0.5) + res.childrens[0].bottommost + res.childrens[1].bottomdiff * 0.5 + BlockConst.UNIT_HEIGHT + BlockConst.DEFINE_BLOCK_BORDER,
             res.childrens[1]
         );
     }
@@ -196,11 +198,11 @@ export class DefineBlock extends ParentBlock {
         childrens.push(res_logic);
         childrens.push(res_apply);
 
-        bottommost = Math.max(bottommost, res_logic.bottommost, res_apply.bottommost);
+        bottommost = Math.max(bottommost, res_logic.bottommost);//, res_apply.bottommost);
         bottomdiff = Math.max(bottomdiff, res_logic.bottomdiff - this.get_height(), res_apply.bottomdiff - this.get_height());
 
         let strech_width = res_logic.rightmost + Math.abs(res_logic.x);
-        this.style.minWidth = strech_width * 2  + "px";
+        this.style.minWidth = strech_width * 2 + "px";
         this.style.minHeight = res_logic.bottommost + BlockConst.UNIT_HEIGHT + "px";
 
         const x = leftmost
@@ -211,8 +213,8 @@ export class DefineBlock extends ParentBlock {
             x: 0,
             leftmost: leftmost - x,
             rightmost: rightmost + x,
-            bottommost: res_apply.bottommost + bottommost + BlockConst.UNIT_HEIGHT + BlockConst.DEFINE_BLOCK_BORDER * 2,
-            bottomdiff: bottomdiff + bottommost + BlockConst.DEFINE_BLOCK_BORDER * 2,
+            bottommost: bottommost + BlockConst.UNIT_HEIGHT + BlockConst.DEFINE_BLOCK_BORDER * 2,
+            bottomdiff: bottomdiff + bottommost,
             childrens: childrens,
         };
     }

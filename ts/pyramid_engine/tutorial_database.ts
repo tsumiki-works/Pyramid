@@ -6,7 +6,7 @@ import { ListBlock } from "../block/concrete_block/list_block.js";
 import { String } from "../evaluation/string.js";
 import { Bool } from "../evaluation/bool.js";
 import { IfBlock } from "../block/concrete_block/if_block.js";
-import { MapBlock } from "../block/concrete_block/map_block.js";
+import { MapBlock } from "../block/concrete_block/list/map_block.js";
 import { AddBlock } from "../block/concrete_block/operator/add_block.js";
 import { SubBlock } from "../block/concrete_block/operator/sub_block.js";
 import { IntDivBlock } from "../block/concrete_block/operator/int_div.js";
@@ -14,6 +14,10 @@ import { MulBlock } from "../block/concrete_block/operator/mul_block.js";
 import { FloatDiv } from "../block/concrete_block/operator/float_div.js";
 import { ModBlock } from "../block/concrete_block/operator/mod_block.js";
 import { PowBlock } from "../block/concrete_block/operator/pow_block.js";
+import { PushBlock } from "../block/concrete_block/list/push_block.js";
+import { PopBlock } from "../block/concrete_block/list/pop_block.js";
+import { RestBlock } from "../block/concrete_block/list/rest_block.js";
+import { LengthBlock } from "../block/concrete_block/list/length_block.js";
 
 export class TutorialDatabase {
     constructor() { }
@@ -63,67 +67,68 @@ export class TutorialDatabase {
                     text: "LIST(0)",
                     block_constructor: ((_l: number, _t: number) => new ListBlock(
                         [_l, _t],
-                        "LIST(0)",
                         0
                     )),
-                })
+                });
 
                 menu_contents.set({ label: "Literal", color: "#5d8cd4" }, menu_contents_literal);
 
                 // arithmetic operator 
-                const menu_contents_symbol = new Array<MenuContent>();
-                menu_contents_symbol.push({
+                const menu_contents_arithmetic = new Array<MenuContent>();
+                menu_contents_arithmetic.push({
                     color: "#40a5a8",
                     text: "+",
                     block_constructor: ((_l: number, _t: number) => new AddBlock(
                         [_l, _t],
                     )),
                 });
-                menu_contents_symbol.push({
+                menu_contents_arithmetic.push({
                     color: "#40a5a8",
                     text: "-",
                     block_constructor: ((_l: number, _t: number) => new SubBlock(
                         [_l, _t],
                     )),
                 });
-                menu_contents_symbol.push({
+                menu_contents_arithmetic.push({
                     color: "#40a5a8",
                     text: "*",
                     block_constructor: ((_l: number, _t: number) => new MulBlock(
                         [_l, _t],
                     )),
                 });
-                menu_contents_symbol.push({
+                menu_contents_arithmetic.push({
                     color: "#40a5a8",
                     text: "//",
                     block_constructor: ((_l: number, _t: number) => new IntDivBlock(
                         [_l, _t],
                     )),
                 });
-                menu_contents_symbol.push({
+                menu_contents_arithmetic.push({
                     color: "#40a5a8",
                     text: "/",
                     block_constructor: ((_l: number, _t: number) => new FloatDiv(
                         [_l, _t],
                     )),
                 });
-                menu_contents_symbol.push({
+                menu_contents_arithmetic.push({
                     color: "#40a5a8",
                     text: "%",
                     block_constructor: ((_l: number, _t: number) => new ModBlock(
                         [_l, _t],
                     )),
                 });
-                menu_contents_symbol.push({
+                menu_contents_arithmetic.push({
                     color: "#40a5a8",
                     text: "**",
                     block_constructor: ((_l: number, _t: number) => new PowBlock(
                         [_l, _t],
                     )),
                 });
+                menu_contents.set({ label: "Arith.", color: "#559cb3" }, menu_contents_arithmetic);
 
+                const menu_contents_logic = new Array<MenuContent>();
                 // logic operator
-                menu_contents_symbol.push({
+                menu_contents_logic.push({
                     color: "#40a5a8",
                     text: "!",
                     block_constructor: ((_l: number, _t: number) => new SymbolBlock(
@@ -132,7 +137,7 @@ export class TutorialDatabase {
                         1
                     )),
                 });
-                menu_contents_symbol.push({
+                menu_contents_logic.push({
                     color: "#40a5a8",
                     text: "&&",
                     block_constructor: ((_l: number, _t: number) => new SymbolBlock(
@@ -141,9 +146,20 @@ export class TutorialDatabase {
                         2
                     )),
                 });
+                menu_contents_logic.push({
+                    color: "#40a5a8",
+                    text: "||",
+                    block_constructor: ((_l: number, _t: number) => new SymbolBlock(
+                        [_l, _t],
+                        "||",
+                        2
+                    )),
+                });
+                menu_contents.set({ label: "Logic", color: "#55ada5" }, menu_contents_logic);
 
+                const menu_contents_comparison = new Array<MenuContent>();
                 // Comparison Operator
-                menu_contents_symbol.push({
+                menu_contents_comparison.push({
                     color: "#40a5a8",
                     text: "==",
                     block_constructor: ((_l: number, _t: number) => new SymbolBlock(
@@ -151,8 +167,53 @@ export class TutorialDatabase {
                         "==",
                         2
                     ))
-                })
-                menu_contents_symbol.push({
+                });
+                menu_contents_comparison.push({
+                    color: "#40a5a8",
+                    text: "!=",
+                    block_constructor: ((_l: number, _t: number) => new SymbolBlock(
+                        [_l, _t],
+                        "!=",
+                        2
+                    ))
+                });
+                menu_contents_comparison.push({
+                    color: "#40a5a8",
+                    text: ">",
+                    block_constructor: ((_l: number, _t: number) => new SymbolBlock(
+                        [_l, _t],
+                        ">",
+                        2
+                    ))
+                });
+                menu_contents_comparison.push({
+                    color: "#40a5a8",
+                    text: "<",
+                    block_constructor: ((_l: number, _t: number) => new SymbolBlock(
+                        [_l, _t],
+                        "<",
+                        2
+                    ))
+                });
+                menu_contents_comparison.push({
+                    color: "#40a5a8",
+                    text: ">=",
+                    block_constructor: ((_l: number, _t: number) => new SymbolBlock(
+                        [_l, _t],
+                        ">=",
+                        2
+                    ))
+                });
+                menu_contents_comparison.push({
+                    color: "#40a5a8",
+                    text: "<=",
+                    block_constructor: ((_l: number, _t: number) => new SymbolBlock(
+                        [_l, _t],
+                        "<=",
+                        2
+                    ))
+                });
+                menu_contents_comparison.push({
                     color: "#40a5a8",
                     text: "\"==",
                     block_constructor: ((_l: number, _t: number) => new SymbolBlock(
@@ -160,10 +221,20 @@ export class TutorialDatabase {
                         "\"==",
                         2
                     ))
-                })
-
+                });
+                menu_contents.set({ label: "Comp.", color: "#58b88f" }, menu_contents_comparison);
+                const menu_contents_function = new Array<MenuContent>();
                 // build in math fanction
-                menu_contents_symbol.push({
+                menu_contents_function.push({
+                    color: "#40a5a8",
+                    text: "log",
+                    block_constructor: ((_l: number, _t: number) => new SymbolBlock(
+                        [_l, _t],
+                        "log",
+                        1
+                    )),
+                });
+                menu_contents_function.push({
                     color: "#40a5a8",
                     text: "exp",
                     block_constructor: ((_l: number, _t: number) => new SymbolBlock(
@@ -172,7 +243,34 @@ export class TutorialDatabase {
                         1
                     )),
                 });
-                menu_contents_symbol.push({
+                menu_contents_function.push({
+                    color: "#40a5a8",
+                    text: "sqrt",
+                    block_constructor: ((_l: number, _t: number) => new SymbolBlock(
+                        [_l, _t],
+                        "sqrt",
+                        1
+                    )),
+                });
+                menu_contents_function.push({
+                    color: "#40a5a8",
+                    text: "sin",
+                    block_constructor: ((_l: number, _t: number) => new SymbolBlock(
+                        [_l, _t],
+                        "sin",
+                        1
+                    )),
+                });
+                menu_contents_function.push({
+                    color: "#40a5a8",
+                    text: "cos",
+                    block_constructor: ((_l: number, _t: number) => new SymbolBlock(
+                        [_l, _t],
+                        "cos",
+                        1
+                    )),
+                });
+                menu_contents_function.push({
                     color: "#40a5a8",
                     text: "tan",
                     block_constructor: ((_l: number, _t: number) => new SymbolBlock(
@@ -181,7 +279,7 @@ export class TutorialDatabase {
                         1
                     )),
                 });
-                menu_contents_symbol.push({
+                menu_contents_function.push({
                     color: "#40a5a8",
                     text: "pi",
                     block_constructor: ((_l: number, _t: number) => new SymbolBlock(
@@ -190,11 +288,59 @@ export class TutorialDatabase {
                         0
                     )),
                 });
-                menu_contents.set({ label: "Symbol", color: "#40a5a8" }, menu_contents_symbol);
+                
+                menu_contents.set({ label: "Fun.", color: "#5dbf7f" }, menu_contents_function);
+
+                const menu_contents_listoperation = new Array<MenuContent>();
+                menu_contents_listoperation.push({
+                    color: "#66bbaa",
+                    text: "map",
+                    block_constructor: ((_l: number, _t: number) => new MapBlock(
+                        [_l, _t],
+                    )),
+                });
+                menu_contents_listoperation.push({
+                    color: "#66bbaa",
+                    text: "push",
+                    block_constructor: ((_l: number, _t: number) => new PushBlock(
+                        [_l, _t],
+                    )),
+                });
+                menu_contents_listoperation.push({
+                    color: "#66bbaa",
+                    text: "pop",
+                    block_constructor: ((_l: number, _t: number) => new PopBlock(
+                        [_l, _t],
+                    )),
+                });
+                menu_contents_listoperation.push({
+                    color: "#66bbaa",
+                    text: "rest",
+                    block_constructor: ((_l: number, _t: number) => new RestBlock(
+                        [_l, _t],
+                    )),
+                });
+                menu_contents_listoperation.push({
+                    color: "#66bbaa",
+                    text: "length",
+                    block_constructor: ((_l: number, _t: number) => new LengthBlock(
+                        [_l, _t],
+                    )),
+                });
+                menu_contents_listoperation.push({
+                    color: "#99a9c2",
+                    text: "LIST(0)",
+                    block_constructor: ((_l: number, _t: number) => new ListBlock(
+                        [_l, _t],
+                        0
+                    )),
+                });
+
+                menu_contents.set({ label: "List", color: "#99a9c2" }, menu_contents_listoperation);
 
                 const menu_contents_define = new Array<MenuContent>();
                 menu_contents_define.push({
-                    color: "#df7083",
+                    color: "#f09ecb",
                     text: "f",
                     block_constructor: ((_l: number, _t: number) => new DefineBlock(
                         [_l, _t],
@@ -202,20 +348,34 @@ export class TutorialDatabase {
                     )),
                 });
                 menu_contents_define.push({
-                    color: "#000000",
+                    color: "#ea7f90",
                     text: "if",
                     block_constructor: ((_l: number, _t: number) => new IfBlock(
                         [_l, _t],
                     )),
                 });
-                menu_contents_define.push({
-                    color: "#000000",
-                    text: "map",
-                    block_constructor: ((_l: number, _t: number) => new MapBlock(
+                menu_contents.set({ label: "Define", color: "#dc8ebc" }, menu_contents_define);
+                
+                const menu_contents_variable = new Array<MenuContent>();
+                menu_contents_variable.push({
+                    color: "#40a5a8",
+                    text: "x",
+                    block_constructor: ((_l: number, _t: number) => new SymbolBlock(
                         [_l, _t],
+                        "x",
+                        0
                     )),
                 });
-                menu_contents.set({ label: "Define", color: "#df7083" }, menu_contents_define);
+                menu_contents_variable.push({
+                    color: "#40a5a8",
+                    text: "n",
+                    block_constructor: ((_l: number, _t: number) => new SymbolBlock(
+                        [_l, _t],
+                        "n",
+                        0
+                    )),
+                });
+                menu_contents.set({ label: "Variable", color: "#91abaa" }, menu_contents_variable);
                 break;
             case 1:
                 let tutorial1: MenuContent[] = [
@@ -511,7 +671,6 @@ export class TutorialDatabase {
                         text: "LIST(0)",
                         block_constructor: ((_l: number, _t: number) => new ListBlock(
                             [_l, _t],
-                            "LIST(0)",
                             0
                         ))
                     }

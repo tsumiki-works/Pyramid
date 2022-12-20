@@ -6,7 +6,7 @@ export class MathFunction {
         var: null,
         attribute: {
             args: [{ id: PyramidTypeID.Number, var: null, attribute: null }],
-            return: { id: PyramidTypeID.Number, var: null, attribute: null },
+            return: { id: PyramidTypeID.F32, var: null, attribute: null },
         },
     };
     static log(args: any[], _: Environment): any {
