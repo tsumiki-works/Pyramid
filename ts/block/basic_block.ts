@@ -15,6 +15,8 @@ import { EventBlock } from "./event_block.js";
 export abstract class BasicBlock extends EventBlock {
 
     private readonly content_span: HTMLSpanElement;
+    private dx: number;
+    private dy: number;
 
     constructor(lr: Vec2, popup_events: PopupEvent[]) {
         super(
@@ -79,6 +81,8 @@ export abstract class BasicBlock extends EventBlock {
     private event_mouse_leftdown(e: MouseEvent) {
         const x = this.get_x();
         const y = this.get_y();
+        this.dx = e.pageX - x;
+        this.dy = e.pageY - y;
         if (this.get_parent() !== null) {
             const tmp = new EmptyBlock();
             tmp.set_parent(this.get_parent());
@@ -89,8 +93,8 @@ export abstract class BasicBlock extends EventBlock {
         }
         Roots.append(this);
         this.set_parent(null);
-        this.set_left(e.pageX);
-        this.set_top(e.pageY);
+        this.set_left(e.pageX - this.dx);
+        this.set_top(e.pageY - this.dy);
         this.get_root().format();
     }
 
@@ -99,9 +103,8 @@ export abstract class BasicBlock extends EventBlock {
     }
 
     private event_mousemove(e: MouseEvent) {
-        const rect = document.getElementById("playground").getBoundingClientRect();
-        this.style.left = (e.pageX - this.get_width() * 0.5 - rect.left) + "px";
-        this.style.top = (e.pageY - this.get_height() * 0.5 - rect.top) + "px";
+        this.set_left(e.pageX - this.dx);
+        this.set_top(e.pageY - this.dy);
         this.get_root().format();
     }
 
