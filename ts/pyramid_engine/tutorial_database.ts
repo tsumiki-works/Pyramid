@@ -217,7 +217,6 @@ export class TutorialDatabase {
                     ))
                 })
                 menu_contents.set({ label: "Comp.", color: "#58b88f" }, menu_contents_comparison);
-
                 const menu_contents_function = new Array<MenuContent>();
                 // build in math fanction
                 menu_contents_function.push({
