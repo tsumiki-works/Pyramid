@@ -5,13 +5,6 @@ import { MathFunction } from "./evaluation/math_function.js";
 import { ListFunction } from "./evaluation/list_func.js";
 
 export const keywords: [string, TempPyramidType, any][] = [
-    ["+", ArithmeticOperator.typeof_arythmetic_operator, ArithmeticOperator.add],
-    ["-", ArithmeticOperator.typeof_arythmetic_operator, ArithmeticOperator.sub],
-    ["*", ArithmeticOperator.typeof_arythmetic_operator, ArithmeticOperator.mul],
-    ["/", ArithmeticOperator.typeof_arythmetic_operator, ArithmeticOperator.div],
-    ["%", ArithmeticOperator.typeof_arythmetic_operator, ArithmeticOperator.mod],
-    ["**", ArithmeticOperator.typeof_arythmetic_operator, ArithmeticOperator.pow],
-
     ["!", LogicalOperator.typeof_not, LogicalOperator.not],
     ["&&", LogicalOperator.typeof_logical_binop, LogicalOperator.and],
     ["||", LogicalOperator.typeof_logical_binop, LogicalOperator.or],
