@@ -1,5 +1,6 @@
 import { Environment } from "../../evaluation/environment.js";
 import { Block } from "../block.js";
+import { BlockConst } from "../block_const.js";
 import { EventBlock } from "../event_block.js";
 
 /* ================================================================================================================= */

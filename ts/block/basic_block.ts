@@ -22,7 +22,7 @@ export abstract class BasicBlock extends EventBlock {
     constructor(lr: Vec2, popup_events: PopupEvent[]) {
         super(
             lr,
-            _ => this.event_mouse_leftdown(),
+            (e: MouseEvent) => this.event_mouse_leftdown(e),
             (e: MouseEvent) => this.event_mouse_rightdown(e, popup_events),
             (e: MouseEvent) => this.event_mousemove(e),
             _ => this.event_mouseup(),
@@ -104,7 +104,7 @@ export abstract class BasicBlock extends EventBlock {
         );
     }
 
-    private event_mouse_leftdown() {
+    private event_mouse_leftdown(e: MouseEvent) {
         const x = this.get_x();
         const y = this.get_y();
         if (this.get_parent() !== null) {
@@ -117,8 +117,9 @@ export abstract class BasicBlock extends EventBlock {
         }
         Roots.append(this);
         this.set_parent(null);
-        this.set_left(x);
-        this.set_top(y);
+        this.style.left = (e.pageX - this.get_width() * 0.5 - this.playground.getBoundingClientRect().left) + "px";
+        this.style.top = (e.pageY - this.get_height() * 0.5 - this.playground.getBoundingClientRect().top) + "px";
+        this.get_root().format();
     }
 
     private event_mouse_rightdown(e: MouseEvent, popup_events: PopupEvent[]) {
