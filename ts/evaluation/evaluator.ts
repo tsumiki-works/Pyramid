@@ -20,6 +20,8 @@ export class Evaluator {
         // TODO:
         switch (pyramid_type.type_id) {
             case PyramidTypeID.Number: return  PyramidNumber.eval(literal, null);
+            case PyramidTypeID.I32: return  I32.eval(literal, null);
+            case PyramidTypeID.F32: return F32.eval(literal, null);
             case PyramidTypeID.Bool: return  Bool.eval(literal, null);
             case PyramidTypeID.String: return  String.eval(literal, null);
             default: throw new Error("");

@@ -176,6 +176,13 @@ export class TutorialDatabase {
                         [_l, _t],
                     )),
                 });
+                menu_contents_define.push({
+                    color: "#000000",
+                    text: "+",
+                    block_constructor: ((_l: number, _t: number) => new AddBlock(
+                        [_l, _t],
+                    )),
+                });
                 menu_contents.set({ label: "Define", color: "#df7083" }, menu_contents_define);
                 break;
             case 1:
