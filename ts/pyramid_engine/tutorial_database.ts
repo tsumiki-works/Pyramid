@@ -7,6 +7,7 @@ import { String } from "../evaluation/string.js";
 import { Bool } from "../evaluation/bool.js";
 import { IfBlock } from "../block/concrete_block/if_block.js";
 import { MapBlock } from "../block/concrete_block/map_block.js";
+import { Roots } from "../block/roots.js";
 
 export class TutorialDatabase {
     constructor() { }
@@ -56,7 +57,6 @@ export class TutorialDatabase {
                     text: "LIST(0)",
                     block_constructor: ((_l: number, _t: number) => new ListBlock(
                         [_l, _t],
-                        "LIST(0)",
                         0
                     )),
                 })
@@ -482,7 +482,6 @@ export class TutorialDatabase {
                         text: "LIST(0)",
                         block_constructor: ((_l: number, _t: number) => new ListBlock(
                             [_l, _t],
-                            "LIST(0)",
                             0
                         ))
                     }

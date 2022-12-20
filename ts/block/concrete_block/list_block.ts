@@ -7,7 +7,7 @@ import { popup_event_eval } from "../result_block.js";
 
 export class ListBlock extends ParentBlock {
 
-    constructor(lr: Vec2, content: string, args_cnt: number) {
+    constructor(lr: Vec2, args_cnt: number) {
         super(
             lr,
             [
@@ -22,7 +22,7 @@ export class ListBlock extends ParentBlock {
                 ["子も削除", _ => this.popup_event_kill()],
             ]
         );
-        this.set_content(content);
+        this.set_content("List(" + args_cnt + ")");
         this.set_children_cnt(args_cnt);
         this.format();
     }
@@ -36,6 +36,7 @@ export class ListBlock extends ParentBlock {
     }
 
     override infer_type(env: TypeEnv): TempPyramidTypeTree {
+        this.set_content("LIST("+this.get_children().length+")");
         if (this.get_children().length == 0) {
             return {
                 // TODO: Use Generics List<T>
