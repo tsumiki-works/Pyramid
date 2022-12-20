@@ -25,4 +25,7 @@ export class Roots {
             }
         }
     }
+    static get(): Block[] {
+        return Array.from(Roots.roots.children) as Array<Block>;
+    }
 }

@@ -14,7 +14,6 @@ import { Roots } from "./roots.js";
 export abstract class Block extends HTMLElement {
 
     private parent: Block | null;
-    protected readonly playground: HTMLDivElement = document.getElementById("playground") as HTMLDivElement;
 
     constructor(lr: Vec2) {
         super();

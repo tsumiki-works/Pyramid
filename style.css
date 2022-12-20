@@ -111,6 +111,9 @@ pyramid-list-block {
 pyramid-if-block {
     background-color: #ea7f90;
 }
+pyramid-map-block {
+    background-color: #66bbaa;
+}
 
 span.content {
     color: white;

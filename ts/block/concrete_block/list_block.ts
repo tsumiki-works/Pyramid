@@ -3,6 +3,7 @@ import { ParentBlock } from "../parent_block.js";
 import { TypedBlock } from "../typed_block.js";
 import { TypeEnv, unify } from "../inference/typeenv.js";
 import { Environment } from "../../evaluation/environment.js";
+import { popup_event_eval } from "../result_block.js";
 
 export class ListBlock extends ParentBlock {
 
@@ -16,7 +17,7 @@ export class ListBlock extends ParentBlock {
                         this.set_children_cnt(parseInt(value));
                     }
                 })],
-                ["実行", _ => this.popup_event_eval()],
+                ["評価", _ => popup_event_eval(this)],
                 ["削除", _ => this.popup_event_kill_self()],
                 ["子も削除", _ => this.popup_event_kill()],
             ]
