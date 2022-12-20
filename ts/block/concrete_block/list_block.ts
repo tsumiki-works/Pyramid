@@ -1,3 +1,4 @@
+import { BlockConst } from "../block_const.js";
 import { ParentBlock } from "../parent_block.js";
 import { TypedBlock } from "../typed_block.js";
 import { TypeEnv, unify } from "../inference/typeenv.js";
@@ -44,9 +45,9 @@ export class ListBlock extends ParentBlock {
                     attribute: {
                         args: [],
                         return: {
-                            id: PyramidTypeID.Generic,
+                            id: null,
                             var: null,
-                            attribute: null,
+                            attribute: null
                         }
                     },
                 },
