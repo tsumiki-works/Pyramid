@@ -36,14 +36,7 @@ export class RestBlock extends ParentBlock {
         }
         const child_type_tree = (this_children[0] as TypedBlock).infer_type(env);
         const list_type: TempPyramidType = { id: null, var: null, attribute: null };
-        if (!unify(child_type_tree.node, {
-            id: PyramidTypeID.List,
-            var: null,
-            attribute: {
-                args: [],
-                return: list_type,
-            },
-        })) {
+        if (!unify(child_type_tree.node, list_type)) {
             return {
                 node: { id: PyramidTypeID.Invalid, var: null, attribute: null },
                 children: [child_type_tree],
