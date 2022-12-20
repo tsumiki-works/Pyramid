@@ -165,7 +165,8 @@ span.pyramid-argument {
 }
 
 .pyramid-block-folding {
-    outline: solid red 2px;
+    outline: solid #64748b 2px;
+    box-shadow: 3px 3px 0px 0 #64748b;
     outline-offset: -2px;
 }
 
