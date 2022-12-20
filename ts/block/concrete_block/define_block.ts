@@ -101,18 +101,17 @@ export class DefineBlock extends ParentBlock {
                 return { node: t1, children: [t2] };
             }
         };
-        let children_tree = [];
-        // set children_tree considering if child is unset
+        let children_tree = new Array<TempPyramidTypeTree>();
+        // set if child is unset
         for(const child of children){
             if(child.is_empty()){
-                children_tree.push({ node: { id: PyramidTypeID.Invalid, var: null, attribute: null }, children: null});
+                children_tree.push({ node: { id: null, var: null, attribute: null }, children: null});
             }else{
                 children_tree.push((child as TypedBlock).infer_type(env));
             }
         }
-        console.log(children_tree[1]);
         if(children[0].is_empty()){
-            return {node: { id: PyramidTypeID.Invalid, var: null, attribute: null }, children: children_tree};
+            return next({ id: PyramidTypeID.Invalid, var: null, attribute: null }, children_tree[1]);
         }
         // set temporary type onto environment
         const this_args = this.get_args();
