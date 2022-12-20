@@ -82,6 +82,16 @@ export abstract class Block extends HTMLElement {
         return res;
     }
 
+    replace_child(idx: number, target: Block) {
+        const children = this.get_children();
+        for(let i=0; i < children.length; i++){
+            if(idx === i){
+                this.removeChild(children[idx]);
+                children[idx] = target;
+            }
+        }
+    }
+
     connect_with(target: Block): boolean {
         if (this === target) {
             return false;

@@ -47,7 +47,6 @@ export abstract class TypedBlock extends BasicBlock {
         let cnt = 0;
         for (const child of this.get_children()) {
             if (!child.is_empty()) {
-                console.log(tree.children);
                 (child as TypedBlock).set_type(tree.children[cnt]);
                 cnt += 1;
             }

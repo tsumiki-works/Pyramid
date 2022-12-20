@@ -30,7 +30,7 @@ export const create_result_block = (result: any): Block => {
     if (typeof result === "number" || typeof result === "boolean" || typeof result === "string") {
         return new LiteralBlock(result_pos, String(result));
     } else if (Array.isArray(result)) {
-        const lst = new ListBlock(result_pos, "", 0);
+        const lst = new ListBlock(result_pos, 0);
         for (const res of result.reverse()) {
             const tmp = create_result_block(res);
             tmp.set_parent(lst);
