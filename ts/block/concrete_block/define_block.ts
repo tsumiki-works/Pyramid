@@ -201,7 +201,7 @@ export class DefineBlock extends ParentBlock {
         let strech_width = res_logic.rightmost + Math.abs(res_logic.x);
         this.style.minWidth = strech_width * 2  + "px";
         this.style.minHeight = res_logic.bottommost + BlockConst.UNIT_HEIGHT + "px";
-        //this.style.minWidth = width + "px";
+
         const x = leftmost
             + (res_logic.x - res_logic.leftmost - BlockConst.UNIT_HALF_WIDTH)
             + (children[0].get_width() * 0.5 - BlockConst.UNIT_HALF_WIDTH)
