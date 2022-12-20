@@ -56,7 +56,6 @@ export class TutorialDatabase {
                     text: "LIST(0)",
                     block_constructor: ((_l: number, _t: number) => new ListBlock(
                         [_l, _t],
-                        "LIST(0)",
                         0
                     )),
                 })
@@ -473,7 +472,6 @@ export class TutorialDatabase {
                         text: "LIST(0)",
                         block_constructor: ((_l: number, _t: number) => new ListBlock(
                             [_l, _t],
-                            "LIST(0)",
                             0
                         ))
                     }
