@@ -7,6 +7,7 @@ import { String } from "../evaluation/string.js";
 import { Bool } from "../evaluation/bool.js";
 import { IfBlock } from "../block/concrete_block/if_block.js";
 import { MapBlock } from "../block/concrete_block/map_block.js";
+import { Roots } from "../block/roots.js";
 
 export class TutorialDatabase {
     constructor() { }

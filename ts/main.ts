@@ -17,7 +17,7 @@ export class Pyramid {
                 if (searchParams.has("q")) {
                     let param_q = searchParams.get("q");
                     if (!isNaN(Number(param_q))) {
-                        this.engine = new PyramidTutorial(parseInt(param_q), []);
+                        this.engine = new PyramidTutorial(parseInt(param_q));
                     } else {
                         alert("Invalid Query of `q`: param `q` must be number.");
                         Pager.goto_top_from_tutorial();
