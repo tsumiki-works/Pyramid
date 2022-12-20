@@ -108,7 +108,8 @@ pyramid-define-block {
 pyramid-list-block {
     background-color: #99a9c2;
 }
-pyramid-if-block {
+pyramid-if-block,
+pyramid-map-block {
     background-color: black;
 }
 

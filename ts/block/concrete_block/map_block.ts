@@ -5,15 +5,14 @@ import { popup_event_eval } from "../result_block.js";
 import { TypedBlock } from "../typed_block.js";
 import { EmptyBlock } from "./empty_block.js";
 
-export class IfBlock extends ParentBlock {
+export class MapBlock extends ParentBlock {
     constructor(lr: Vec2) {
         super(lr, [
             ["評価", _ => popup_event_eval(this)],
             ["削除", _ => this.popup_event_kill_self()],
             ["子も削除", _ => this.popup_event_kill()],
         ]);
-        this.set_content("if");
-        this.appendChild(new EmptyBlock(this));
+        this.set_content("map");
         this.appendChild(new EmptyBlock(this));
         this.appendChild(new EmptyBlock(this));
         this.format();
@@ -23,11 +22,9 @@ export class IfBlock extends ParentBlock {
             throw new Error("invalid");
         }
         const this_children = this.get_children();
-        if (this_children[0].eval(env)) {
-            return this_children[1].eval(env);
-        } else {
-            return this_children[2].eval(env);
-        }
+        const f = this_children[0].eval(env);
+        const lst = this_children[1].eval(env);
+        return lst.map(n => f([n], env));
     }
     override infer_type(env: TypeEnv): TempPyramidTypeTree {
         const this_children = this.get_children();
@@ -37,18 +34,49 @@ export class IfBlock extends ParentBlock {
                 children.push((child as TypedBlock).infer_type(env));
             }
         }
-        if (children.length !== 3
-            || !unify(children[0].node, { id: PyramidTypeID.Bool, var: null, attribute: null })
-            || !unify(children[1].node, children[2].node)) {
+        let invalid = () => {
             return {
                 node: { id: PyramidTypeID.Invalid, var: null, attribute: null },
                 children: children,
             };
+        };
+        // TODO:
+        if (children.length !== 2) {
+            return invalid();
+        }
+        const list_type: TempPyramidType = { id: null, var: null, attribute: null };
+        if (!unify(children[1].node, {
+            id: PyramidTypeID.List,
+            var: null,
+            attribute: {
+                args: [],
+                return: list_type,
+            },
+        })) {
+            return invalid();
+        }
+        const mapped_type: TempPyramidType = { id: null, var: null, attribute: null };
+        if (!unify(children[0].node, {
+            id: PyramidTypeID.Function,
+            var: null,
+            attribute: {
+                args: [list_type],
+                return: mapped_type,
+            }
+        })) {
+            return invalid();
         }
         return {
-            node: children[1].node,
+            node: {
+                id: PyramidTypeID.List,
+                var: null,
+                attribute: {
+                    args: [],
+                    return: mapped_type,
+                },
+            },
             children: children,
         }
     }
 }
-customElements.define('pyramid-if-block', IfBlock);
+customElements.define('pyramid-map-block', MapBlock);

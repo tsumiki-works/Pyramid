@@ -1,11 +1,8 @@
 import { Popup } from "../popup.js";
-import { Block } from "./block.js";
 import { EmptyBlock } from "./concrete_block/empty_block.js";
-import { LiteralBlock } from "./concrete_block/literal_block.js";
 import { Roots } from "./roots.js";
 import { Trash } from "./trash.js";
 import { EventBlock } from "./event_block.js";
-import { Environment } from "../evaluation/environment.js";
 
 /* ================================================================================================================= */
 /*     BasicBlock                                                                                                    */
@@ -58,31 +55,6 @@ export abstract class BasicBlock extends EventBlock {
         Trash.append(this);
     }
 
-    protected popup_event_eval() {
-        Popup.remove_all_popup();
-        let block_eval_result = document.getElementById("block-eval-result");
-        if (block_eval_result !== null) {
-            document.getElementById("roots").removeChild(block_eval_result);
-        }
-        let result = this.eval(new Environment());
-        console.log(result);
-        let result_block: Block;
-        if (typeof result !== "function") {
-            result_block = new LiteralBlock(
-                [
-                    document.documentElement.clientWidth - this.playground.getBoundingClientRect().left - 210,
-                    document.documentElement.clientHeight - 210,
-                ],
-                String(result),
-            );
-            result_block.id = "block-eval-result";
-            Roots.append(result_block);
-            result_block.format();
-        } else {
-            console.log("result is function so cannot create result block");
-        }
-    }
-
     protected popup_event_kill() {
         Popup.remove_all_popup();
         this.kill();
@@ -117,8 +89,8 @@ export abstract class BasicBlock extends EventBlock {
         }
         Roots.append(this);
         this.set_parent(null);
-        this.style.left = (e.pageX - this.get_width() * 0.5 - this.playground.getBoundingClientRect().left) + "px";
-        this.style.top = (e.pageY - this.get_height() * 0.5 - this.playground.getBoundingClientRect().top) + "px";
+        this.set_left(e.pageX);
+        this.set_top(e.pageY);
         this.get_root().format();
     }
 
@@ -127,8 +99,9 @@ export abstract class BasicBlock extends EventBlock {
     }
 
     private event_mousemove(e: MouseEvent) {
-        this.style.left = (e.pageX - this.get_width() * 0.5 - this.playground.getBoundingClientRect().left) + "px";
-        this.style.top = (e.pageY - this.get_height() * 0.5 - this.playground.getBoundingClientRect().top) + "px";
+        const rect = document.getElementById("playground").getBoundingClientRect();
+        this.style.left = (e.pageX - this.get_width() * 0.5 - rect.left) + "px";
+        this.style.top = (e.pageY - this.get_height() * 0.5 - rect.top) + "px";
         this.get_root().format();
     }
 

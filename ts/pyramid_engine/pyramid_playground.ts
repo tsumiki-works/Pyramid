@@ -5,6 +5,7 @@ import { LiteralBlock } from "../block/concrete_block/literal_block.js";
 import { SymbolBlock } from "../block/concrete_block/symbol_block.js";
 import { DefineBlock } from "../block/concrete_block/define_block.js";
 import { PyramidNumber } from "../evaluation/pyramid_number.js";
+import { WorkspaceMover } from "../workspace_mover.js";
 
 /**
  * This class is PyramidEngine for Playgorund.
@@ -32,8 +33,7 @@ export class PyramidPlayground extends PyramidEngine {
         Popup.remove_all_popup();
         if (e.button === 2) {
             this.workspace.removeEventListener("mousedown", this.mousedown_listener);
-            document.addEventListener("mousemove", this.mousemove_listener);
-            document.addEventListener("mouseup", this.mouseup_listener);
+            new WorkspaceMover([e.pageX, e.pageY], this.workspace, this.mousedown_listener);
         }
     }
 }
