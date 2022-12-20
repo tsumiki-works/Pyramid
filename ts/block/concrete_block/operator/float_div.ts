@@ -1,19 +1,36 @@
-import { EmptyBlock } from "./concrete_block/empty_block.js";
-import { TypeEnv, unify } from "./inference/typeenv.js";
-import { ParentBlock } from "./parent_block.js";
-import { popup_event_eval } from "./result_block.js";
-import { TypedBlock } from "./typed_block.js";
+import { ArithmeticOperator } from "../../../evaluation/arithmetic_operator.js";
+import { Environment } from "../../../evaluation/environment.js";
+import { BinopBlock } from "../../binop_block.js";
+import { TypedBlock } from "../../typed_block.js";
+import { TypeEnv, unify } from "../../inference/typeenv.js";
 
-export abstract class BinopBlock extends ParentBlock {
+export class FloatDiv extends BinopBlock {
     constructor(lr: Vec2) {
-        super(lr, [
-            ["評価", _ => popup_event_eval(this)],
-            ["削除", _ => this.popup_event_kill_self()],
-            ["子も削除", _ => this.popup_event_kill()],
-        ]);
-        this.appendChild(new EmptyBlock(this));
-        this.appendChild(new EmptyBlock(this));
+        super(lr);
+        this.set_content("/");
+        this.format();
     }
+    override eval(env: Environment) {
+        if (this.is_invalid()) {
+            throw new Error("invalid");
+        }
+        const this_children = this.get_children();
+        if (this_children.length !== 2) {
+            throw new Error("pyramid: backend error: float div operation must have two arguments");
+        }
+
+        const arg1 = this_children[0] as TypedBlock
+        const arg2 = this_children[1] as TypedBlock
+        if (arg1.get_type().type_id === PyramidTypeID.I32 && arg2.get_type().type_id === PyramidTypeID.I32
+        || arg1.get_type().type_id === PyramidTypeID.I32 && arg2.get_type().type_id === PyramidTypeID.F32
+        || arg1.get_type().type_id === PyramidTypeID.F32 && arg2.get_type().type_id === PyramidTypeID.I32
+        || arg1.get_type().type_id === PyramidTypeID.F32 && arg2.get_type().type_id === PyramidTypeID.F32) {
+            console.log(ArithmeticOperator.div_float(arg1.eval(env), arg2.eval(env)))
+            return ArithmeticOperator.div_float(arg1.eval(env), arg2.eval(env))
+        }
+        throw new Error("pyramid: backend error: invalid operation ocurred")
+    }
+
     override infer_type(env: TypeEnv): TempPyramidTypeTree {
         const this_children = this.get_children();
         if (this_children[0].is_empty() && this_children[1].is_empty()) {
@@ -26,7 +43,7 @@ export abstract class BinopBlock extends ParentBlock {
                             { id: PyramidTypeID.Number, var: null, attribute: null },
                             { id: PyramidTypeID.Number, var: null, attribute: null },
                         ],
-                        return: { id: PyramidTypeID.Number, var: null, attribute: null },
+                        return: { id: PyramidTypeID.F32, var: null, attribute: null },
                     },
                 },
                 children: [],
@@ -49,7 +66,7 @@ export abstract class BinopBlock extends ParentBlock {
                         args: [
                             { id: PyramidTypeID.Number, var: null, attribute: null },
                         ],
-                        return: { id: PyramidTypeID.Number, var: null, attribute: null },
+                        return: { id: PyramidTypeID.F32, var: null, attribute: null },
                     },
                 },
                 children: [nonempty_type_tree],
@@ -76,9 +93,7 @@ export abstract class BinopBlock extends ParentBlock {
         if (invalid_flag) {
             id = PyramidTypeID.Invalid
         }
-        else if (i32_cnt === 2) {
-            id = PyramidTypeID.I32;
-        } else if ((f32_cnt === 1 && i32_cnt === 1) || f32_cnt === 2) {
+        else {
             id = PyramidTypeID.F32;
         }
         return {
@@ -87,3 +102,4 @@ export abstract class BinopBlock extends ParentBlock {
         };
     }
 }
+customElements.define('pyramid-float-div-block', FloatDiv);
