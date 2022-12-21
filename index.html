@@ -4,37 +4,31 @@
 <head>
     <meta charset="UTF-8">
     <link rel="stylesheet" href="style.css">
-    <title>Pyramid</title>
+    <title>ピラミッド</title>
     <link rel="icon" href="images/favicon.ico" />
     <link rel="apple-touch-icon" href="images/apple-touch-icon-152.png">
     <meta name="twitter:card" content="summary_large_image" />
     <!--- Twitterカードは絶対パスで指定 -->
     <meta name="twitter:image" content="https://edge-server.224.works/pyramid/pyramid_twitter_card.png">
+    <!-- CSS のちのち軽量化のためインストール版に変更 -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!--
+    Copyright (c) Tailwind Labs, Inc.
+    Released under the MIT license
+    https://github.com/tailwindlabs/tailwindcss/blob/master/LICENSE
+    -->
+    <!-- /CSS -->
 </head>
 <header>
     <img id="logo" src="images/logo.svg" alt="ピラミッドのロゴ">
 </header>
+
 <body oncontextmenu="return false;">
-    <div id="pyramid-wrapper">
-        <div id="playground">
-            <div id="workspace">
-                <div id="roots"></div>
-                <div id="trash"></div>
-            </div>
-            <div id="menu">
-                <div id="menu-tab"></div>
-                <div id="menu-items"></div>    
-            </div>
-        </div>
+    <div id="pyramid-wrapper" class="flex">
+        <a class="m-4" href="playground/">プレイグラウンド</a>
+        <a class="m-4" href="tutorial/">チュートリアル</a>
+        <a class="m-4" href="doc/">ドキュメント</a>
     </div>
-    <script src="js/types.js"></script>
-    <script type="module" src="js/main.js"></script>
-    <script type="module">
-        import { Pyramid } from "./js/main.js"
-        window.onload = () => {
-            new Pyramid("playground");
-        }
-    </script>
 </body>
 
 </html>
