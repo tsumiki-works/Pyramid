@@ -77,7 +77,7 @@ export class TutorialDatabase {
                         0
                     )),
                 });
-                menu_contents_symbol.push({
+                menu_contents_arithmetic.push({
                     color: "#40a5a8",
                     text: "x",
                     block_constructor: ((_l: number, _t: number) => new SymbolBlock(
@@ -86,7 +86,7 @@ export class TutorialDatabase {
                         0
                     )),
                 });
-                menu_contents_symbol.push({
+                menu_contents_arithmetic.push({
                     color: "#40a5a8",
                     text: "+",
                     block_constructor: ((_l: number, _t: number) => new SymbolBlock(
