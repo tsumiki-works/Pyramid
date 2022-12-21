@@ -92,14 +92,14 @@ export abstract class Block extends HTMLElement {
         }
     }
 
-    connect_with(target: Block): boolean {
+    connect_with(target: Block, x: number, y: number): boolean {
         if (this === target) {
             return false;
         }
         for (const child of this.get_children()) {
             if (child.is_empty()
-                && Math.abs(child.get_x() - target.get_x()) < child.get_width() * 0.5
-                && Math.abs(child.get_y() - target.get_y()) < child.get_height() * 0.5
+                && Math.abs(child.get_x() - x) < child.get_width() * 0.5
+                && Math.abs(child.get_y() - y) < child.get_height() * 0.5
             ) {
                 this.replaceChild(target, child);
                 target.parent = this;
@@ -109,7 +109,7 @@ export abstract class Block extends HTMLElement {
                 this.get_root().format();
                 return true;
             }
-            if (child.connect_with(target)) {
+            if (child.connect_with(target, x, y)) {
                 return true;
             }
         }
