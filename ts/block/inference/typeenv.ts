@@ -34,6 +34,71 @@ function occur(r: TempPyramidType, t: TempPyramidType): boolean {
     }
 }
 
+export function check_same(t1: TempPyramidType, t2: TempPyramidType): boolean {
+    if (t1.id !== null && t2.id === null) {
+        return check_same(t2, t1);
+    }
+    let res = true;
+    switch (t1.id) {
+        case null:
+            if (t2.id === null && t1.var === t2.var) {
+                return true;
+            }
+            if (!occur(t1.var, t2) && t1.var !== null) {
+                return check_same(t1.var, t2);
+            }
+            return false;
+        case PyramidTypeID.Number:
+            switch (t2.id) {
+                case PyramidTypeID.Number: return true;
+                default: return false;
+            }
+        case PyramidTypeID.I32:
+            switch (t2.id) {
+                case PyramidTypeID.I32: return true;
+                default: return false;
+            }
+        case PyramidTypeID.F32:
+            switch (t2.id) {
+                case PyramidTypeID.F32: return true;
+                default: return false;
+            }
+        case PyramidTypeID.Bool:
+            switch (t2.id) {
+                case PyramidTypeID.Bool: return true;
+                default: return false;
+            }
+        case PyramidTypeID.String:
+            switch (t2.id) {
+                case PyramidTypeID.String: return true;
+                default: return false;
+            }
+        case PyramidTypeID.Function:
+            switch (t2.id) {
+                case PyramidTypeID.Function:
+                    if (t1.attribute.args.length !== t2.attribute.args.length) return false;
+                    for (let i = 0; i < t1.attribute.args.length; ++i) {
+                        res = check_same(t1.attribute.args[i], t2.attribute.args[i]) && res;
+                    }
+                    res = check_same(t1.attribute.return, t2.attribute.return) && res;
+                    return res;
+                default:
+                    return false;
+            }
+        case PyramidTypeID.List:
+            switch (t2.id) {
+                case PyramidTypeID.List:
+                    res = check_same(t1.attribute.return, t2.attribute.return) && res;
+                    return res;
+                default:
+                    return false;
+            }
+
+        default:
+            return false;
+    }
+}
+
 export function unify(t1: TempPyramidType, t2: TempPyramidType): boolean {
     if (t1.id !== null && t2.id === null) {
         return unify(t2, t1);
@@ -56,6 +121,18 @@ export function unify(t1: TempPyramidType, t2: TempPyramidType): boolean {
         case PyramidTypeID.Number:
             switch (t2.id) {
                 case PyramidTypeID.Number: return true;
+                case PyramidTypeID.I32: return true;
+                case PyramidTypeID.F32: return true;
+                default: return false;
+            }
+        case PyramidTypeID.I32:
+            switch (t2.id) {
+                case PyramidTypeID.I32: return true;
+                default: return false;
+            }
+        case PyramidTypeID.F32:
+            switch (t2.id) {
+                case PyramidTypeID.F32: return true;
                 default: return false;
             }
         case PyramidTypeID.Bool:

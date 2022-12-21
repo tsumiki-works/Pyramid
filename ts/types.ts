@@ -7,6 +7,8 @@ enum PyramidTypeID {
     Generic,
     String,
     Number,
+    I32,
+    F32,
     Bool,
     Function,
     List,
@@ -17,6 +19,8 @@ function typeid_to_string(id: PyramidTypeID): string {
         case PyramidTypeID.Generic: return "_";
         case PyramidTypeID.String: return "string";
         case PyramidTypeID.Number: return "num";
+        case PyramidTypeID.I32: return "i32";
+        case PyramidTypeID.F32: return "f32";
         case PyramidTypeID.Bool: return "bool";
         case PyramidTypeID.Function: return "function";
         case PyramidTypeID.List: return "list";

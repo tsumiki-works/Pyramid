@@ -98,7 +98,14 @@ pyramid-empty-block {
 pyramid-literal-block {
     background-color: #5d8cd4;
 }
-pyramid-symbol-block {
+pyramid-symbol-block,
+pyramid-add-block,
+pyramid-sub-block,
+pyramid-mul-block,
+pyramid-int-div-block,
+pyramid-float-div-block,
+pyramid-mod-block,
+pyramid-pow-block {
     background-color: #40a5a8;
 }
 pyramid-define-block {
