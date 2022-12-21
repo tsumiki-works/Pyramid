@@ -24,7 +24,7 @@ export abstract class BasicBlock extends EventBlock {
             (e: MouseEvent) => this.event_mouse_leftdown(e),
             (e: MouseEvent) => this.event_mouse_rightdown(e, popup_events),
             (e: MouseEvent) => this.event_mousemove(e),
-            _ => this.event_mouseup(),
+            (e: MouseEvent) => this.event_mouseup(e),
         );
         const div = document.createElement("div");
         div.classList.add("content-wrapper");
@@ -108,7 +108,7 @@ export abstract class BasicBlock extends EventBlock {
         this.get_root().format();
     }
 
-    private event_mouseup() {
-        Roots.connect(this);
+    private event_mouseup(e: MouseEvent) {
+        Roots.connect(this, e.pageX, e.pageY);
     }
 }

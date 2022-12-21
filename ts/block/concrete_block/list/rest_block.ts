@@ -50,7 +50,14 @@ export class RestBlock extends ParentBlock {
             };
         }
         return {
-            node: list_type,
+            node: {
+                id: PyramidTypeID.List,
+                var: null,
+                attribute: {
+                    args: [],
+                    return: list_type,
+                },
+            },
             children: [child_type_tree],
         }
     }
