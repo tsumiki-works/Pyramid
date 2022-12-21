@@ -17,8 +17,35 @@ export class AddBlock extends BinopBlock {
         if (this_children.length !== 2) {
             throw new Error("pyramid: backend error: add operation must have two arguments");
         }
-
-        const arg1 = this_children[0] as TypedBlock
+        // check if it needs currying
+        let nonempty_idxs = [];
+        for (let i = 0; i < this_children.length; ++i) {
+            if (!this_children[i].is_empty()) {
+                nonempty_idxs.push(i);
+            }
+        }
+        // currying
+        if (nonempty_idxs.length === 0) {
+            return ArithmeticOperator.add_float;
+        } else if (nonempty_idxs.length === 1 && nonempty_idxs[0] === 0) {
+            const arg1_evaluated = (this_children[0] as TypedBlock).eval(env);
+            return (args: any[], _: Environment): any => {
+                if (args.length !== 1) {
+                    throw new Error("few or many args passed to curried function +");
+                }
+                return ArithmeticOperator.add_float(arg1_evaluated, args[0]);
+            };
+        } else if (nonempty_idxs.length === 1 && nonempty_idxs[0] === 1) {
+            const arg2_evaluated = (this_children[1] as TypedBlock).eval(env);
+            return (args: any[], _: Environment): any => {
+                if (args.length !== 1) {
+                    throw new Error("few or many args passed to curried function +");
+                }
+                return ArithmeticOperator.add_float(args[0], arg2_evaluated);
+            };
+        }
+        // eval
+        const arg1 = this_children[0] as TypedBlock;
         const arg2 = this_children[1] as TypedBlock
         if (arg1.get_type().type_id === PyramidTypeID.I32 && arg2.get_type().type_id === PyramidTypeID.I32) {
             return ArithmeticOperator.add_int(arg1.eval(env), arg2.eval(env))

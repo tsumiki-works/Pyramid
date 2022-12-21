@@ -44,25 +44,25 @@ export class MapBlock extends ParentBlock {
         if (children.length !== 2) {
             return invalid();
         }
-        const list_type: TempPyramidType = { id: null, var: null, attribute: null };
+        const type_a: TempPyramidType = { id: null, var: null, attribute: null };
+        const type_b: TempPyramidType = { id: null, var: null, attribute: null };
+        if (!unify(children[0].node, {
+            id: PyramidTypeID.Function,
+            var: null,
+            attribute: {
+                args: [type_a],
+                return: type_b
+            },
+        })) {
+            return invalid();
+        }
         if (!unify(children[1].node, {
             id: PyramidTypeID.List,
             var: null,
             attribute: {
                 args: [],
-                return: list_type,
+                return: type_a,
             },
-        })) {
-            return invalid();
-        }
-        const mapped_type: TempPyramidType = { id: null, var: null, attribute: null };
-        if (!unify(children[0].node, {
-            id: PyramidTypeID.Function,
-            var: null,
-            attribute: {
-                args: [list_type],
-                return: mapped_type,
-            }
         })) {
             return invalid();
         }
@@ -72,7 +72,7 @@ export class MapBlock extends ParentBlock {
                 var: null,
                 attribute: {
                     args: [],
-                    return: mapped_type,
+                    return: type_b,
                 },
             },
             children: children,
