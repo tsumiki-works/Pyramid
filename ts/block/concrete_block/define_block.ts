@@ -107,7 +107,7 @@ export class DefineBlock extends ParentBlock {
             if(child.is_empty()){
                 children_tree.push({ node: { id: null, var: null, attribute: null }, children: null});
             }else{
-                children_tree.push((child as TypedBlock).infer_type(env));
+                children_tree.push(null);
             }
         }
         if(children[0].is_empty()){
@@ -124,7 +124,8 @@ export class DefineBlock extends ParentBlock {
         // infer logic type
         const this_type = { id: null, var: null, attribute: null };
         env.set(this.get_content(), this_type);
-        const logic_type_tree = (children[0] as TypedBlock).infer_type(env);
+        children_tree[0] = (children[0] as TypedBlock).infer_type(env);
+        const logic_type_tree = children_tree[0]; 
         if (this_args.length === 0) {
             if (!unify(this_type, logic_type_tree.node)) {
                 return next({ id: PyramidTypeID.Invalid, var: null, attribute: null }, logic_type_tree);
