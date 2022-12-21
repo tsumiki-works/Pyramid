@@ -6,10 +6,6 @@ import { LiteralBlock } from "./concrete_block/literal_block.js";
 import { Roots } from "./roots.js";
 
 const playground: HTMLDivElement = document.getElementById("playground") as HTMLDivElement;
-const result_pos: Vec2 = [
-    document.documentElement.clientWidth - playground.getBoundingClientRect().left - 210,
-    document.documentElement.clientHeight - 210,
-];
 
 export function popup_event_eval(block: Block) {
     Popup.remove_all_popup();
@@ -27,6 +23,10 @@ export function popup_event_eval(block: Block) {
 }
 
 export const create_result_block = (result: any): Block => {
+    const result_pos: Vec2 = [
+        document.documentElement.clientWidth - playground.getBoundingClientRect().left - 210,
+        document.documentElement.clientHeight - 210,
+    ];
     if (typeof result === "number" || typeof result === "boolean" || typeof result === "string") {
         return new LiteralBlock(result_pos, String(result));
     } else if (Array.isArray(result)) {
@@ -36,6 +36,7 @@ export const create_result_block = (result: any): Block => {
             tmp.set_parent(lst);
             lst.appendChild(tmp);
         }
+        lst.fold();
         return lst;
     } else {
         console.log("result is function so cannot create result block");

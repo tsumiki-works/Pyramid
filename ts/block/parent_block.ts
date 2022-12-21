@@ -5,8 +5,16 @@ import { TypedBlock } from "./typed_block.js";
 
 export abstract class ParentBlock extends TypedBlock {
 
+    private is_folding: boolean;
+
     constructor(lr: Vec2, popup_events: PopupEvent[]) {
+        popup_events.push(["開閉", _ => {
+            Popup.remove_all_popup();
+            this.fold();
+            this.get_root().format();
+        }]);
         super(lr, popup_events);
+        this.is_folding = false;
     }
 
     protected set_children_cnt(args_cnt: number) {
@@ -47,5 +55,21 @@ export abstract class ParentBlock extends TypedBlock {
                 child.set_top(y);
             }
         }
+    }
+
+    fold() {
+        for (const child of this.get_children()) {
+            if (this.is_folding) {
+                child.classList.remove("pyramid-block-disable");
+            } else {
+                child.classList.add("pyramid-block-disable");
+            }
+        }
+        if (this.is_folding) {
+            this.classList.remove("pyramid-block-folding");
+        } else {
+            this.classList.add("pyramid-block-folding");
+        }
+        this.is_folding = !this.is_folding;
     }
 }

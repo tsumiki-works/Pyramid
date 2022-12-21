@@ -111,7 +111,11 @@ pyramid-list-block {
 pyramid-if-block {
     background-color: #ea7f90;
 }
-pyramid-map-block {
+pyramid-map-block,
+pyramid-push-block,
+pyramid-pop-block,
+pyramid-rest-block,
+pyramid-length-block {
     background-color: #66bbaa;
 }
 
@@ -161,8 +165,9 @@ span.pyramid-argument {
 }
 
 .pyramid-block-folding {
-    border: thick double #cc1a2c;
-    box-sizing: border-box;
+    outline: solid #64748b 2px;
+    box-shadow: 3px 3px 0px 0 #64748b;
+    outline-offset: -2px;
 }
 
 .pyramid-block-variable {
