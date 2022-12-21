@@ -25,7 +25,12 @@ export class PowBlock extends BinopBlock {
         }
         else if (arg1.get_type().type_id === PyramidTypeID.F32 && arg2.get_type().type_id === PyramidTypeID.F32
             || arg1.get_type().type_id === PyramidTypeID.F32 && arg2.get_type().type_id === PyramidTypeID.I32
-            || arg1.get_type().type_id === PyramidTypeID.I32 && arg2.get_type().type_id === PyramidTypeID.F32) {
+            || arg1.get_type().type_id === PyramidTypeID.I32 && arg2.get_type().type_id === PyramidTypeID.F32
+            || arg1.get_type().type_id === PyramidTypeID.Number && arg2.get_type().type_id === PyramidTypeID.I32
+            || arg1.get_type().type_id === PyramidTypeID.Number && arg2.get_type().type_id === PyramidTypeID.F32
+            || arg1.get_type().type_id === PyramidTypeID.I32 && arg2.get_type().type_id === PyramidTypeID.Number
+            || arg1.get_type().type_id === PyramidTypeID.F32 && arg2.get_type().type_id === PyramidTypeID.Number
+            || arg1.get_type().type_id === PyramidTypeID.Number && arg2.get_type().type_id === PyramidTypeID.Number) {
             return ArithmeticOperator.pow_float(arg1.eval(env), arg2.eval(env))
         }
         throw new Error("pyramid: backend error: invalid operation ocurred")

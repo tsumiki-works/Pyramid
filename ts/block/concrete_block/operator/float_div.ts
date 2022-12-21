@@ -24,7 +24,12 @@ export class FloatDivBlock extends BinopBlock {
         if (arg1.get_type().type_id === PyramidTypeID.I32 && arg2.get_type().type_id === PyramidTypeID.I32
         || arg1.get_type().type_id === PyramidTypeID.I32 && arg2.get_type().type_id === PyramidTypeID.F32
         || arg1.get_type().type_id === PyramidTypeID.F32 && arg2.get_type().type_id === PyramidTypeID.I32
-        || arg1.get_type().type_id === PyramidTypeID.F32 && arg2.get_type().type_id === PyramidTypeID.F32) {
+        || arg1.get_type().type_id === PyramidTypeID.F32 && arg2.get_type().type_id === PyramidTypeID.F32
+        || arg1.get_type().type_id === PyramidTypeID.Number && arg2.get_type().type_id === PyramidTypeID.I32
+        || arg1.get_type().type_id === PyramidTypeID.Number && arg2.get_type().type_id === PyramidTypeID.F32
+        || arg1.get_type().type_id === PyramidTypeID.I32 && arg2.get_type().type_id === PyramidTypeID.Number
+        || arg1.get_type().type_id === PyramidTypeID.F32 && arg2.get_type().type_id === PyramidTypeID.Number
+        || arg1.get_type().type_id === PyramidTypeID.Number && arg2.get_type().type_id === PyramidTypeID.Number) {
             console.log(ArithmeticOperator.div_float(arg1.eval(env), arg2.eval(env)))
             return ArithmeticOperator.div_float(arg1.eval(env), arg2.eval(env))
         }
