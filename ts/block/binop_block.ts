@@ -1,5 +1,5 @@
 import { EmptyBlock } from "./concrete_block/empty_block.js";
-import { TypeEnv, unify } from "./inference/typeenv.js";
+import { check_same, TypeEnv, unify } from "./inference/typeenv.js";
 import { ParentBlock } from "./parent_block.js";
 import { popup_event_eval } from "./result_block.js";
 import { TypedBlock } from "./typed_block.js";
@@ -63,11 +63,11 @@ export abstract class BinopBlock extends ParentBlock {
             const child_type_tree = (child as TypedBlock).infer_type(env);
             if (!unify({ id: PyramidTypeID.Number, var: null, attribute: null }, child_type_tree.node)) {
                 invalid_flag = true;
-                continue;
+                //continue;
             }
-            if (unify(child_type_tree.node, { id: PyramidTypeID.I32, var: null, attribute: null })) {
+            else if (check_same({ id: PyramidTypeID.I32, var: null, attribute: null }, child_type_tree.node)) {
                 i32_cnt += 1;
-            } else if (unify(child_type_tree.node, { id: PyramidTypeID.F32, var: null, attribute: null })) {
+            } else if (check_same({ id: PyramidTypeID.F32, var: null, attribute: null }, child_type_tree.node)) {
                 f32_cnt += 1;
             }
             children.push(child_type_tree);
