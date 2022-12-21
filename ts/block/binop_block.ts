@@ -63,7 +63,7 @@ export abstract class BinopBlock extends ParentBlock {
             const child_type_tree = (child as TypedBlock).infer_type(env);
             if (!unify({ id: PyramidTypeID.Number, var: null, attribute: null }, child_type_tree.node)) {
                 invalid_flag = true;
-                continue;
+                //continue;
             }
             if (unify(child_type_tree.node, { id: PyramidTypeID.I32, var: null, attribute: null })) {
                 i32_cnt += 1;
