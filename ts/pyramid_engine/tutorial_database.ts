@@ -70,24 +70,6 @@ export class TutorialDatabase {
                 const menu_contents_arithmetic = new Array<MenuContent>();
                 menu_contents_arithmetic.push({
                     color: "#40a5a8",
-                    text: "pi",
-                    block_constructor: ((_l: number, _t: number) => new SymbolBlock(
-                        [_l, _t],
-                        "pi",
-                        0
-                    )),
-                });
-                menu_contents_arithmetic.push({
-                    color: "#40a5a8",
-                    text: "x",
-                    block_constructor: ((_l: number, _t: number) => new SymbolBlock(
-                        [_l, _t],
-                        "x",
-                        0
-                    )),
-                });
-                menu_contents_arithmetic.push({
-                    color: "#40a5a8",
                     text: "+",
                     block_constructor: ((_l: number, _t: number) => new SymbolBlock(
                         [_l, _t],
