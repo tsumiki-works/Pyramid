@@ -69,7 +69,7 @@ export class MenuBlock extends HTMLElement {
         if (e.pageX < MenuManager.getInstance().get_width()) {
             this.block.remove();
         }
-        Roots.connect(this.block);
+        Roots.connect(this.block, e.pageX, e.pageY);
         this.block.style.zIndex = "0";
         this.addEventListener("mousedown", this.mousedown_listener);
         document.removeEventListener("mousemove", this.mousemove_listener);

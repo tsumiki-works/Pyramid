@@ -13,7 +13,9 @@ export function popup_event_eval(block: Block) {
     if (block_eval_result !== null) {
         document.getElementById("roots").removeChild(block_eval_result);
     }
-    let result = block.eval(new Environment());
+    const env = new Environment();
+    Roots.push_global_definitions(block.get_root(), env);
+    let result = block.eval(env);
     console.log(result);
     let result_block: Block = create_result_block(result);
     if (result_block === null) return;

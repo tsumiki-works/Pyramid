@@ -1,7 +1,7 @@
 import { Block } from "../block.js";
 import { BlockConst } from "../block_const.js";
 import { Environment } from "../../evaluation/environment.js";
-import { TypeEnv, unify } from "../inference/typeenv.js";
+import { encode_type, TypeEnv, unify } from "../inference/typeenv.js";
 import { ParentBlock } from "../parent_block.js";
 import { popup_event_eval } from "../result_block.js";
 import { TypedBlock } from "../typed_block.js";
@@ -52,6 +52,13 @@ export class DefineBlock extends ParentBlock {
     }
 
     override eval(env: Environment): any {
+        this.push_definition(env);
+        const res = this.get_children()[1].eval(env);
+        env.remove(this.get_content());
+        return res;
+    }
+
+    push_definition(env: Environment): void {
         if (this.get_args().length === 0) {
             env.set(this.get_content(), this.get_children()[0].eval(env));
         } else {
@@ -80,16 +87,10 @@ export class DefineBlock extends ParentBlock {
                 }
             );
         }
-        return this.get_children()[1].eval(env);
     }
 
-    override get_type(): PyramidType {
-        const next = this.get_children()[0];
-        if (next.is_empty()) {
-            return { type_id: PyramidTypeID.Invalid, attribute: null };
-        } else {
-            return (next as TypedBlock).get_type();
-        }
+    push_definition_type(env: TypeEnv) {
+        env.set(this.get_content(), encode_type(this.get_type()));
     }
 
     override infer_type(env: TypeEnv): TempPyramidTypeTree {
