@@ -93,25 +93,19 @@ export class DefineBlock extends ParentBlock {
     }
 
     override infer_type(env: TypeEnv): TempPyramidTypeTree {
-        const children = this.get_children();
-        let next = (t1: TempPyramidType, t2: TempPyramidTypeTree): TempPyramidTypeTree => {
-            if (!children[1].is_empty()) {
-                return { node: t1, children: [t2, (children[1] as TypedBlock).infer_type(env)] };
+        const this_children = this.get_children();
+        if (this_children[0].is_empty()) {
+            if (this_children[1].is_empty()) {
+                return {
+                    node: { id: PyramidTypeID.Invalid, var: null, attribute: null },
+                    children: [],
+                };
             } else {
-                return { node: t1, children: [t2] };
+                return {
+                    node: { id: PyramidTypeID.Invalid, var: null, attribute: null },
+                    children: [(this_children[1] as TypedBlock).infer_type(env)],
+                };
             }
-        };
-        let children_tree = new Array<TempPyramidTypeTree>();
-        // set if child is unset
-        for(const child of children){
-            if(child.is_empty()){
-                children_tree.push({ node: { id: null, var: null, attribute: null }, children: null});
-            }else{
-                children_tree.push((child as TypedBlock).infer_type(env));
-            }
-        }
-        if(children[0].is_empty()){
-            return next({ id: PyramidTypeID.Invalid, var: null, attribute: null }, children_tree[1]);
         }
         // set temporary type onto environment
         const this_args = this.get_args();
@@ -124,14 +118,37 @@ export class DefineBlock extends ParentBlock {
         // infer logic type
         const this_type = { id: null, var: null, attribute: null };
         env.set(this.get_content(), this_type);
-        const logic_type_tree = (children[0] as TypedBlock).infer_type(env);
+        const logic_type_tree = (this_children[0] as TypedBlock).infer_type(env);
+        // variable
         if (this_args.length === 0) {
             if (!unify(this_type, logic_type_tree.node)) {
-                return next({ id: PyramidTypeID.Invalid, var: null, attribute: null }, logic_type_tree);
+                if (this_children[1].is_empty()) {
+                    return {
+                        node: { id: PyramidTypeID.Invalid, var: null, attribute: null },
+                        children: [logic_type_tree],
+                    };
+                } else {
+                    return {
+                        node: { id: PyramidTypeID.Invalid, var: null, attribute: null },
+                        children: [logic_type_tree, (this_children[1] as TypedBlock).infer_type(env)],
+                    };
+                }
             } else {
-                return next(this_type, logic_type_tree);
+                if (this_children[1].is_empty()) {
+                    return {
+                        node: this_type,
+                        children: [logic_type_tree],
+                    };
+                } else {
+                    return {
+                        node: this_type,
+                        children: [logic_type_tree, (this_children[1] as TypedBlock).infer_type(env)],
+                    };
+                }
             }
-        } else {
+        }
+        // function
+        else {
             const this_type_ = {
                 id: PyramidTypeID.Function,
                 var: null,
@@ -141,10 +158,29 @@ export class DefineBlock extends ParentBlock {
                 },
             };
             if (!unify(this_type, this_type_)) {
-                console.log(this_type, this_type_);
-                return next({ id: PyramidTypeID.Invalid, var: null, attribute: null }, logic_type_tree);
+                if (this_children[1].is_empty()) {
+                    return {
+                        node: { id: PyramidTypeID.Invalid, var: null, attribute: null },
+                        children: [logic_type_tree],
+                    };
+                } else {
+                    return {
+                        node: { id: PyramidTypeID.Invalid, var: null, attribute: null },
+                        children: [logic_type_tree, (this_children[1] as TypedBlock).infer_type(env)],
+                    };
+                }
             } else {
-                return next(this_type, logic_type_tree);
+                if (this_children[1].is_empty()) {
+                    return {
+                        node: this_type_,
+                        children: [logic_type_tree],
+                    };
+                } else {
+                    return {
+                        node: this_type_,
+                        children: [logic_type_tree, (this_children[1] as TypedBlock).infer_type(env)],
+                    };
+                }
             }
         }
     }
