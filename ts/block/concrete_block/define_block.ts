@@ -141,6 +141,7 @@ export class DefineBlock extends ParentBlock {
                 },
             };
             if (!unify(this_type, this_type_)) {
+                console.log(this_type, this_type_);
                 return next({ id: PyramidTypeID.Invalid, var: null, attribute: null }, logic_type_tree);
             } else {
                 return next(this_type, logic_type_tree);
