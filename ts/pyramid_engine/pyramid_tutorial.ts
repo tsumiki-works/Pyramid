@@ -65,7 +65,7 @@ export class PyramidTutorial extends PyramidEngine {
             a1.setAttribute("class", "mx-1 my-2");
             let button1 = document.createElement("button");
             button1.innerText = "前の問題";
-            button1.setAttribute("class", "bg-sky-600 py-1 px-2 text-white hover:bg-sky-500 rounded invisible");
+            button1.setAttribute("class", "py-1 px-2 rounded invisible");
             a1.appendChild(button1);
             elem.appendChild(a1);
         }
@@ -91,7 +91,7 @@ export class PyramidTutorial extends PyramidEngine {
             let a3 = document.createElement("div");
             a3.setAttribute("class", "mx-1 my-2");
             let button3 = document.createElement("button");
-            button3.setAttribute("class", "bg-sky-600 py-1 px-2 text-white hover:bg-sky-500 rounded invisible");
+            button3.setAttribute("class", "py-1 px-2 rounded invisible");
             button3.innerText = "次の問題";
             a3.appendChild(button3);
             elem.appendChild(a3);
