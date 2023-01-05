@@ -100,7 +100,7 @@ export class PyramidTutorial extends PyramidEngine {
     }
     private get_checkmark_icon(check_event: CheckEvent): HTMLElement {
         //! TODO: Form this Elem or Use CheckBox(disabled)
-        let elem = document.createElement("i");
+        let elem = document.createElement("span");
         elem.setAttribute("class", "fa-solid fa-check ml-2 text-gray-300");
         // IF ENABLE, text-red-600
         let listener_event = (e => {
