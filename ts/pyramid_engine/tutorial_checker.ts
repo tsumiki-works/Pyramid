@@ -52,22 +52,16 @@ export class TutorialChecker {
     private static readonly isEditContent: Function =
         (_ => {
             var array = ['0','+','-','*','//','/'];
-            let elem = document.getElementsByTagName("content");
-            if (elem !== null) {
-                for (let i = 0; i < elem.length; i++) {
-                    if (array.includes(elem[i].innerHTML)) {
-                        console.log(elem[i]);
-                        return false;
-                        
-                    }else{
-                        console.log(elem[i]);
-                        return true;
-                    }
+            const elemlist = document.getElementsByClassName("content");
+            for(let i = 0; i < elemlist.length; i++) {
+                if (array.includes(elemlist[i].innerHTML)) {
+                }else{
+                    return true;
                 }
             }
             return false;
-        }
-        );  
+            }
+        );
     static get_checker(problem_number: number): { event: string, check_func: Function }[] {
         let ret_functions = new Array<{ event: string, check_func: Function }>();
         switch (problem_number) {
