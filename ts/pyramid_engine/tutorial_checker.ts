@@ -49,6 +49,25 @@ export class TutorialChecker {
                 return false;
             })
         );
+    private static readonly isEditContent: Function =
+        (_ => {
+            var array = ['0','+','-','*','//','/'];
+            let elem = document.getElementsByTagName("content");
+            if (elem !== null) {
+                for (let i = 0; i < elem.length; i++) {
+                    if (array.includes(elem[i].innerHTML)) {
+                        console.log(elem[i]);
+                        return false;
+                        
+                    }else{
+                        console.log(elem[i]);
+                        return true;
+                    }
+                }
+            }
+            return false;
+        }
+        );  
     static get_checker(problem_number: number): { event: string, check_func: Function }[] {
         let ret_functions = new Array<{ event: string, check_func: Function }>();
         switch (problem_number) {
@@ -67,6 +86,10 @@ export class TutorialChecker {
                         let elem = document.getElementById("block-eval-result");
                         return elem !== null;
                     })
+                });
+                ret_functions.push({
+                    event: "mouseenter",
+                    check_func: TutorialChecker.isEditContent
                 });
                 ret_functions.push({
                     event: "mouseenter",
