@@ -225,13 +225,14 @@ export class TutorialChecker {
                         let roots = Roots.get();
                         for (const root of roots) {
                             if (root.tagName === "PYRAMID-DEFINE-BLOCK") {
-                                let tmp_children = root.get_children();
-                                let count_block: number = 0;
-                                for (const child of tmp_children) {
-                                    count_block += child.is_empty() ? 1 : 0;
-                                }
-                                if (count_block > 0) {
-                                    return true;
+                                for (let k=0; k < root.children.length; k++) {
+                                    if(root.children.item(k).className === "content-wrapper"){
+                                        for(let i=0; i < root.children.item(k).children.length; i++){
+                                            if(root.children.item(k).children.item(i).className === "pyramid-argument"){
+                                                return root.children.item(k).children.item(i).textContent !== "";
+                                            }
+                                        }
+                                    }
                                 }
                             }
                         }
@@ -239,6 +240,46 @@ export class TutorialChecker {
                     })
                 });
 
+                // exist f(x) = x + 1?
+                ret_functions.push({
+                    event: "mousemove",
+                    check_func: (_ => {
+                        let roots = Roots.get();
+                        for (const root of roots) {
+                            if(root.tagName === "PYRAMID-DEFINE-BLOCK"){
+                                let tmp_children = root.get_children();
+                                for (const child of tmp_children) {
+                                    let isX = false;
+                                    let is1 = false;
+                                    if(child.tagName === "PYRAMID-SYMBOL-BLOCK"){
+                                        for(let i=0; i < child.children.length; i++){
+                                            if(child.children.item(i).tagName === "PYRAMID-SYMBOL-BLOCK"){
+                                                for(let k=0; k < child.children.item(i).children.length; k++){
+                                                    if (child.children.item(i).children.item(k).className == "content-wrapper") {
+                                                        isX = child.children.item(i).children.item(k).textContent === "x";
+                                                    }
+                                                }
+                                            }
+                                            if(child.children.item(i).tagName === "PYRAMID-LITERAL-BLOCK"){
+                                                for(let k=0; k < child.children.item(i).children.length; k++){
+                                                    if (child.children.item(i).children.item(k).className == "content-wrapper") {
+                                                        is1 = child.children.item(i).children.item(k).textContent === "1";
+                                                    }
+                                                }
+                                            }
+                                        }
+                                    }
+                                    return isX && is1;
+                                }
+                            }
+                        }
+                    })
+                });
+
+                ret_functions.push({
+                    event: "mouseenter",
+                    check_func: TutorialChecker.isEvalResult(4)
+                });
                 ret_functions.push({
                     event: "mouseenter",
                     check_func: TutorialChecker.isEvalResult(4)
