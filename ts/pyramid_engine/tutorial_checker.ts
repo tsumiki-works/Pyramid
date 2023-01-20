@@ -277,8 +277,34 @@ export class TutorialChecker {
                 });
 
                 ret_functions.push({
-                    event: "mouseenter",
-                    check_func: TutorialChecker.isEvalResult(4)
+                    event: "mousemove",
+                    check_func: (_ => {
+                        let roots = Roots.get();
+                        let function_name: string;
+                        let symbol_name: string;
+                        let cnt = 0;
+                        for (const root of roots) {
+                            if (root.tagName === "PYRAMID-DEFINE-BLOCK") {
+                                for (let k=0; k < root.children.length; k++) {
+                                    if(root.children.item(k).className === "content-wrapper"){
+                                        function_name = root.children.item(k).textContent;
+                                    }
+                                    if(root.children.item(k).classList.contains("pyramid-block")){
+                                        for(let i=0; i < root.children.item(k).children.length; i++){
+                                            if(cnt == 1){
+                                                console.log(root.children.item(k).children.item(i));
+                                                if(root.children.item(k).children.item(i).className === "content-wrapper"){
+                                                    symbol_name = root.children.item(k).children.item(i).textContent;
+                                                }
+                                            }
+                                        }
+                                        cnt += 1;
+                                    }
+                                }
+                            }
+                        }
+                        return (function_name == symbol_name && function_name !== undefined && symbol_name !== undefined);
+                    })
                 });
                 ret_functions.push({
                     event: "mouseenter",
