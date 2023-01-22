@@ -57,29 +57,16 @@ export abstract class BinopBlock extends ParentBlock {
         }
         const children: TempPyramidTypeTree[] = [];
         let invalid_flag = false;
-        let i32_cnt = 0;
-        let f32_cnt = 0;
         for (const child of this_children) {
             const child_type_tree = (child as TypedBlock).infer_type(env);
             if (!unify({ id: PyramidTypeID.Number, var: null, attribute: null }, child_type_tree.node)) {
                 invalid_flag = true;
                 //continue;
             }
-            else if (check_same({ id: PyramidTypeID.I32, var: null, attribute: null }, child_type_tree.node)) {
-                i32_cnt += 1;
-            } else if (check_same({ id: PyramidTypeID.F32, var: null, attribute: null }, child_type_tree.node)) {
-                f32_cnt += 1;
-            }
             children.push(child_type_tree);
         }
         let id = PyramidTypeID.Number;
-        if (i32_cnt === 2) {
-            id = PyramidTypeID.I32;
-        }
-        else if ((f32_cnt === 1 && i32_cnt === 1) || f32_cnt === 2) {
-            id = PyramidTypeID.F32;
-        }
-        else if (invalid_flag) {
+        if (invalid_flag) {
             id = PyramidTypeID.Invalid
         }
         return {
