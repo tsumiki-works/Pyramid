@@ -174,6 +174,7 @@ export class TutorialDatabase {
 
                 menu_contents.set({ label: "Variable", color: "#91abaa" }, menu_contents_variable);
                 break;
+            //TODO: Change menucontents
             /*
             case 1:
                 let tutorial1: MenuContent[] = [
