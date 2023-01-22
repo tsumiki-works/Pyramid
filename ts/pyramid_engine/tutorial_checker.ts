@@ -283,6 +283,7 @@ export class TutorialChecker {
                         let function_name: string;
                         let symbol_name: string;
                         let cnt = 0;
+                        let child_cnt = 0;
                         for (const root of roots) {
                             if (root.tagName === "PYRAMID-DEFINE-BLOCK") {
                                 for (let k=0; k < root.children.length; k++) {
@@ -292,9 +293,11 @@ export class TutorialChecker {
                                     if(root.children.item(k).classList.contains("pyramid-block")){
                                         for(let i=0; i < root.children.item(k).children.length; i++){
                                             if(cnt == 1){
-                                                console.log(root.children.item(k).children.item(i));
                                                 if(root.children.item(k).children.item(i).className === "content-wrapper"){
                                                     symbol_name = root.children.item(k).children.item(i).textContent;
+                                                }
+                                                if(root.children.item(k).children.item(i).classList.contains("pyramid-block")){
+                                                    child_cnt += 1;
                                                 }
                                             }
                                         }
@@ -303,7 +306,8 @@ export class TutorialChecker {
                                 }
                             }
                         }
-                        return (function_name == symbol_name && function_name !== undefined && symbol_name !== undefined);
+                        console.log(child_cnt);
+                        return (function_name == symbol_name && child_cnt == 1 && (function_name !== undefined && symbol_name !== undefined));
                     })
                 });
                 ret_functions.push({
