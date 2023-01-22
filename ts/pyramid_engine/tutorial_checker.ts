@@ -288,7 +288,11 @@ export class TutorialChecker {
                             if (root.tagName === "PYRAMID-DEFINE-BLOCK") {
                                 for (let k=0; k < root.children.length; k++) {
                                     if(root.children.item(k).className === "content-wrapper"){
-                                        function_name = root.children.item(k).textContent;
+                                        for(let l=0; l < root.children.item(k).children.length; l++){
+                                            if(root.children.item(k).children.item(l).className == "content"){
+                                                function_name = root.children.item(k).children.item(l).textContent;
+                                            }
+                                        }
                                     }
                                     if(root.children.item(k).classList.contains("pyramid-block")){
                                         for(let i=0; i < root.children.item(k).children.length; i++){
