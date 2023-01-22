@@ -174,294 +174,71 @@ export class TutorialDatabase {
 
                 menu_contents.set({ label: "Variable", color: "#91abaa" }, menu_contents_variable);
                 break;
-            //TODO: Change menucontents
-            /*
             case 1:
                 let tutorial1: MenuContent[] = [
-                    {
-                        color: "#5d8cd4",
-                        text: "0",
-                        block_constructor: ((_l: number, _t: number) => new LiteralBlock(
-                            [_l, _t],
-                            "0"
-                        ))
-                    },
-                    {
-                        color: "#40a5a8",
-                        text: "+",
-                        block_constructor: ((_l: number, _t: number) => new AddBlock(
-                            [_l, _t],
-                        ))
-                    },
-                    {
-                        color: "#40a5a8",
-                        text: "-",
-                        block_constructor: ((_l: number, _t: number) => new SubBlock(
-                            [_l, _t],
-                        ))
-                    },
-                    {
-                        color: "#40a5a8",
-                        text: "*",
-                        block_constructor: ((_l: number, _t: number) => new MulBlock(
-                            [_l, _t],
-                        ))
-                    },
-                    {
-                        color: "#40a5a8",
-                        text: "//",
-                        block_constructor: ((_l: number, _t: number) => new IntDivBlock(
-                            [_l, _t],
-                        ))
-                    },
-                    {
-                        color: "#40a5a8",
-                        text: "/",
-                        block_constructor: ((_l: number, _t: number) => new FloatDivBlock(
-                            [_l, _t],
-                        ))
-                    }
+                    TutorialDatabase.abstract_literal_block("#5d8cd4", "0"),
+                    TutorialDatabase.abstract_op_block("#40a5a8", "+", 2),
+                    TutorialDatabase.abstract_op_block("#40a5a8", "-", 2),
+                    TutorialDatabase.abstract_op_block("#40a5a8", "*", 2),
+                    TutorialDatabase.abstract_op_block("#40a5a8", "/", 2),
+                    TutorialDatabase.abstract_op_block("#40a5a8", "%", 2),
+                    TutorialDatabase.abstract_op_block("#40a5a8", "**", 2)
+
                 ];
                 menu_contents.set({ label: "sample", color: "#82be64" }, tutorial1);
                 break;
 
             case 2:
                 let tutorial2: MenuContent[] = [
-                    {
-                        color: "#5d8cd4",
-                        text: "true",
-                        block_constructor: ((_l: number, _t: number) => new LiteralBlock(
-                            [_l, _t],
-                            "true"
-                        ))
-                    },
-                    {
-                        text: "false",
-                        color: "#5d8cd4",
-                        block_constructor: ((_l: number, _t: number) => new LiteralBlock(
-                            [_l, _t],
-                            "false"
-                        ))
-                    },
-                    {
-                        color: "#40a5a8",
-                        text: "!",
-                        block_constructor: ((_l: number, _t: number) => new SymbolBlock(
-                            [_l, _t],
-                            "!",
-                            1
-                        ))
-                    },
-                    {
-                        color: "#40a5a8",
-                        text: "&&",
-                        block_constructor: ((_l: number, _t: number) => new SymbolBlock(
-                            [_l, _t],
-                            "&&",
-                            2
-
-                        ))
-                    },
-                    {
-                        color: "#40a5a8",
-                        text: "||",
-                        block_constructor: ((_l: number, _t: number) => new SymbolBlock(
-                            [_l, _t],
-                            "||",
-                            2
-                        ))
-                    }
-
+                    TutorialDatabase.abstract_literal_block("#5d8cd4", "true"),
+                    TutorialDatabase.abstract_literal_block("#5d8cd4", "false"),
+                    TutorialDatabase.abstract_op_block("#40a5a8", "!", 1),
+                    TutorialDatabase.abstract_op_block("#40a5a8", "&&", 2),
+                    TutorialDatabase.abstract_op_block("#40a5a8", "||", 2)
                 ];
                 menu_contents.set({ label: "sample", color: "#82be64" }, tutorial2);
                 break;
 
             case 3:
                 let tutorial3: MenuContent[] = [
-                    {
-                        color: "#5d8cd4",
-                        text: "0",
-                        block_constructor: ((_l: number, _t: number) => new LiteralBlock(
-                            [_l, _t],
-                            "0"
-                        ))
-                    },
-                    {
-                        color: "#40a5a8",
-                        text: "pi",
-                        block_constructor: ((_l: number, _t: number) => new SymbolBlock(
-                            [_l, _t],
-                            "pi",
-                            0
-                        ))
-                    },
-                    {
-                        color: "#40a5a8",
-                        text: "+",
-                        block_constructor: ((_l: number, _t: number) => new AddBlock(
-                            [_l, _t],
-                        ))
-                    },
-                    {
-                        color: "#40a5a8",
-                        text: "-",
-                        block_constructor: ((_l: number, _t: number) => new SubBlock(
-                            [_l, _t],
-                        ))
-                    },
-                    {
-                        color: "#40a5a8",
-                        text: "*",
-                        block_constructor: ((_l: number, _t: number) => new MulBlock(
-                            [_l, _t],
-                        ))
-                    },
-                    {
-                        color: "#40a5a8",
-                        text: "//",
-                        block_constructor: ((_l: number, _t: number) => new IntDivBlock(
-                            [_l, _t],
-                        ))
-                    },
-                    {
-                        color: "#40a5a8",
-                        text: "/",
-                        block_constructor: ((_l: number, _t: number) => new FloatDivBlock(
-                            [_l, _t],
-                        ))
-                    },
-                    {
-                        color: "#40a5a8",
-                        text: "sin",
-                        block_constructor: ((_l: number, _t: number) => new SymbolBlock(
-                            [_l, _t],
-                            "sin",
-                            1
-                        ))
-                    },
-                    {
-                        color: "#40a5a8",
-                        text: "cos",
-                        block_constructor: ((_l: number, _t: number) => new SymbolBlock(
-                            [_l, _t],
-                            "cos",
-                            1
-                        ))
-                    },
-                    {
-                        color: "#40a5a8",
-                        text: "tan",
-                        block_constructor: ((_l: number, _t: number) => new SymbolBlock(
-                            [_l, _t],
-                            "tan",
-                            1
-                        ))
-                    }
+                    TutorialDatabase.abstract_literal_block("#5d8cd4", "0"),
+                    TutorialDatabase.abstract_op_block("#40a5a8", "pi", 0),
+                    TutorialDatabase.abstract_op_block("#40a5a8", "+", 2),
+                    TutorialDatabase.abstract_op_block("#40a5a8", "-", 2),
+                    TutorialDatabase.abstract_op_block("#40a5a8", "*", 2),
+                    TutorialDatabase.abstract_op_block("#40a5a8", "/", 2),
+                    TutorialDatabase.abstract_op_block("#40a5a8", "%", 2),
+                    TutorialDatabase.abstract_op_block("#40a5a8", "**", 2),
+                    TutorialDatabase.abstract_op_block("#40a5a8", "sin", 1),
+                    TutorialDatabase.abstract_op_block("#40a5a8", "cos", 1),
+                    TutorialDatabase.abstract_op_block("#40a5a8", "tan", 1)
                 ];
                 menu_contents.set({ label: "sample", color: "#82be64" }, tutorial3);
                 break;
 
             case 4:
                 let tutorial4: MenuContent[] = [
-                    {
-                        color: "#5d8cd4",
-                        text: "0",
-                        block_constructor: ((_l: number, _t: number) => new LiteralBlock(
-                            [_l, _t],
-                            "0"
-                        ))
-                    },
-                    {
-                        color: "#40a5a8",
-                        text: "+",
-                        block_constructor: ((_l: number, _t: number) => new AddBlock(
-                            [_l, _t],
-                        ))
-                    },
-                    {
-                        color: "#40a5a8",
-                        text: "-",
-                        block_constructor: ((_l: number, _t: number) => new SubBlock(
-                            [_l, _t],
-                        ))
-                    },
-                    {
-                        color: "#40a5a8",
-                        text: "*",
-                        block_constructor: ((_l: number, _t: number) => new MulBlock(
-                            [_l, _t],
-                        ))
-                    },
-                    {
-                        color: "#40a5a8",
-                        text: "//",
-                        block_constructor: ((_l: number, _t: number) => new IntDivBlock(
-                            [_l, _t],
-                        ))
-                    },
-                    {
-                        color: "#40a5a8",
-                        text: "/",
-                        block_constructor: ((_l: number, _t: number) => new FloatDivBlock(
-                            [_l, _t],
-                        ))
-                    },
-                    {
-                        color: "#40a5a8",
-                        text: "exp",
-                        block_constructor: ((_l: number, _t: number) => new SymbolBlock(
-                            [_l, _t],
-                            "exp",
-                            1
-                        ))
-                    },
-                    {
-                        color: "#40a5a8",
-                        text: "log",
-                        block_constructor: ((_l: number, _t: number) => new SymbolBlock(
-                            [_l, _t],
-                            "log",
-                            1
-                        ))
-                    }
+                    TutorialDatabase.abstract_literal_block("#5d8cd4", "0"),
+                    TutorialDatabase.abstract_op_block("#40a5a8", "pi", 0),
+                    TutorialDatabase.abstract_op_block("#40a5a8", "+", 2),
+                    TutorialDatabase.abstract_op_block("#40a5a8", "-", 2),
+                    TutorialDatabase.abstract_op_block("#40a5a8", "*", 2),
+                    TutorialDatabase.abstract_op_block("#40a5a8", "/", 2),
+                    TutorialDatabase.abstract_op_block("#40a5a8", "%", 2),
+                    TutorialDatabase.abstract_op_block("#40a5a8", "**", 2),
+                    TutorialDatabase.abstract_op_block("#40a5a8", "exp", 1),
+                    TutorialDatabase.abstract_op_block("#40a5a8", "log", 1)
                 ];
                 menu_contents.set({ label: "sample", color: "#82be64" }, tutorial4);
                 break;
 
             case 5:
                 let tutorial5: MenuContent[] = [
-                    {
-                        color: "#5d8cd4",
-                        text: "0",
-                        block_constructor: ((_l: number, _t: number) => new LiteralBlock(
-                            [_l, _t],
-                            "0"
-                        ))
-                    },
-                    {
-                        color: "#5d8cd4",
-                        text: "text",
-                        block_constructor: ((_l: number, _t: number) => new LiteralBlock(
-                            [_l, _t],
-                            "text",
-                        ))
-                    },
-                    {
-                        color: "#5d8cd4",
-                        text: "true",
-                        block_constructor: ((_l: number, _t: number) => new LiteralBlock(
-                            [_l, _t],
-                            "true"
-                        ))
-                    },
-                    {
-                        text: "false",
-                        color: "#5d8cd4",
-                        block_constructor: ((_l: number, _t: number) => new LiteralBlock(
-                            [_l, _t],
-                            "false"
-                        ))
-                    },
+                    TutorialDatabase.abstract_literal_block("#5d8cd4", "0"),
+                    TutorialDatabase.abstract_literal_block("#5d8cd4", "0"),
+                    TutorialDatabase.abstract_literal_block("#5d8cd4", "text"),
+                    TutorialDatabase.abstract_literal_block("#5d8cd4", "true"),
+                    TutorialDatabase.abstract_literal_block("#5d8cd4", "false"),
                     {
                         color: "#99a9c2",
                         text: "LIST(0)",
@@ -475,62 +252,14 @@ export class TutorialDatabase {
                 ];
                 menu_contents.set({ label: "sample", color: "#82be64" }, tutorial5);
                 break;
-
             case 6:
                 let tutorial6: MenuContent[] = [
-                    {
-                        color: "#5d8cd4",
-                        text: "0",
-                        block_constructor: ((_l: number, _t: number) => new LiteralBlock(
-                            [_l, _t],
-                            "0"
-                        ))
-                    },
-                    {
-                        color: "#40a5a8",
-                        text: "x",
-                        block_constructor: ((_l: number, _t: number) => new SymbolBlock(
-                            [_l, _t],
-                            "x",
-                            0
-                        ))
-                    },
-                    {
-                        color: "#40a5a8",
-                        text: "+",
-                        block_constructor: ((_l: number, _t: number) => new SymbolBlock(
-                            [_l, _t],
-                            "+",
-                            2
-                        ))
-                    },
-                    {
-                        color: "#40a5a8",
-                        text: "-",
-                        block_constructor: ((_l: number, _t: number) => new SymbolBlock(
-                            [_l, _t],
-                            "-",
-                            2
-                        ))
-                    },
-                    {
-                        color: "#40a5a8",
-                        text: "*",
-                        block_constructor: ((_l: number, _t: number) => new SymbolBlock(
-                            [_l, _t],
-                            "*",
-                            2
-                        ))
-                    },
-                    {
-                        color: "#40a5a8",
-                        text: "/",
-                        block_constructor: ((_l: number, _t: number) => new SymbolBlock(
-                            [_l, _t],
-                            "/",
-                            2
-                        ))
-                    },
+                    TutorialDatabase.abstract_literal_block("#5d8cd4", "0"),
+                    TutorialDatabase.abstract_op_block("#40a5a8", "x", 0),
+                    TutorialDatabase.abstract_op_block("#40a5a8", "+", 2),
+                    TutorialDatabase.abstract_op_block("#40a5a8", "-", 2),
+                    TutorialDatabase.abstract_op_block("#40a5a8", "*", 2),
+                    TutorialDatabase.abstract_op_block("#40a5a8", "/", 2),
                     {
                         color: "#f09ecb",
                         text: "f",
@@ -546,85 +275,15 @@ export class TutorialDatabase {
 
             case 7:
                 let tutorial7: MenuContent[] = [
-                    {
-                        color: "#5d8cd4",
-                        text: "0",
-                        block_constructor: ((_l: number, _t: number) => new LiteralBlock(
-                            [_l, _t],
-                            "0"
-                        ))
-                    },
-                    {
-                        color: "#5d8cd4",
-                        text: "text",
-                        block_constructor: ((_l: number, _t: number) => new LiteralBlock(
-                            [_l, _t],
-                            "text",
-                        ))
-                    },
-                    {
-                        color: "#40a5a8",
-                        text: "x",
-                        block_constructor: ((_l: number, _t: number) => new SymbolBlock(
-                            [_l, _t],
-                            "x",
-                            0
-                        ))
-                    },
-                    {
-                        color: "#40a5a8",
-                        text: "+",
-                        block_constructor: ((_l: number, _t: number) => new SymbolBlock(
-                            [_l, _t],
-                            "+",
-                            2
-                        ))
-                    },
-                    {
-                        color: "#40a5a8",
-                        text: "-",
-                        block_constructor: ((_l: number, _t: number) => new SymbolBlock(
-                            [_l, _t],
-                            "-",
-                            2
-                        ))
-                    },
-                    {
-                        color: "#40a5a8",
-                        text: "*",
-                        block_constructor: ((_l: number, _t: number) => new SymbolBlock(
-                            [_l, _t],
-                            "*",
-                            2
-                        ))
-                    },
-                    {
-                        color: "#40a5a8",
-                        text: "/",
-                        block_constructor: ((_l: number, _t: number) => new SymbolBlock(
-                            [_l, _t],
-                            "/",
-                            2
-                        ))
-                    },
-                    {
-                        color: "#40a5a8",
-                        text: "==",
-                        block_constructor: ((_l: number, _t: number) => new SymbolBlock(
-                            [_l, _t],
-                            "==",
-                            2
-                        ))
-                    },
-                    {
-                        color: "#40a5a8",
-                        text: "\"==",
-                        block_constructor: ((_l: number, _t: number) => new SymbolBlock(
-                            [_l, _t],
-                            "\"==",
-                            2
-                        ))
-                    },
+                    TutorialDatabase.abstract_literal_block("#5d8cd4", "0"),
+                    TutorialDatabase.abstract_literal_block("#5d8cd4", "text"),
+                    TutorialDatabase.abstract_op_block("#40a5a8", "x", 0),
+                    TutorialDatabase.abstract_op_block("#40a5a8", "+", 2),
+                    TutorialDatabase.abstract_op_block("#40a5a8", "-", 2),
+                    TutorialDatabase.abstract_op_block("#40a5a8", "*", 2),
+                    TutorialDatabase.abstract_op_block("#40a5a8", "/", 2),
+                    TutorialDatabase.abstract_op_block("#40a5a8", "==", 2),
+                    TutorialDatabase.abstract_op_block("#40a5a8", "\"==", 2),
                     {
                         color: "#ea7f90",
                         text: "if",
@@ -638,68 +297,13 @@ export class TutorialDatabase {
 
             case 8:
                 let tutorial8: MenuContent[] = [
-                    {
-                        color: "#5d8cd4",
-                        text: "0",
-                        block_constructor: ((_l: number, _t: number) => new LiteralBlock(
-                            [_l, _t],
-                            "0"
-                        ))
-                    },
-                    {
-                        color: "#40a5a8",
-                        text: "x",
-                        block_constructor: ((_l: number, _t: number) => new SymbolBlock(
-                            [_l, _t],
-                            "x",
-                            0
-                        ))
-                    },
-                    {
-                        color: "#40a5a8",
-                        text: "+",
-                        block_constructor: ((_l: number, _t: number) => new SymbolBlock(
-                            [_l, _t],
-                            "+",
-                            2
-                        ))
-                    },
-                    {
-                        color: "#40a5a8",
-                        text: "-",
-                        block_constructor: ((_l: number, _t: number) => new SymbolBlock(
-                            [_l, _t],
-                            "-",
-                            2
-                        ))
-                    },
-                    {
-                        color: "#40a5a8",
-                        text: "*",
-                        block_constructor: ((_l: number, _t: number) => new SymbolBlock(
-                            [_l, _t],
-                            "*",
-                            2
-                        ))
-                    },
-                    {
-                        color: "#40a5a8",
-                        text: "/",
-                        block_constructor: ((_l: number, _t: number) => new SymbolBlock(
-                            [_l, _t],
-                            "/",
-                            2
-                        ))
-                    },
-                    {
-                        color: "#40a5a8",
-                        text: "==",
-                        block_constructor: ((_l: number, _t: number) => new SymbolBlock(
-                            [_l, _t],
-                            "==",
-                            2
-                        ))
-                    },
+                    TutorialDatabase.abstract_literal_block("#5d8cd4", "0"),
+                    TutorialDatabase.abstract_op_block("#40a5a8", "x", 0),
+                    TutorialDatabase.abstract_op_block("#40a5a8", "+", 2),
+                    TutorialDatabase.abstract_op_block("#40a5a8", "-", 2),
+                    TutorialDatabase.abstract_op_block("#40a5a8", "*", 2),
+                    TutorialDatabase.abstract_op_block("#40a5a8", "/", 2),
+                    TutorialDatabase.abstract_op_block("#40a5a8", "==", 2),
                     {
                         color: "#ea7f90",
                         text: "if",
@@ -722,14 +326,7 @@ export class TutorialDatabase {
 
             case 9:
                 let tutorial9: MenuContent[] = [
-                    {
-                        color: "#5d8cd4",
-                        text: "0",
-                        block_constructor: ((_l: number, _t: number) => new LiteralBlock(
-                            [_l, _t],
-                            "0"
-                        ))
-                    },
+                    TutorialDatabase.abstract_literal_block("#5d8cd4", "0"),
                     {
                         color: "#99a9c2",
                         text: "LIST(0)",
@@ -738,24 +335,8 @@ export class TutorialDatabase {
                             0
                         ))
                     },
-                    {
-                        color: "#40a5a8",
-                        text: "x",
-                        block_constructor: ((_l: number, _t: number) => new SymbolBlock(
-                            [_l, _t],
-                            "x",
-                            0
-                        ))
-                    },
-                    {
-                        color: "#40a5a8",
-                        text: "+",
-                        block_constructor: ((_l: number, _t: number) => new SymbolBlock(
-                            [_l, _t],
-                            "+",
-                            2
-                        ))
-                    },
+                    TutorialDatabase.abstract_op_block("#40a5a8", "x", 0),
+                    TutorialDatabase.abstract_op_block("#40a5a8", "+", 2),
                     {
                         color: "#ea7f90",
                         text: "if",
@@ -774,7 +355,6 @@ export class TutorialDatabase {
                 ];
                 menu_contents.set({ label: "sample", color: "#82be64" }, tutorial9);
                 break;
-            */
             default:
                 alert("Pyramid frontend error: invalid query parameter.");
         }

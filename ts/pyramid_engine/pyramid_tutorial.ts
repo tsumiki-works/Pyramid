@@ -26,7 +26,7 @@ export class PyramidTutorial extends PyramidEngine {
 
     private init_tutorial_doc(): void {
         let tutorial_reader = new PyramidTutorialReader(this.problem_number);
-        tutorial_reader.debug();
+        //tutorial_reader.debug();
 
         // Title
         document.getElementById("tutorial-index").innerText = tutorial_reader.get_title();
