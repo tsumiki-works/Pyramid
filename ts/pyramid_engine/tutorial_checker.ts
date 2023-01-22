@@ -306,7 +306,6 @@ export class TutorialChecker {
                                 }
                             }
                         }
-                        console.log(child_cnt);
                         return (function_name == symbol_name && child_cnt == 1 && (function_name !== undefined && symbol_name !== undefined));
                     })
                 });
