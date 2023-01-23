@@ -1,5 +1,6 @@
 import { Environment } from "../../evaluation/environment.js";
 import { Evaluator } from "../../evaluation/evaluator.js";
+import { PyramidNumber } from "../../evaluation/pyramid_number.js";
 import { TypeEnv } from "../inference/typeenv.js";
 import { popup_event_eval } from "../result_block.js";
 import { TypedBlock } from "../typed_block.js";
@@ -17,7 +18,10 @@ export class LiteralBlock extends TypedBlock {
             [
                 ["編集", (e: MouseEvent) => this.popup_event_edit(e, (value: string) => {
                     if (value.length !== 0) {
-                        this.set_content(value);
+                        // convert zero's literal to 0 (ex: 0., 00000, .000 -> 0)
+                        this.set_content(
+                            PyramidNumber.check_type(value) ? Number(value).toString() : value
+                            );
                     }
                 })],
                 ["評価", _ => popup_event_eval(this)],
