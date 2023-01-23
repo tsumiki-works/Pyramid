@@ -15,8 +15,18 @@ export class PyramidNumber {
     // Number("") = 0
     // Number(undefined) = NaN
     static check_type(value: string): boolean {
+        if (value.indexOf(".") !== -1) {
+            while (value.slice(-1) === "0" && value.slice(-2, -1) !== ".") {
+                value = value.slice(0, -1);
+            }
+            if (value.slice(-1) === ".") {
+                value = value.slice(0, -1);
+            }
+        }
+        if(value.match(/^0+$/)) value = "0"
         if (value === "0") return true
         if (value === "0.0") return true
+        if (value === ".0") return true
         const temp = Number(value);
         if (Number.isNaN(temp) || temp === 0) return false
         return true;
