@@ -15,6 +15,7 @@ export class PyramidNumber {
     // Number("") = 0
     // Number(undefined) = NaN
     static check_type(value: string): boolean {
+        if (value === "NaN") return true
         if (value === "0") return true
         const temp = Number(value);
         if (Number.isNaN(temp) || temp === 0) return false
