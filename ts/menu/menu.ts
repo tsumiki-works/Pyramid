@@ -7,6 +7,7 @@ export class MenuManager {
     private menu: HTMLDivElement;
     private menu_tab: HTMLDivElement;
     private menu_items: HTMLDivElement;
+    private menu_items_scroll_width: number;
 
     private menu_content_tab: Map<string, MenuTab>;
     private menu_contents: Map<string, MenuBlock[]>;
@@ -15,6 +16,7 @@ export class MenuManager {
         this.menu = document.getElementById("menu") as HTMLDivElement;
         this.menu_tab = document.getElementById("menu-tab") as HTMLDivElement;
         this.menu_items = document.getElementById("menu-items") as HTMLDivElement;
+        this.menu_items_scroll_width = 0;
 
         this.menu_contents = new Map<string, MenuBlock[]>();
         this.menu_content_tab = new Map<string, MenuTab>();
@@ -37,9 +39,18 @@ export class MenuManager {
     add_menu_contents(menu_tab: MenuTabContent, menu_content: MenuContent[]): void {
         let tmp_menu_contents: MenuBlock[] = new Array<MenuBlock>();
         // Constraction Menu-Items
+        let pg = document.getElementById("playground");
+        let tc = document.getElementById("tutorial-container");
+        let isOverflow: boolean = 15 + 60 * menu_content.length > pg.clientHeight;
+        if(tc != undefined){
+            if(isOverflow){
+                this.menu_items_scroll_width = tc.offsetWidth - tc.clientWidth;
+            }
+        }
         for (const mc of menu_content) {
             let tmp_menublock: MenuBlock = new MenuBlock(
-                this.menu_items.offsetWidth * 0.5 - MenuBlock.UNIT_WIDTH * 0.5,
+                // 5 is scroll bar size.
+                this.menu_items.offsetWidth * 0.5 - MenuBlock.UNIT_WIDTH * 0.5 - this.menu_items_scroll_width * 0.5,
                 tmp_menu_contents.length * MenuBlock.UNIT_HEIGHT * 1.2 + MenuBlock.UNIT_HEIGHT * 0.3,
                 mc.color,
                 mc.text,

@@ -44,6 +44,12 @@ div#tutorial {
     border-color: lightgray;
 }
 
+main#tutorial-container {
+    overflow-y: scroll;
+    height: calc(100vh - 30.3px);
+    padding-bottom: 10px;
+}
+
 div#playground {
     position: relative;
     width: 60%;
@@ -186,7 +192,7 @@ span.pyramid-argument {
 
 div#menu {
     position: absolute;
-    width: 190px;
+    width: 200px;
     height: 100vh;
 }
 
@@ -201,12 +207,16 @@ div#menu-tab {
 
 div#menu-items {
     position: absolute;
+    float: left;
     background-color: rgb(226, 230, 230);
     left: 70px;
     top: 0;
-    width: calc(190px - 70px);
-    height: 100vh;
+    width: calc(200px - 70px);
+    height: calc(100vh - 30.3px);
     box-shadow: inset 1px 0 2px rgba(0, 0, 0, 0.1);
+    padding-bottom: 10px;
+    overflow-x: hidden;
+    overflow-y: auto;
 }
 
 div#console {

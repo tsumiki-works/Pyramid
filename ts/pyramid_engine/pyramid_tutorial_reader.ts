@@ -1,6 +1,11 @@
 type CheckText = {
     head: string;
-    captions: string[];
+    captions: CheckBody[];
+}
+
+type CheckBody = {
+    type: string;
+    body: string;
 }
 
 export class PyramidTutorialReader {
@@ -35,7 +40,7 @@ export class PyramidTutorialReader {
         //問題番号によってtextsを変える
         let text_array = this.texts[problem_number].split("\n");
         let tmp_head: string = "";
-        let tmp_caption: string[] = new Array<string>();
+        let tmp_caption: CheckBody[] = new Array<CheckBody>();
         for (const line of text_array) {
             let formed_line = this.delete_head_space(line);
             switch (formed_line.slice(0, 2)) {
@@ -54,9 +59,15 @@ export class PyramidTutorialReader {
                         tmp_caption = tmp_caption.slice(0, 0);
                     }
                     break;
+                case "pi":
+                    // pi [./your-image-pass]
+                    let pi_body = formed_line.slice(2, formed_line.length);
+                    let formed_pi_body = pi_body.slice(2, pi_body.length - 1);
+                    tmp_caption.push({type: "img", body: formed_pi_body});
+                    break;
                 case "- ":
                     if (tmp_head.length != 0) {
-                        tmp_caption.push(formed_line.slice(2, formed_line.length));
+                        tmp_caption.push({type: "text", body: formed_line.slice(2, formed_line.length)});
                     } else {
                         alert("Tutorial Reader Error: Not Found Check Title.")
                     }

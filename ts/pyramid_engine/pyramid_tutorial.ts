@@ -31,9 +31,8 @@ export class PyramidTutorial extends PyramidEngine {
         // Title
         document.getElementById("tutorial-index").innerText = tutorial_reader.get_title();
 
-
         // Checks
-        let checks: { head: string, captions: string[] }[] = tutorial_reader.get_check_texts();
+        let checks: { head: string, captions: {type: string, body: string}[] }[] = tutorial_reader.get_check_texts();
         let idx = 0;
         for (const check of checks) {
             this.doc.appendChild(this.get_check_elem(check.head, check.captions, this.checker[idx]));
@@ -111,7 +110,7 @@ export class PyramidTutorial extends PyramidEngine {
         document.addEventListener(check_event.event, listener_event);
         return elem;
     }
-    private get_check_elem(check_text: string, check_disp: string[], check_event: CheckEvent): HTMLElement {
+    private get_check_elem(check_text: string, check_disp: {type: string, body: string}[], check_event: CheckEvent): HTMLElement {
         //! TODO: Form this Elem for tutorial check contents
         let elem = document.createElement("section");
         elem.classList.add("mt-3");
@@ -121,11 +120,18 @@ export class PyramidTutorial extends PyramidEngine {
         h3.appendChild(this.get_checkmark_icon(check_event));
         elem.appendChild(h3);
         for (const disp of check_disp) {
-            let p = document.createElement("p");
-            p.classList.add("text-slate-700");
-            p.innerText = disp;
-            p.innerText = p.innerText.slice(0, p.innerText.length);
-            elem.appendChild(p);
+            if(disp.type == "text"){
+                let p = document.createElement("p");
+                p.classList.add("text-slate-700");
+                p.innerText = disp.body;
+                p.innerText = p.innerText.slice(0, p.innerText.length);
+                elem.appendChild(p);
+            }else if(disp.type == "img"){
+                //! TODO: Form image
+                let img = document.createElement("img");
+                img.src = disp.body;
+                elem.appendChild(img);
+            }
         }
         return elem;
     }
