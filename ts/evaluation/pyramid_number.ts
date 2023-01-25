@@ -15,6 +15,7 @@ export class PyramidNumber {
     // Number("") = 0
     // Number(undefined) = NaN
     static check_type(value: string): boolean {
+        if (value === "NaN") return true
         if (value.indexOf(".") !== -1) { //when value contains "."
             while (value.slice(-1) === "0" && value.slice(-2, -1) !== ".") { //tail digit is "0" and second tail literal is "."
                 value = value.slice(0, -1);
