@@ -40,8 +40,6 @@ div#tutorial {
     height: 100vh;
     background-color: white;
     z-index: 1;
-    border-right: solid 2px;
-    border-color: lightgray;
 }
 
 main#tutorial-container {
