@@ -48,6 +48,10 @@ main#tutorial-container {
     padding-bottom: 10px;
 }
 
+img.tutorialimg {
+    max-width: 480px;
+}
+
 div#playground {
     position: relative;
     width: 60%;
