@@ -129,6 +129,7 @@ export class PyramidTutorial extends PyramidEngine {
             }else if(disp.type == "img"){
                 //! TODO: Form image
                 let img = document.createElement("img");
+                img.classList.add("tutorialimg");
                 img.src = disp.body;
                 elem.appendChild(img);
             }
