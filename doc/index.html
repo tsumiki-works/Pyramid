@@ -33,13 +33,13 @@
   -->
   <!-- /CSS -->
 </head>
-<header class="py-1 bg-white shadow">
+<header class="py-1">
   <nav class="container max-w-screen-lg mx-auto flex items-center">
     <a href="../">
       <img class="h-12 ml-1 mr-2 p-2 hover:opacity-80" src="../images/logo.svg" alt="Pyramid logo(トップヘ戻る)">
       </img>
     </a>
-    <a class="ml-3 leading-tight text-slate-700 hover:text-slate-500"" href=" https://github.com/tsumiki-works/">Tsumiki
+    <a class="ml-3 leading-tight text-slate-700 hover:text-slate-500" target="_blank" rel="noopener noreferrer" href="https://github.com/tsumiki-works/">Tsumiki
       Works<br>(GitHub)</a>
     <div class="ml-auto">
       <a class="mr-4 text-slate-700 hover:text-slate-500" href="../playground/">プレイグラウンド</a>
@@ -48,13 +48,16 @@
   </nav>
 </header>
 
-<body class="flex flex-col min-h-screen">
-  <main class="container max-w-screen-lg mx-auto flex-grow">
-    <dev class="flex">
-      <aside class="w-full mt-4 text-slate-800" aria-label="Sidebar">
-        <a class="ml-1" href="">
+<body class="container max-w-screen-lg mx-auto flex flex-col min-h-screen">
+  <main class="flex-grow">
+    <dev class="sm:flex">
+      <section class="m-4 leading-relaxed sm:order-2">
+        ドキュメントはPHPを使用するため、本番環境(<a href="https://pyramid.224.works/">pyramid.224.works</a>)でご確認ください。
+      </section>
+      <aside class="w-56 ml-2 my-2 text-slate-800 order-1" aria-label="Sidebar">
+        <a class="mx-1" href="">
           <h1
-            class="inline-flex items-center rounded bg-slate-100 py-1 pl-2 pr-2 md:pr-4 lg:pr-10 text-slate-800 hover:opacity-90 text-2xl">
+            class="inline-flex items-center rounded bg-slate-100 w-52 py-1 pl-2 text-slate-800 hover:opacity-90 text-2xl">
             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 384 512" fill="lightslategray"
               class="h-8 my-2 ml-2 mr-3">
               <!--! Font Awesome Pro 6.2.1 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license (Commercial License) Copyright 2022 Fonticons, Inc. -->
@@ -64,25 +67,21 @@
             ドキュメント
           </h1>
         </a>
-        <a href="#" class="hover:text-slate-700">
+        <a href="?page=literal" class="hover:text-slate-700">
           <h2 class="pl-2 mx-2 mt-4 text-xl border-l-2 border-sky-100 hover:border-sky-400">
-            四則演算</h2>
+            h2見出し</h2>
         </a>
-        <a href="#" class="hover:text-slate-700">
+        <a href="?page=i32" class="hover:text-slate-700">
+          <h3 class="pl-2 mx-2 mt-3 text-lg border-l-2 border-sky-100 hover:border-sky-400 ml-6">h3見出し</h3>
+        </a>
+        <a href="?page=calc" class="hover:text-slate-700">
           <h2 class="pl-2 mx-2 mt-4 text-xl border-l-2 border-sky-100 hover:border-sky-400">
-            関数</h2>
+            h2見出し</h2>
         </a>
-        <a href="#" class="hover:text-slate-700">
-          <h3 class="pl-2 mx-2 mt-3 text-lg border-l-2 border-sky-100 hover:border-sky-400 ml-6">べき乗</h3>
+        <a href="?page=arithmetic" class="hover:text-slate-700">
+          <h3 class="pl-2 mx-2 mt-3 text-lg border-l-2 border-sky-100 hover:border-sky-400 ml-6">h3見出し</h3>
         </a>
-        <a href="#" class="hover:text-slate-700">
-          <h3 class="pl-2 mx-2 mt-3 text-lg border-l-2 border-sky-100 hover:border-sky-400 ml-6"">数列</h3>
-      </a>
-    </aside>
-    <section class=" p-2 leading-relaxed">
-            <h2 class="text-lg my-3">ドキュメントについて</h2>
-            吾輩は猫である。名前はまだ無い。どこで生れたかとんと見当がつかぬ。何でも薄暗いじめじめした所でニャーニャー泣いていた事だけは記憶している。吾輩はここで始めて人間というものを見た。しかもあとで聞くとそれは書生という人間中で一番獰悪な種族であったそうだ。この書生というのは時々我々を捕えて煮て食うという話である。しかしその当時は何という考もなかったから別段恐しいとも思わなかった。ただ彼の掌に載せられてスーと持ち上げられた時何だかフワフワした感じがあったばかりである。
-            </section>
+      </aside>
     </dev>
   </main>
 </body>
@@ -90,7 +89,7 @@
   <p>Copyright (c) 2022 TsumikiWorks</p>
   <p class="text-sm">Released under the MIT license
     <a href="https://github.com/tsumiki-works/Pyramid/blob/main/LICENSE"
-      class="hover:text-slate-500">https://github.com/tsumiki-works/Pyramid/blob/main/LICENSE</a>
+      class="hover:text-slate-500" target="_blank” rel="noopener noreferrer">https://github.com/tsumiki-works/Pyramid/blob/main/LICENSE</a>
   </p>
 </footer>
 
