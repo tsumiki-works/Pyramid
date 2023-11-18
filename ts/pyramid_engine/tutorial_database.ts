@@ -337,6 +337,41 @@ export class TutorialDatabase {
                     },
                     TutorialDatabase.abstract_op_block("#40a5a8", "x", 0),
                     TutorialDatabase.abstract_op_block("#40a5a8", "+", 2),
+                    ({
+                        color: "#66bbaa",
+                        text: "map",
+                        block_constructor: ((_l: number, _t: number) => new MapBlock(
+                            [_l, _t]
+                        ))
+                    }),
+                    ({
+                        color: "#66bbaa",
+                        text: "push",
+                        block_constructor: ((_l: number, _t: number) => new PushBlock(
+                            [_l, _t]
+                        ))
+                    }),
+                    ({
+                        color: "#66bbaa",
+                        text: "pop",
+                        block_constructor: ((_l: number, _t: number) => new PopBlock(
+                            [_l, _t]
+                        ))
+                    }),
+                    ({
+                        color: "#66bbaa",
+                        text: "rest",
+                        block_constructor: ((_l: number, _t: number) => new RestBlock(
+                            [_l, _t]
+                        ))
+                    }),
+                    ({
+                        color: "#66bbaa",
+                        text: "length",
+                        block_constructor: ((_l: number, _t: number) => new LengthBlock(
+                            [_l, _t]
+                        ))
+                    }),
                     {
                         color: "#ea7f90",
                         text: "if",
